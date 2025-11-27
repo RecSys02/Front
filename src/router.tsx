@@ -4,16 +4,17 @@ import {
   createRoute,
 } from "@tanstack/react-router";
 import App from "./app/App";
+import Home from "./app/Home";
 
-const rootRoute = createRootRoute();
+const rootRoute = createRootRoute({ component: App });
 
-const appRoute = createRoute({
+const homeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: "/",
-  component: App,
+  component: Home,
 });
 
-const routeTree = rootRoute.addChildren([appRoute]);
+const routeTree = rootRoute.addChildren([homeRoute]);
 
 export const router = createRouter({ routeTree });
 export type AppRouter = typeof router;
