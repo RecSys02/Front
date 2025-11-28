@@ -1,2 +1,163 @@
-@import "tailwindcss/preflight"
-@tailwind utilities;
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: 'Pretendard', Arial;
+}
+
+:root {
+   /* Brand Colors */
+  --color-primary: #9ECD87;
+  --color-secondary: #F8FAF8;
+  --color-accent: #7DBA5E;
+  --color-base: #ECFFE3;
+
+  /* Gray Scale */
+  --gray-50:  #FAFAFA;
+  --gray-100: #F4F4F5;
+  --gray-200: #E4E4E7;
+  --gray-300: #D4D4D8;
+  --gray-400: #A1A1AA;
+  --gray-500: #71717A;
+  --gray-600: #52525B;
+  --gray-700: #3F3F46;
+  --gray-800: #27272A;
+  --gray-900: #18181B;
+
+  /* Black Scale */
+  --black:         #000000;
+  --black-80:      rgba(0,0,0,0.8);
+  --black-60:      rgba(0,0,0,0.6);
+  --black-40:      rgba(0,0,0,0.4);
+  --black-20:      rgba(0,0,0,0.2);
+  --black-10:      rgba(0,0,0,0.1);
+
+  --text-title1: 48px;
+  --text-title1--line-height: 72px;
+
+  --text-title2: 36px;
+  --text-title2--line-height: 54px;
+
+  --text-heading1: 44px;
+  --text-heading1--line-height: 66px;
+
+  --text-heading2: 28px;
+  --text-heading2--line-height: 42px;
+
+  --text-subtitle1: 32px;
+  --text-subtitle1--line-height: 48px;
+
+  --text-subtitle2: 24px;
+  --text-subtitle2--line-height: 36px;
+
+  --text-subtitle3: 16px;
+  --text-subtitle3--line-height: 24px;
+
+  --text-body1: 20px;
+  --text-body1--line-height: 30px;
+
+  --text-body2: 16px;
+  --text-body2--line-height: 24px;
+}
+
+@custom-variant pc {
+  @media (min-width: 1024px) {
+    @slot;
+  }
+}
+@custom-variant mobile {
+  @media (max-width: 1023px) {
+    @slot;
+  }
+}
+
+@layer utilities {
+    /* Brand Text Colors */
+  .text-primary { color: var(--color-primary); }
+  .text-secondary { color: var(--color-secondary); }
+  .text-accent { color: var(--color-accent); }
+  .text-base { color: var(--color-base); }
+
+  /* Gray Text Colors */
+  .text-gray-50  { color: var(--gray-50); }
+  .text-gray-100 { color: var(--gray-100); }
+  .text-gray-200 { color: var(--gray-200); }
+  .text-gray-300 { color: var(--gray-300); }
+  .text-gray-400 { color: var(--gray-400); }
+  .text-gray-500 { color: var(--gray-500); }
+  .text-gray-600 { color: var(--gray-600); }
+  .text-gray-700 { color: var(--gray-700); }
+  .text-gray-800 { color: var(--gray-800); }
+  .text-gray-900 { color: var(--gray-900); }
+
+  /* Black Text */
+  .text-black { color: var(--black); }
+  .text-black-80 { color: var(--black-80); }
+  .text-black-60 { color: var(--black-60); }
+
+  /* BG Colors */
+  .bg-gray-50  { background-color: var(--gray-50); }
+  .bg-gray-100 { background-color: var(--gray-100); }
+  .bg-gray-900 { background-color: var(--gray-900); }
+  .bg-black { background-color: var(--black); }
+
+  /* Border Colors */
+  .border-gray-100 { border-color: var(--gray-100); }
+  .border-gray-200 { border-color: var(--gray-200); }
+  .border-gray-300 { border-color: var(--gray-300); }
+  .border-gray-400 { border-color: var(--gray-400); }
+  
+  .text-title1 {
+    font-size: var(--text-title1);
+    line-height: var(--text-title1--line-height);
+  }
+
+  .text-title2 {
+    font-size: var(--text-title2);
+    line-height: var(--text-title2--line-height);
+  }
+
+  .text-heading1 {
+    font-size: var(--text-heading1);
+    line-height: var(--text-heading1--line-height);
+  }
+
+  .text-heading2 {
+    font-size: var(--text-heading2);
+    line-height: var(--text-heading2--line-height);
+  }
+
+  .text-subtitle1 {
+    font-size: var(--text-subtitle1);
+    line-height: var(--text-subtitle1--line-height);
+  }
+
+  .text-subtitle2 {
+    font-size: var(--text-subtitle2);
+    line-height: var(--text-subtitle2--line-height);
+  }
+
+  .text-subtitle3 {
+    font-size: var(--text-subtitle3);
+    line-height: var(--text-subtitle3--line-height);
+  }
+
+  .text-body1 {
+    font-size: var(--text-body1);
+    line-height: var(--text-body1--line-height);
+  }
+
+  .text-body2 {
+    font-size: var(--text-body2);
+    line-height: var(--text-body2--line-height);
+  }
+}
