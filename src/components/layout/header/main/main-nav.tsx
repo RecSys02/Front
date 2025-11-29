@@ -19,17 +19,19 @@ type Props = {
 
 const MainNav = ({ locale, userName, onChange }: Props) => {
   return (
-    <Row className="w-full items-center h-[90px] px-[60px] justify-between mobile:hidden">
+    <Row className="w-full items-center h-[90px] px-[60px] mobile:hidden">
       <LogoContainer />
-      <NavigationMenu className="flex-1 flex justify-center ">
-        <NavigationMenuList className="flex flex-row">
-          <HomeMenuItem className="px-[35px]" />
-          <AIMenuItem className="px-[35px]" />
-          <HotMenuItem className="px-[35px]" />
-          <PlanMenuItem className="px-[35px]" />
-        </NavigationMenuList>
-      </NavigationMenu>
-      <ETCContainer userName={userName} locale={locale} onChange={onChange} />
+      <Row className="gap-[40px]">
+        <NavigationMenu className="flex-1 flex justify-center ">
+          <NavigationMenuList className="flex flex-row">
+            <HomeMenuItem className="px-[35px]" />
+            <AIMenuItem className="px-[35px]" />
+            <HotMenuItem className="px-[35px]" />
+            <PlanMenuItem className="px-[35px]" />
+          </NavigationMenuList>
+        </NavigationMenu>
+        <ETCContainer userName={userName} locale={locale} onChange={onChange} />
+      </Row>
     </Row>
   );
 };
