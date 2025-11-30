@@ -1,4 +1,4 @@
-import Header from "@/components/layout/header/Header";
+import Header from "@/components/layout/header/header";
 import { Outlet } from "@tanstack/react-router";
 
 const App = () => {
