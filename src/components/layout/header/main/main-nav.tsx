@@ -13,11 +13,10 @@ import { Locale } from "@/constants/types";
 
 type Props = {
   locale: Locale;
-  userName: string;
   onChange: (locale: Locale) => void;
 };
 
-const MainNav = ({ locale, userName, onChange }: Props) => {
+const MainNav = ({ locale, onChange }: Props) => {
   return (
     <Row className="w-full items-center h-[90px] px-[60px] mobile:hidden">
       <LogoContainer />
@@ -30,7 +29,7 @@ const MainNav = ({ locale, userName, onChange }: Props) => {
             <PlanMenuItem className="px-[35px]" />
           </NavigationMenuList>
         </NavigationMenu>
-        <ETCContainer userName={userName} locale={locale} onChange={onChange} />
+        <ETCContainer locale={locale} onChange={onChange} />
       </Row>
     </Row>
   );

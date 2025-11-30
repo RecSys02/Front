@@ -1,23 +1,23 @@
 import Row from "@/components/common/container/row";
-import Body from "@/components/text/body";
 import { Locale } from "@/constants/types";
 import { CircleUserRoundIcon } from "lucide-react";
 import LocaleChanger from "./locale-changer";
+import { useUser } from "@/hooks/user.hook";
+import LoginContainer from "./login-container";
 
 type Props = {
-  userName: string;
   locale: Locale;
   onChange: (locale: Locale) => void;
 };
 
-const ETCContainer = ({ userName, locale, onChange }: Props) => {
+const ETCContainer = ({ locale, onChange }: Props) => {
+  const { data } = useUser();
+  const userName = data?.body.username;
+
   return (
-    <Row className="w-[452px] items-center">
-      <Row className="w-[292px]">
-        <Body variant="body2">{userName}</Body>
-        <Body variant="body2" className="text-gray-500">
-          님, 새로운 여정이 기다리고 있습니다
-        </Body>
+    <Row className="w-[452px] items-center gap-[20px]">
+      <Row className="w-full flex justify-end">
+        <LoginContainer userName={userName} status={data?.status} />
       </Row>
       <Row className="flex items-center gap-[8px] h-[36px] w-[160px]">
         <CircleUserRoundIcon

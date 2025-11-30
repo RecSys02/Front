@@ -11,9 +11,13 @@ export const useUser = () => {
         return {
           status: 200,
           body: {
-            username: "임치현",
+            username: "홍길동",
           },
         };
+        // return {
+        //   status: 401,
+        //   body: { message: "UNAUTHENTICATED" },
+        // };
       }
       return apiClient.user.me.query();
     },
