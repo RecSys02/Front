@@ -4,7 +4,7 @@ import {
   createRoute,
 } from "@tanstack/react-router";
 import App from "./app/App";
-import { Home } from "lucide-react";
+import Home from "./app/home";
 
 const rootRoute = createRootRoute({ component: App });
 
