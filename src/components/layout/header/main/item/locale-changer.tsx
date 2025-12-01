@@ -26,12 +26,12 @@ const LocaleChanger = ({ locale, onChange }: Props) => {
         <SelectTrigger
           className="border-transparent bg-transparent px-0 py-0 h-auto text-body1 font-medium 
                    shadow-none focus-visible:ring-0 focus-visible:border-transparent 
-                   hover:bg-transparent data-[state=open]:bg-transparent"
+                   hover:bg-transparent data-[state=open]:bg-transparent text-body2"
         >
           <SelectValue />
         </SelectTrigger>
         <SelectContent
-          className="bg-white/90 border border-gray-200 backdrop-blur-sm"
+          className="bg-white/90 border border-none backdrop-blur-sm"
           align="center"
         >
           {LOCALES.map((locale) => (
