@@ -16,8 +16,8 @@ type Props = {
 };
 const LocaleChanger = ({ locale, onChange }: Props) => {
   return (
-    <Row className="flex gap-[12px]">
-      <GlobeIcon className="w-auto h-[28px]" color="gray" strokeWidth={1.0} />
+    <Row className="flex gap-3">
+      <GlobeIcon className="w-auto h-7" color="gray" strokeWidth={1.0} />
       <Select
         disabled={true}
         value={locale}

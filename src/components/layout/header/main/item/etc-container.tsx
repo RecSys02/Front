@@ -15,13 +15,13 @@ const ETCContainer = ({ locale, onChange }: Props) => {
   const userName = data?.body.username;
 
   return (
-    <Row className="w-[452px] items-center gap-[20px]">
+    <Row className="w-113 items-center gap-5">
       <Row className="w-full flex justify-end">
         <LoginContainer userName={userName} status={data?.status} />
       </Row>
-      <Row className="flex items-center gap-[8px] h-[36px] w-[160px]">
+      <Row className="flex items-center gap-2 h-9 w-40">
         <CircleUserRoundIcon
-          className="h-[37px] w-auto"
+          className="h-12 w-auto"
           color="gray"
           strokeWidth={1.0}
         />

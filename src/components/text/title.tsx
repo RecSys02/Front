@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/libs/utils";
 
-const titleVariants = cva("font-bold text-primary", {
+const titleVariants = cva("font-bold fc-primary", {
   variants: {
     variant: {
       title1: "text-title1 md:text-title2",
