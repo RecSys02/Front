@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 
 import { cn } from "@/libs/utils";
 
-const subtitleVariants = cva("font-semibold text-primary", {
+const subtitleVariants = cva("font-semibold fc-primary", {
   variants: {
     variant: {
       subtitle1: "text-subtitle1 md:subtitle-2",

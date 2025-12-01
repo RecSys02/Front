@@ -2,7 +2,7 @@ import LogoLink from "../../common/logo-link";
 
 const LogoContainer = () => {
   return (
-    <div className="w-[208px] flex justify-center mr-[132px]">
+    <div className="w-102 flex justify-center mr-33">
       <LogoLink />
     </div>
   );

@@ -11,7 +11,7 @@ const LoginContainer = ({ userName, status }: Props) => {
     return (
       <Link
         to="/login"
-        className="text-body2 md:text-body2 text-gray-600 hover:text-gray-900"
+        className="text-body2 md:text-body2 fc-gray-600 hover:fc-gray-900"
       >
         로그인
       </Link>
@@ -21,7 +21,7 @@ const LoginContainer = ({ userName, status }: Props) => {
     return (
       <>
         <Body variant="body2">{userName}</Body>
-        <Body variant="body2" className="text-gray-500">
+        <Body variant="body2" className="fc-gray-500">
           님, 새로운 여정이 기다리고 있습니다
         </Body>
       </>

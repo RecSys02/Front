@@ -18,15 +18,15 @@ type Props = {
 
 const MainNav = ({ locale, onChange }: Props) => {
   return (
-    <Row className="w-full items-center h-[90px] px-[60px] mobile:hidden">
+    <Row className="w-full items-center h-22.5 px-15 mobile:hidden">
       <LogoContainer />
-      <Row className="gap-[40px]">
+      <Row className="gap-10">
         <NavigationMenu className="flex-1 flex justify-center ">
           <NavigationMenuList className="flex flex-row">
-            <HomeMenuItem className="px-[35px]" />
-            <AIMenuItem className="px-[35px]" />
-            <HotMenuItem className="px-[35px]" />
-            <PlanMenuItem className="px-[35px]" />
+            <HomeMenuItem className="px-9" />
+            <AIMenuItem className="px-9" />
+            <HotMenuItem className="px-9" />
+            <PlanMenuItem className="px-9" />
           </NavigationMenuList>
         </NavigationMenu>
         <ETCContainer locale={locale} onChange={onChange} />

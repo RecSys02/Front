@@ -1,5 +1,5 @@
-@import "tailwindcss/preflight";
-@import "tailwindcss/utilities";
+@import "tailwindcss";
+
 
 @font-face {
   font-family: "Pretendard";
@@ -20,6 +20,9 @@ body {
   --color-secondary: #F8FAF8;
   --color-accent: #7DBA5E;
   --color-base: #ECFFE3;
+  --color-emphasis: #1A6E3D;
+  
+  --white: #ffffff;
 
   /* Gray Scale */
   --gray-50:  #FAFAFA;
@@ -67,6 +70,9 @@ body {
 
   --text-body2: 16px;
   --text-body2--line-height: 24px;
+
+  --text-body3: 14px;
+  --text-body3--line-height: 21px;
 }
 
 @custom-variant pc {
@@ -81,83 +87,101 @@ body {
 }
 
 @layer utilities {
-    /* Brand Text Colors */
-  .text-primary { color: var(--color-primary); }
-  .text-secondary { color: var(--color-secondary); }
-  .text-accent { color: var(--color-accent); }
-  .text-base { color: var(--color-base); }
+  /* =======================
+   * Brand Text Colors (font)
+   * ======================= */
+  .fc-primary   { color: var(--black); }
+  .fc-secondary { color: var(--white); }
+  .fc-accent    { color: var(--color-accent); }
+  .fc-emphasis  { color: var(--color-emphasis); }
+  .fc-base      { color: var(--color-base); }
 
-  /* Gray Text Colors */
-  .text-gray-50  { color: var(--gray-50); }
-  .text-gray-100 { color: var(--gray-100); }
-  .text-gray-200 { color: var(--gray-200); }
-  .text-gray-300 { color: var(--gray-300); }
-  .text-gray-400 { color: var(--gray-400); }
-  .text-gray-500 { color: var(--gray-500); }
-  .text-gray-600 { color: var(--gray-600); }
-  .text-gray-700 { color: var(--gray-700); }
-  .text-gray-800 { color: var(--gray-800); }
-  .text-gray-900 { color: var(--gray-900); }
+  /* =======================
+   * Brand Background Colors
+   * ======================= */
+  .bg-primary   { background-color: var(--color-primary); }
+  .bg-secondary { background-color: var(--color-secondary); }
+  .bg-accent    { background-color: var(--color-accent); }
+  .bg-base      { background-color: var(--color-base); }
+  .bg-emphasis  { background-color: var(--color-emphasis); }
+
+  /* =======================
+   * Brand Border Colors
+   * ======================= */
+  .border-primary   { border-color: var(--color-primary); }
+  .border-secondary { border-color: var(--color-secondary); }
+  .border-accent    { border-color: var(--color-accent); }
+  .border-base      { border-color: var(--color-base); }
+  .border-emphasis  { border-color: var(--color-emphasis); }
+
+  /* Gray Text Colors (font) */
+  .fc-gray-50  { color: var(--gray-50); }
+  .fc-gray-100 { color: var(--gray-100); }
+  .fc-gray-200 { color: var(--gray-200); }
+  .fc-gray-300 { color: var(--gray-300); }
+  .fc-gray-400 { color: var(--gray-400); }
+  .fc-gray-500 { color: var(--gray-500); }
+  .fc-gray-600 { color: var(--gray-600); }
+  .fc-gray-700 { color: var(--gray-700); }
+  .fc-gray-800 { color: var(--gray-800); }
+  .fc-gray-900 { color: var(--gray-900); }
 
   /* Black Text */
-  .text-black { color: var(--black); }
-  .text-black-80 { color: var(--black-80); }
-  .text-black-60 { color: var(--black-60); }
+  .fc-black    { color: var(--black); }
+  .fc-black-80 { color: var(--black-80); }
+  .fc-black-60 { color: var(--black-60); }
 
-  /* BG Colors */
+  /* Gray Backgrounds */
   .bg-gray-50  { background-color: var(--gray-50); }
   .bg-gray-100 { background-color: var(--gray-100); }
   .bg-gray-900 { background-color: var(--gray-900); }
-  .bg-black { background-color: var(--black); }
+  .bg-black    { background-color: var(--black); }
 
-  /* Border Colors */
+  /* Gray Borders */
   .border-gray-100 { border-color: var(--gray-100); }
   .border-gray-200 { border-color: var(--gray-200); }
   .border-gray-300 { border-color: var(--gray-300); }
   .border-gray-400 { border-color: var(--gray-400); }
-  
+
+  /* Typography: text-body* 그대로 유지 */
   .text-title1 {
     font-size: var(--text-title1);
     line-height: var(--text-title1--line-height);
   }
-
   .text-title2 {
     font-size: var(--text-title2);
     line-height: var(--text-title2--line-height);
   }
-
   .text-heading1 {
     font-size: var(--text-heading1);
     line-height: var(--text-heading1--line-height);
   }
-
   .text-heading2 {
     font-size: var(--text-heading2);
     line-height: var(--text-heading2--line-height);
   }
-
   .text-subtitle1 {
     font-size: var(--text-subtitle1);
     line-height: var(--text-subtitle1--line-height);
   }
-
   .text-subtitle2 {
     font-size: var(--text-subtitle2);
     line-height: var(--text-subtitle2--line-height);
   }
-
   .text-subtitle3 {
     font-size: var(--text-subtitle3);
     line-height: var(--text-subtitle3--line-height);
   }
-
   .text-body1 {
     font-size: var(--text-body1);
     line-height: var(--text-body1--line-height);
   }
-
   .text-body2 {
     font-size: var(--text-body2);
     line-height: var(--text-body2--line-height);
+  }
+  .text-body3 {
+    font-size: var(--text-body3);
+    line-height: var(--text-body3--line-height);
   }
 }
