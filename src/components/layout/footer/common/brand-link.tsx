@@ -1,4 +1,4 @@
-import BrandLogo from "@/assets/brand.svg?react";
+import BrandLogo from "@/assets/logos/brand.svg?react";
 import { ROUTES } from "@/constants/routes";
 import { Link } from "@tanstack/react-router";
 

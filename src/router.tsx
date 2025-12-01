@@ -4,7 +4,7 @@ import {
   createRoute,
 } from "@tanstack/react-router";
 import App from "./app/App";
-import Home from "./app/home";
+import Home from "./app/(home)/page";
 
 const rootRoute = createRootRoute({ component: App });
 

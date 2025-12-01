@@ -1,6 +1,6 @@
-import FigmaLogo from "@/assets/figma.svg?react";
-import NotionLogo from "@/assets/notion.svg?react";
-import GithubLogo from "@/assets/github.svg?react";
+import FigmaLogo from "@/assets/logos/figma.svg?react";
+import NotionLogo from "@/assets/logos/notion.svg?react";
+import GithubLogo from "@/assets/logos/github.svg?react";
 import Row from "@/components/common/container/row";
 
 const IconBar = () => {
