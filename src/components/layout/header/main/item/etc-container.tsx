@@ -21,7 +21,7 @@ const ETCContainer = ({ locale, onChange }: Props) => {
       </Row>
       <Row className="flex items-center gap-2 h-9 w-40">
         <CircleUserRoundIcon
-          className="h-12 w-auto"
+          className="h-9 w-auto"
           color="gray"
           strokeWidth={1.0}
         />
