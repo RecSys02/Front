@@ -12,7 +12,7 @@ export function Pill({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full bg-black px-3.5 py-1 rounded-bl-none",
+        "inline-flex items-center gap-2 rounded-full bg-black px-3.5 py-2 rounded-bl-none",
         className
       )}
     >
