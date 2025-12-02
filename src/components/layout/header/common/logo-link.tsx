@@ -4,8 +4,8 @@ import { Link } from "@tanstack/react-router";
 
 const LogoLink = () => {
   return (
-    <Link to={ROUTES.Home}>
-      <Logo />
+    <Link to={ROUTES.Home} className="w-52 flex justify-center">
+      <Logo className="w-18 h-fit" />
     </Link>
   );
 };

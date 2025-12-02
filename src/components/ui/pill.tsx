@@ -17,7 +17,9 @@ export function Pill({
       )}
     >
       {iconSrc && <img src={iconSrc} className="w-4 h-4 object-contain" />}
-      <span className="text-white leading-none">{children}</span>
+      <span className="text-white leading-none font-extralight">
+        {children}
+      </span>
     </span>
   );
 }
