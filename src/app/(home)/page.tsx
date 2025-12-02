@@ -1,10 +1,10 @@
 import Column from "@/components/common/container/column";
-import TitleBox from "./_components/title-box";
+import BannerSlider from "./_components/banner-slider/banner-slider";
 
 const Home = () => {
   return (
-    <Column className="h-175">
-      <TitleBox />
+    <Column className="gap-10">
+      <BannerSlider />
     </Column>
   );
 };
