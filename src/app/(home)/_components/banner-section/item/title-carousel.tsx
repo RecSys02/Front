@@ -27,7 +27,7 @@ const TitleCarousel = ({ setIdx, setApi }: Props) => {
         containScroll: "trimSnaps",
         duration: 40,
       }}
-      className="w-116 pt-40 pr-23"
+      className="w-116 pt-30 pr-23"
     >
       <CarouselContent>
         {BANNER_ITEMS.map((banner, i) => (
