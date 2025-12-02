@@ -8,7 +8,7 @@ import { Surface } from "@/components/ui/surface";
 import Row from "@/components/common/container/row";
 import TitleCarousel from "./item/tite-carousel";
 
-const BannerSlider = () => {
+const BannerSection = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
 
   const [titleApi, setTitleApi] = useState<CarouselApi | null>(null);
@@ -97,4 +97,4 @@ const BannerSlider = () => {
   );
 };
 
-export default BannerSlider;
+export default BannerSection;
