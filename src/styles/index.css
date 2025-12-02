@@ -76,6 +76,13 @@ body {
 
   --text-body3: 14px;
   --text-body3--line-height: 21px;
+
+  --text-button1: 26px;
+  --text-button1--line-height: 39px;
+
+  --text-button2: 24px;
+  --text-button2--line-height: 36px;
+
 }
 
 @custom-variant pc {
@@ -186,5 +193,13 @@ body {
   .text-body3 {
     font-size: var(--text-body3);
     line-height: var(--text-body3--line-height);
+  }
+  .text-button1 {
+    font-size: var(--text-button1);
+    line-height: var(--text-button1--line-height);
+  }
+  .text-button2 {
+    font-size: var(--text-button2);
+    line-height: var(--text-button2--line-height);
   }
 }
