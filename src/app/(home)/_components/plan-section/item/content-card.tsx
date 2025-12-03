@@ -14,7 +14,7 @@ type Props = {
 
 const ContentCard = ({ content }: Props) => {
   return (
-    <Column className="w-140">
+    <Column className="w-full px-5.5 pt-20 ">
       <ImageBox
         src={content.imgSrc}
         className="w-140 h-80 overflow-hidden"
