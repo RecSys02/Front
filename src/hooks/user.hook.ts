@@ -13,12 +13,10 @@ export const useUser = () => {
             username: "홍길동",
           },
         };
-        // return {
-        //   body: { message: "UNAUTHENTICATED" },
-        // };
       }
-      const res = apiClient.user.me.query();
-      return res.body;
+
+      return apiClient.user.me.query();
     },
+    select: (res) => res.body,
   });
 };
