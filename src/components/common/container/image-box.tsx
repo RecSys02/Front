@@ -17,6 +17,7 @@ export function ImageBox({ src, className, fit = "cover" }: Props) {
           fit === "contain" && "object-contain"
         )}
       />
+      <div className="absolute inset-0 bg-white/15" />
     </div>
   );
 }
