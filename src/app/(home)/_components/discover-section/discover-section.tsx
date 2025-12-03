@@ -14,8 +14,8 @@ const DiscoverSection = () => {
       <DiscoverTitle />
       <ButtonGroup activeTab={activeTab} onChangeTab={setActiveTab} />
 
-      <TrainIcon className="self-end mr-37.5 w-67.5 absolute pt-70" />
-      
+      <TrainIcon className="self-end mr-37.5 w-67.5 absolute pt-60" />
+
       {activeTab === "AI" ? <OnboardingCarouselSection /> : null}
     </Column>
   );

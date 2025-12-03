@@ -7,12 +7,20 @@ type Props = {
   name: string;
   description: string;
   isActive: boolean;
+  disabled?: boolean;
 };
 
-const DiscoverButton = ({ onClick, name, description, isActive }: Props) => {
+const DiscoverButton = ({
+  onClick,
+  name,
+  description,
+  isActive,
+  disabled = false,
+}: Props) => {
   return (
     <Column className="w-fit gap-8.5 justify-center">
       <Button
+        disabled={disabled}
         onClick={onClick}
         className={`w-97.5 h-16 rounded-full text-button1 font-extrabold
           ${
