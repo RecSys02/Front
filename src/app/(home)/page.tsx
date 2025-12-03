@@ -1,10 +1,14 @@
 import Column from "@/components/common/container/column";
-import TitleBox from "./_components/title-box";
+import BannerSection from "./_components/banner-section/banner-section";
+import DiscoverSection from "./_components/discover-section/discover-section";
+import PlanSection from "./_components/plan-section/plan-section";
 
 const Home = () => {
   return (
-    <Column className="h-175">
-      <TitleBox />
+    <Column className="gap-10">
+      <BannerSection />
+      <DiscoverSection />
+      <PlanSection />
     </Column>
   );
 };

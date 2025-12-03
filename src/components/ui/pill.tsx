@@ -12,12 +12,14 @@ export function Pill({
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-2 rounded-full bg-black px-3.5 py-1 rounded-bl-none",
+        "inline-flex items-center gap-2 rounded-full bg-black px-3.5 py-2 rounded-bl-none",
         className
       )}
     >
       {iconSrc && <img src={iconSrc} className="w-4 h-4 object-contain" />}
-      <span className="text-white leading-none">{children}</span>
+      <span className="text-white leading-none font-extralight">
+        {children}
+      </span>
     </span>
   );
 }

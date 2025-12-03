@@ -3,11 +3,11 @@ import { Link } from "@tanstack/react-router";
 
 type Props = {
   userName: string | null;
-  status: number;
+  isLoggedIn: boolean;
 };
 
-const LoginContainer = ({ userName, status }: Props) => {
-  if (status == 401) {
+const LoginContainer = ({ userName, isLoggedIn }: Props) => {
+  if (!isLoggedIn) {
     return (
       <Link
         to="/login"
@@ -17,7 +17,7 @@ const LoginContainer = ({ userName, status }: Props) => {
       </Link>
     );
   }
-  if (status == 200) {
+  if (isLoggedIn) {
     return (
       <>
         <Body variant="body2">{userName}</Body>

@@ -9,17 +9,14 @@ export const useUser = () => {
     queryFn: async () => {
       if (IS_MOCK) {
         return {
-          status: 200,
           body: {
             username: "홍길동",
           },
         };
-        // return {
-        //   status: 401,
-        //   body: { message: "UNAUTHENTICATED" },
-        // };
       }
+
       return apiClient.user.me.query();
     },
+    select: (res) => res.body,
   });
 };
