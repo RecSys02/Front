@@ -24,7 +24,8 @@ body {
   --color-accent: #7DBA5E;
   --color-base: #ECFFE3;
   --color-emphasis: #1A6E3D;
-  
+  --color-surface: #C7E6CB40;
+
   --white: #ffffff;
 
   /* Gray Scale */
@@ -114,7 +115,7 @@ body {
   .bg-accent    { background-color: var(--color-accent); }
   .bg-base      { background-color: var(--color-base); }
   .bg-emphasis  { background-color: var(--color-emphasis); }
-
+  .bg-surface   { background-color: var(--color-surface); }
   /* =======================
    * Brand Border Colors
    * ======================= */

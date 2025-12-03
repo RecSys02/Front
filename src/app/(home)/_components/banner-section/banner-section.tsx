@@ -6,7 +6,7 @@ import BannerCarousel from "./item/banner-carousel";
 import type { CarouselApi } from "@/components/ui/carousel";
 import { Surface } from "@/components/ui/surface";
 import Row from "@/components/common/container/row";
-import TitleCarousel from "./item/tite-carousel";
+import TitleCarousel from "./item/title-carousel";
 
 const BannerSection = () => {
   const [currentIdx, setCurrentIdx] = useState(0);
@@ -77,7 +77,7 @@ const BannerSection = () => {
   }, [currentIdx]);
 
   return (
-    <Surface className={`${BANNER_ITEMS[currentIdx].color} relative`}>
+    <Surface className={`${BANNER_ITEMS[currentIdx].color} relative h-fit`}>
       <Column className="w-full relative">
         <Row className="pl-122 relative z-10">
           <TitleCarousel setIdx={handleTitleChange} setApi={setTitleApi} />
