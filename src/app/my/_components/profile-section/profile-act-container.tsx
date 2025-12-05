@@ -1,18 +1,8 @@
 import Heading from "@/components/text/heading";
 import Column from "@/components/common/container/column";
-import ProfileActItem from "../profile-act-item"
-import Map1 from "@/assets/map1.svg?react";
-import Tag from "@/assets/tag.svg?react";
-import Question from "@/assets/question.svg?react";
-import { MYROUTES } from "../my-routes";
-//import { IconName } from "lucide-react";
-
-const PROFILE_ACT_ITEMS = [
-    {act: "저장된 플랜", icon: <Map1/>, routeLink: MYROUTES.Plan },
-    {act: "태그 수정", icon: <Tag/>, routeLink: MYROUTES.Tag },
-    {act: "Q&A", icon: <Question/>, routeLink: MYROUTES.QnA },
-    {act: "Q&A", icon: <Question/>, routeLink: MYROUTES.QnA }
-]
+import { PROFILE_ACT_ITEMS } from "./profile-act-item"
+import { Link } from "@tanstack/react-router";
+import Subtitle from "@/components/text/subtitle";
 
 const ProfileActContainer = () => {
     return(
@@ -21,10 +11,14 @@ const ProfileActContainer = () => {
 
             <Column className="w-fit border border-primary grid grid-cols-2 rounded-2xl py-3">
                 {PROFILE_ACT_ITEMS.map((item) => (
-                    <ProfileActItem
-                    act={item.act}
-                    icon={item.icon}
-                    routeLink={item.routeLink}/>
+                    <Column className="w-55 h-47 items-center justify-center gap-3">
+                        <div className="w-21 h-21 bg-gray-100 rounded-[32px] rounded-tr-[0px] flex items-center justify-center">
+                            <Link to={item.routeLink}>
+                               {item.icon}
+                            </Link>
+                        </div>
+                        <Subtitle variant="subtitle2" className="font-normal fc-gray-700 ">{item.act}</Subtitle>
+                    </Column>
                 ))}       
             </Column>
         </Column>
