@@ -2,18 +2,15 @@ import Column from "@/components/common/container/column"
 import Row from "@/components/common/container/row";
 import Subtitle from "@/components/text/subtitle";
 import Title from "@/components/text/title";
-//import { DropdownMenu, DropdownMenuContent, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-//import { useUser } from "@/hooks/user.hook";
+import ProfileDropdown from "./profile-dropdown";
 import { CircleUserRoundIcon } from "lucide-react";
-import EllipsisVerticalFilled from "@/assets/ellipsis-vertical-filled.svg?react";
-
+//import { useUser } from "@/hooks/user.hook";
 
 const Profile = () => {
     return(
         <Column className="w-110 h-145 bg-base items-center rounded-[16px]">
             <Row className="h-38 justify-end">
-                {/*드롭다운 해당 위치*/}
-                <EllipsisVerticalFilled className="h-12 w-12 mt-8 mr-4" strokeWidth={1.0}/>
+                <ProfileDropdown/>
             </Row>
             <CircleUserRoundIcon className="h-26 w-26" strokeWidth={1.0}/>
             {/*프로필 사진 해당 위치 w-26 h-26 rounded-full*/}
