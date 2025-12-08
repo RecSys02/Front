@@ -16,8 +16,12 @@ const SocialLoginList = () => {
         <Border direction="horizontal" />
       </Row>
       <Row className="gap-4 mt-7.5 justify-center">
-        <GoogleIcon className="text-gray-300" />
-        <img src={NaverIconPng} alt="naver login" className="size-10" />
+        <GoogleIcon className="text-gray-300 cursor-pointer size-10" />
+        <img
+          src={NaverIconPng}
+          alt="naver login"
+          className="size-10 cursor-pointer"
+        />
       </Row>
     </Column>
   );

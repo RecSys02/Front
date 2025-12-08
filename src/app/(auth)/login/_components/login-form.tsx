@@ -4,18 +4,25 @@ import Column from "@/components/common/container/column";
 import { Checkbox } from "@/components/ui/checkbox";
 import { FieldSet, FieldGroup, Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { useSignin } from "@/hooks/auth.hook";
 
 const LoginForm = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(false);
 
   const isValid = userId.trim() !== "" && password.trim() !== "";
+  const signin = useSignin();
 
-  const onSubmit = (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isValid) return;
 
-    console.log("Login try");
+    signin.mutate({
+      username: userId,
+      password,
+      remember,
+    });
   };
 
   return (
@@ -52,7 +59,11 @@ const LoginForm = () => {
             </Field>
 
             <Field orientation="horizontal">
-              <Checkbox id="login-save" className="size-5" />
+              <Checkbox
+                id="login-save"
+                className="size-5"
+                onCheckedChange={(checked) => setRemember(!!checked)}
+              />
               <FieldLabel
                 htmlFor="login-save"
                 className="text-body3 font-normal fc-gray-700"
