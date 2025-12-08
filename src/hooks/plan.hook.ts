@@ -65,8 +65,8 @@ export const usePopular = () => {
           body: MOCK_POPULAR,
         };
       }
-      return apiClient.plan.popular.query();
+      const res = apiClient.plan.popular.query();
+      return res.body;
     },
-    select: (res) => res.body,
   });
 };

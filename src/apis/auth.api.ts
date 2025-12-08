@@ -11,9 +11,11 @@ export const authApi = c.router(
       body: z.object({
         username: z.string(),
         password: z.string(),
+        remember: z.boolean().optional(),
       }),
       responses: {
         200: z.object({
+          accessToken: z.string(),
           name: z.string(),
           id: z.number(),
         }),
@@ -27,6 +29,16 @@ export const authApi = c.router(
         200: z.object({
           success: z.boolean(),
           message: z.string(),
+        }),
+      },
+    },
+    refresh: {
+      method: "POST",
+      path: "/refresh",
+      body: z.object({}).optional(),
+      responses: {
+        200: z.object({
+          accessToken: z.string(),
         }),
       },
     },
