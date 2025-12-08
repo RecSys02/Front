@@ -61,11 +61,9 @@ export const usePopular = () => {
     queryKey: ["popular"],
     queryFn: async () => {
       if (IS_MOCK) {
-        return {
-          body: MOCK_POPULAR,
-        };
+        return MOCK_POPULAR;
       }
-      const res = apiClient.plan.popular.query();
+      const res = await apiClient.plan.popular.query();
       return res.body;
     },
   });
