@@ -3,5 +3,7 @@ const ROUTES = {
   AI: "/ai",
   Hot: "/hot",
   Plan: "/plan",
+  Register: "/register",
+  Login: "/login",
 };
 export { ROUTES };
