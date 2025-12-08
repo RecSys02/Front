@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import { Locale } from "@/constants/types";
 import MainNav from "./main/main-nav";
+import { Border } from "@/components/ui/border";
+import { useLocation } from "@tanstack/react-router";
 
 const Header = () => {
   const [locale, setLocale] = useState<Locale>("KR");
   const [isTop, setIsTop] = useState(true);
+  const { pathname } = useLocation();
+  const hideBorder = pathname === "/";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +28,7 @@ const Header = () => {
       }}
     >
       <MainNav locale={locale} onChange={setLocale} />
+      {!hideBorder && <Border />}
     </header>
   );
 };
