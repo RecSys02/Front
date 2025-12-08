@@ -5,11 +5,14 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FieldSet, FieldGroup, Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useSignin } from "@/hooks/auth.hook";
+import { Eye, EyeOff, X } from "lucide-react";
+import Row from "@/components/common/container/row";
 
 const LoginForm = () => {
   const [userId, setUserId] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const isValid = userId.trim() !== "" && password.trim() !== "";
   const signin = useSignin();
@@ -34,28 +37,60 @@ const LoginForm = () => {
               <FieldLabel htmlFor="userId" className="text-body2">
                 ID
               </FieldLabel>
-              <Input
-                id="userId"
-                type="text"
-                placeholder="아이디 입력"
-                className="h-15 text-body2"
-                value={userId}
-                onChange={(e) => setUserId(e.target.value)}
-              />
+              <Row className="relative">
+                <Input
+                  id="userId"
+                  type="text"
+                  placeholder="아이디 입력"
+                  className="h-15 text-body2 pr-10"
+                  value={userId}
+                  onChange={(e) => setUserId(e.target.value)}
+                />
+
+                {userId !== "" && (
+                  <button
+                    type="button"
+                    onClick={() => setUserId("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </Row>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="password" className="text-body2">
                 Password
               </FieldLabel>
-              <Input
-                id="password"
-                type="password"
-                placeholder="비밀번호 입력"
-                className="h-15 text-body2"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <Row className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="비밀번호 입력"
+                  className="h-15 text-body2 pr-24"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  className="absolute right-9 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                </button>
+
+                {password !== "" && (
+                  <button
+                    type="button"
+                    onClick={() => setPassword("")}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={18} />
+                  </button>
+                )}
+              </Row>
             </Field>
 
             <Field orientation="horizontal">
