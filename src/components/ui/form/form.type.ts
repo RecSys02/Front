@@ -6,14 +6,22 @@ export type ShowIfCondition<TValues> =
   | { condition: boolean }
   | { key: keyof TValues; value: unknown };
 
+export type FieldRule<TValues> = {
+  message: string;
+  required?: boolean;
+  validate?: (values: TValues, value: unknown) => boolean;
+  live?: boolean;
+};
+
 export type FormItemConfig<TValues> = {
   key: keyof TValues;
-  type?: TextFieldType; 
+  type?: TextFieldType;
   label?: string;
   placeholder?: string;
   disabled?: boolean;
   clearable?: boolean;
   showIf?: ShowIfCondition<TValues>[];
+  rules?: FieldRule<TValues>[];
   children?: ReactNode;
 };
 

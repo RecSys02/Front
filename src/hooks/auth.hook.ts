@@ -4,7 +4,7 @@ import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
 
 type SigninArgs = {
-  username: string;
+  userid: string;
   password: string;
   remember: boolean;
 };
@@ -14,20 +14,20 @@ export const useSignin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ username, password, remember }: SigninArgs) => {
+    mutationFn: async ({ userid, password, remember }: SigninArgs) => {
       if (import.meta.env.DEV) {
         throw new Error("MOCK SIGNIN ERROR");
-        // console.log("MOCK SIGNIN", username, password);
+        // console.log("MOCK SIGNIN", userid, password);
         // return {
         //   body: {
         //     token: "token",
-        //     name: `MOCK-${username}`,
+        //     name: `MOCK-${userid}`,
         //     id: 9999,
         //   },
         // };
       }
       const res = await apiClient.auth.signin.query({
-        body: { username, password, remember },
+        body: { userid, password, remember },
       });
       return res.body;
     },
@@ -36,7 +36,7 @@ export const useSignin = () => {
       setAccessToken(res.accessToken);
 
       queryClient.invalidateQueries({ queryKey: ["me"] });
-      toast.success(`${res.body.username}님의 새로운 여정을 환영합니다. `);
+      toast.success(`${res.body.userid}님의 새로운 여정을 환영합니다. `);
     },
 
     onError: () => {
@@ -75,6 +75,17 @@ export const useSignout = () => {
       queryClient.removeQueries({ queryKey: ["me"] });
       window.location.href = "/login";
       toast.error("로그아웃 중 오류가 발생했습니다.");
+    },
+  });
+};
+
+export const useCheckUserId = () => {
+  return useMutation({
+    mutationFn: async (userid: string) => {
+      const res = await apiClient.auth.checkId.query({
+        body: { userid },
+      });
+      return res.body;
     },
   });
 };

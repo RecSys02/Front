@@ -6,10 +6,8 @@ import SocialLoginList from "./_components/social-login-list";
 
 const LoginPage = () => {
   return (
-    <Column className="pt-30 pb-40 px-40 items-center w-200 mx-auto">
-      <Title variant="title2" className="mb-20 w-full text-center">
-        로그인
-      </Title>
+    <Column className="pt-30 pb-30 px-40 items-center w-200 mx-auto">
+      <Title className="mb-20 w-full text-center font-extrabold">로그인</Title>
       <LoginForm />
       <LoginList />
       <SocialLoginList />

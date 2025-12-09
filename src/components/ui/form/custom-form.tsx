@@ -20,9 +20,7 @@ export function CustomForm<TValues>({
     Record<string, boolean>
   >({});
 
-  const handleChange = (field: keyof TValues, value: unknown) => {
-    setValues((prev) => ({ ...prev, [field]: value }));
-  };
+  const [errors, setErrors] = useState<Record<string, string | null>>({});
 
   const togglePasswordVisible = (fieldName: string) => {
     setPasswordVisible((prev) => ({
@@ -31,12 +29,93 @@ export function CustomForm<TValues>({
     }));
   };
 
+  const validateField = (
+    item: FormItemConfig<TValues>,
+    currentValues: TValues,
+    options?: { onlyLive?: boolean }
+  ): string | null => {
+    const rules = item.rules;
+    if (!rules || rules.length === 0) return null;
+
+    const value = currentValues[item.key];
+
+    for (const rule of rules) {
+      if (options?.onlyLive && !rule.live) {
+        continue;
+      }
+
+      if (rule.required) {
+        const empty =
+          value === null ||
+          value === undefined ||
+          (typeof value === "string" && value.trim() === "") ||
+          (Array.isArray(value) && value.length === 0);
+
+        if (empty) {
+          return rule.message;
+        }
+      }
+
+      if (rule.validate && !rule.validate(currentValues, value)) {
+        return rule.message;
+      }
+    }
+
+    return null;
+  };
+
+  const handleChange = (item: FormItemConfig<TValues>, value: unknown) => {
+    const name = String(item.key);
+
+    setValues((prev) => {
+      const next = { ...prev, [item.key]: value };
+
+      const hasLiveRule = item.rules?.some((r) => r.live);
+
+      if (hasLiveRule) {
+        const error = validateField(item, next, { onlyLive: true });
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: error,
+        }));
+      } else if (errors[name]) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: null,
+        }));
+      }
+
+      return next;
+    });
+  };
+
   const renderField = (item: FormItemConfig<TValues>) => {
     const name = String(item.key);
     const rawValue = values[item.key];
 
     if (item.children) {
-      return <Field key={name}>{item.children}</Field>;
+      const hasRequired = item.rules?.some((r) => r.required);
+
+      return (
+        <Field key={name}>
+          {item.label && (
+            <FieldLabel
+              htmlFor={name}
+              className="text-body2 flex items-center gap-1"
+            >
+              <span
+                className={
+                  hasRequired ? "text-red-500" : "text-red-500 opacity-0"
+                }
+              >
+                *
+              </span>
+              {item.label}
+            </FieldLabel>
+          )}
+          {item.children}
+        </Field>
+      );
     }
 
     const type: TextFieldType = item.type ?? "text";
@@ -54,10 +133,24 @@ export function CustomForm<TValues>({
       ? "pr-10"
       : "pr-4";
 
+    const errorMessage = errors[name];
+
     return (
       <Field key={name}>
         {item.label && (
-          <FieldLabel htmlFor={name} className="text-body2">
+          <FieldLabel
+            htmlFor={name}
+            className="text-body2 flex items-center gap-1"
+          >
+            <span
+              className={
+                item.rules?.some((r) => r.required)
+                  ? "text-red-500"
+                  : "text-red-500 opacity-0"
+              }
+            >
+              *
+            </span>
             {item.label}
           </FieldLabel>
         )}
@@ -70,7 +163,7 @@ export function CustomForm<TValues>({
             disabled={item.disabled}
             className={`h-15 text-body2 w-full ${paddingClass}`}
             value={inputValue}
-            onChange={(e) => handleChange(item.key, e.target.value)}
+            onChange={(e) => handleChange(item, e.target.value)}
           />
 
           {isPassword && inputValue !== "" && (
@@ -85,7 +178,7 @@ export function CustomForm<TValues>({
 
               <button
                 type="button"
-                onClick={() => handleChange(item.key, "")}
+                onClick={() => handleChange(item, "")}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
                 <X size={18} />
@@ -96,20 +189,45 @@ export function CustomForm<TValues>({
           {!isPassword && item.clearable && inputValue !== "" && (
             <button
               type="button"
-              onClick={() => handleChange(item.key, "")}
+              onClick={() => handleChange(item, "")}
               className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
             >
               <X size={18} />
             </button>
           )}
         </Row>
+
+        {errorMessage && (
+          <span className="mt-1 text-body3 text-red-500">{errorMessage}</span>
+        )}
       </Field>
     );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    const nextErrors: Record<string, string | null> = {};
+
+    items.forEach((item) => {
+      const name = String(item.key);
+
+      if (!shouldShow(item, values)) {
+        nextErrors[name] = null;
+        return;
+      }
+
+      const error = validateField(item, values);
+      nextErrors[name] = error;
+    });
+
+    setErrors(nextErrors);
+
+    const hasError = Object.values(nextErrors).some((msg) => !!msg);
+    if (hasError) return;
+
     if (!isValid) return;
+
     onSubmit();
   };
 
