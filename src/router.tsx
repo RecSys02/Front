@@ -11,6 +11,7 @@ import { PATH, ROUTES } from "./constants/routes";
 import ModelLayout from "./app/(model)/moel.layout";
 import ModelContextPage from "./app/(model)/context/page";
 import ModelSpotPage from "./app/(model)/spot/page";
+import Mypage from "./app/my/page";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -30,6 +31,12 @@ const registerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTES.Register,
   component: RegisterPage,
+});
+
+const myRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTES.My,
+  component: Mypage,
 });
 
 const modelRoute = createRoute({
@@ -66,8 +73,10 @@ const routeTree = rootRoute.addChildren([
   homeRoute,
   loginRoute,
   registerRoute,
+  myRoute,
   modelTree,
 ]);
+
 
 export const router = createRouter({ routeTree });
 export type AppRouter = typeof router;
