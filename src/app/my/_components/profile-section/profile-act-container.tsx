@@ -11,12 +11,15 @@ const ProfileActContainer = () => {
 
             <Column className="w-fit border border-primary grid grid-cols-2 rounded-2xl py-3">
                 {PROFILE_ACT_ITEMS.map((item) => (
-                    <Column className="w-55 h-47 items-center justify-center gap-3">
-                        <div className="w-21 h-21 bg-gray-100 rounded-[32px] rounded-tr-[0px] flex items-center justify-center">
-                            <Link to={item.routeLink}>
-                               {item.icon}
-                            </Link>
-                        </div>
+                    <Column 
+                        key={item.key}
+                        className="w-55 h-47 items-center justify-center gap-3"
+                        >
+                            <div className="w-21 h-21 bg-gray-100 rounded-[32px] rounded-tr-[0px] flex items-center justify-center">
+                                <Link to={item.routeLink}>
+                                    {item.icon}
+                                </Link>
+                            </div>
                         <Subtitle variant="subtitle2" className="font-normal fc-gray-700 ">{item.act}</Subtitle>
                     </Column>
                 ))}       
