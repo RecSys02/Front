@@ -13,6 +13,7 @@ export const useUser = () => {
       if (IS_MOCK) {
         return {
           username: "홍길동",
+          userimg: null,
         };
       }
 
