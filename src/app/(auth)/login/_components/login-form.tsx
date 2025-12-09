@@ -13,7 +13,7 @@ const LoginForm = () => {
   const isValid = values.userId.trim() !== "" && values.password.trim() !== "";
   const signin = useSignin();
 
-  const onSubmit = async () => {
+  const handleSubmit = async () => {
     if (!isValid) return;
     console.log("on func", values);
 
@@ -30,7 +30,7 @@ const LoginForm = () => {
       values={values}
       setValues={setValues}
       items={items}
-      onSubmit={onSubmit}
+      onSubmit={handleSubmit}
       isValid={isValid}
       submitLabel="로그인"
     />
