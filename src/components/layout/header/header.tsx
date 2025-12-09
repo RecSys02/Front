@@ -23,7 +23,7 @@ const Header = () => {
 
   return (
     <header
-      className="sticky top-0 left-0 z-50 w-full"
+      className="fixed top-0 left-0 z-50 w-full"
       style={{
         backgroundColor:
           isHome && isTop ? "var(--banner-color)" : "var(--white)",
