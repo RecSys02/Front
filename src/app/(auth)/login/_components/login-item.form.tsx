@@ -15,14 +15,14 @@ export const generateLoginFormItems = (
   {
     key: "userId",
     type: "text",
-    label: "ID",
+    label: "아이디",
     placeholder: "아이디 입력",
     clearable: true,
   },
   {
     key: "password",
     type: "password",
-    label: "Password",
+    label: "비밀번호",
     placeholder: "비밀번호 입력",
   },
   {
