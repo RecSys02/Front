@@ -5,5 +5,6 @@ const ROUTES = {
   Plan: "/plan",
   Register: "/register",
   Login: "/login",
+  Welcome: "/welcome",
 };
 export { ROUTES };

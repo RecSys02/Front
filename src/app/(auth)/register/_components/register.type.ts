@@ -1,9 +1,9 @@
 export type Tags = {
-  themes: string[];
-  moods: string[];
-  dislikes: string[];
-  foods: string[];
-  cafes: string[];
+  themes: string[] | null;
+  moods: string[] | null;
+  dislikes: string[] | null;
+  foods: string[] | null;
+  cafes: string[] | null;
   activity: string | null;
   activityValue: number;
 };

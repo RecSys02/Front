@@ -30,7 +30,7 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={THEME_TAGS}
-            value={values.tags.themes}
+            value={values.tags.themes ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
@@ -51,7 +51,7 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={MOOD_TAGS}
-            value={values.tags.moods}
+            value={values.tags.moods ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
@@ -96,7 +96,7 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={FOOD_TAGS}
-            value={values.tags.foods}
+            value={values.tags.foods ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
@@ -117,7 +117,7 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={CAFE_TAGS}
-            value={values.tags.cafes}
+            value={values.tags.cafes ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
@@ -138,7 +138,7 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={DISLIKE_TAGS}
-            value={values.tags.dislikes}
+            value={values.tags.dislikes ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,

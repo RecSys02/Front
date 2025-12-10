@@ -2,12 +2,14 @@ import { apiClient } from "@/apis/client/ts-rest/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
+import { RegisterFormValues } from "@/app/(auth)/register/_components/register.type";
 
 type SigninArgs = {
   userid: string;
   password: string;
   remember: boolean;
 };
+
 const { setAccessToken, clear } = AuthStore.actions;
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -56,10 +58,7 @@ export const useSignout = () => {
       if (import.meta.env.DEV) {
         console.log("MOCK SIGNOUT");
         return {
-          body: {
-            success: true,
-            message: "mock signout",
-          },
+          success: true,
         };
       }
       const res = await apiClient.auth.signout.query({
@@ -93,6 +92,41 @@ export const useCheckUserId = () => {
         body: { userid },
       });
       return res.body;
+    },
+    onError: () => {
+      toast.error("중복 확인 중 오류가 발생했습니다.");
+    },
+  });
+};
+
+export const useRegister = () => {
+  return useMutation({
+    mutationFn: async ({
+      userId: userid,
+      password,
+      nickname,
+      email,
+      tags,
+    }: RegisterFormValues) => {
+      if (IS_MOCK) {
+        console.log(userid, password, nickname, email, tags);
+        return {
+          success: true,
+        };
+      }
+      const res = await apiClient.auth.register.query({
+        body: {
+          userid,
+          password,
+          nickname,
+          email,
+          tags,
+        },
+      });
+      return res.body;
+    },
+    onError: () => {
+      toast.error("회원가입 중 오류가 발생했습니다.");
     },
   });
 };

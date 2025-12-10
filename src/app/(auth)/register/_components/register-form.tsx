@@ -1,5 +1,5 @@
 import { CustomForm } from "@/components/ui/form/custom-form";
-import { useCheckUserId } from "@/hooks/auth.hook";
+import { useCheckUserId, useRegister } from "@/hooks/auth.hook";
 import { useState } from "react";
 import { toast } from "sonner";
 import { RegisterFormValues, RegisterStep } from "./register.type";
@@ -22,11 +22,11 @@ const RegisterForm = () => {
     nickname: "",
     email: "",
     tags: {
-      themes: [],
-      moods: [],
-      dislikes: [],
-      foods: [],
-      cafes: [],
+      themes: null,
+      moods: null,
+      dislikes: null,
+      foods: null,
+      cafes: null,
       activity: null,
       activityValue: 50,
     },
@@ -37,6 +37,7 @@ const RegisterForm = () => {
   );
 
   const checkId = useCheckUserId();
+  const registerUser = useRegister();
 
   const { isStep1Valid } = generateRegisterUtil(values, isUserIdAvailable);
 
@@ -46,8 +47,11 @@ const RegisterForm = () => {
       setStep(2);
       return;
     }
-
-    // TODO: 회원가입 API 호출
+    registerUser.mutate(values, {
+      onSuccess: () => {
+        navigate({ to: ROUTES.Welcome });
+      },
+    });
   };
 
   const handleCheckUserId = () => {
@@ -68,9 +72,6 @@ const RegisterForm = () => {
           setIsUserIdAvailable(false);
           toast.error("이미 사용 중인 아이디입니다.");
         }
-      },
-      onError: () => {
-        toast.error("중복 확인 중 오류가 발생했습니다.");
       },
     });
   };

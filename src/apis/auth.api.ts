@@ -28,7 +28,6 @@ export const authApi = c.router(
       responses: {
         200: z.object({
           success: z.boolean(),
-          message: z.string(),
         }),
       },
     },
@@ -51,6 +50,29 @@ export const authApi = c.router(
       responses: {
         200: z.object({
           available: z.boolean(),
+        }),
+      },
+    },
+    register: {
+      method: "POST",
+      path: "/register",
+      body: z.object({
+        uesrid: z.string(),
+        password: z.string(),
+        nickname: z.string(),
+        email: z.string().optional(),
+        tags: z.object({
+          themes: z.array(z.string()).optional(),
+          moods: z.array(z.string()).optional(),
+          dislikes: z.array(z.string()).optional(),
+          foods: z.array(z.string()).optional(),
+          cafes: z.array(z.string()).optional(),
+          activity: z.string().optional(),
+        }),
+      }),
+      responses: {
+        200: z.object({
+          success: z.boolean(),
         }),
       },
     },
