@@ -9,8 +9,11 @@ import { generateRegisterStep2Items } from "./step2-item.form";
 import Column from "@/components/common/container/column";
 import RegisterStepHeader from "./register-step-header";
 import { Border } from "@/components/ui/border";
+import { useNavigate } from "@tanstack/react-router";
+import { ROUTES } from "@/constants/routes";
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState<RegisterStep>(1);
   const [values, setValues] = useState<RegisterFormValues>({
     userId: "",
@@ -35,11 +38,7 @@ const RegisterForm = () => {
 
   const checkId = useCheckUserId();
 
-  const { isStep1Valid, isStep2Valid, isValid } = generateRegisterUtil(
-    values,
-    isUserIdAvailable,
-    step
-  );
+  const { isStep1Valid } = generateRegisterUtil(values, isUserIdAvailable);
 
   const handleSubmit = () => {
     if (step === 1) {
@@ -47,8 +46,6 @@ const RegisterForm = () => {
       setStep(2);
       return;
     }
-
-    if (!isStep2Valid) return;
 
     // TODO: 회원가입 API 호출
   };
@@ -79,7 +76,7 @@ const RegisterForm = () => {
   };
 
   const buildItems = () => {
-    if (step === 2) {
+    if (step === 1) {
       return generateRegisterStep1Items({
         values,
         setValues,
@@ -96,15 +93,23 @@ const RegisterForm = () => {
 
   return (
     <Column className="max-w-md">
-      <RegisterStepHeader step={2} />
+      <RegisterStepHeader step={step} />
       <Border className="mt-4 mb-4 " />
       <CustomForm
         values={values}
         setValues={setValues}
         items={items}
         onSubmit={handleSubmit}
-        isValid={isValid}
+        isValid={true}
         submitLabel={step === 1 ? "다음" : "회원가입"}
+        cancelLabel={step === 1 ? "취소" : "이전"}
+        onCancel={() => {
+          if (step === 1) {
+            navigate({ to: ROUTES.Login });
+          } else {
+            setStep(1);
+          }
+        }}
       />
     </Column>
   );

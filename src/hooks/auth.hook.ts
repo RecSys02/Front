@@ -10,12 +10,14 @@ type SigninArgs = {
 };
 const { setAccessToken, clear } = AuthStore.actions;
 
+const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
+
 export const useSignin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async ({ userid, password, remember }: SigninArgs) => {
-      if (import.meta.env.DEV) {
+      if (IS_MOCK) {
         throw new Error("MOCK SIGNIN ERROR");
         // console.log("MOCK SIGNIN", userid, password);
         // return {
@@ -82,6 +84,11 @@ export const useSignout = () => {
 export const useCheckUserId = () => {
   return useMutation({
     mutationFn: async (userid: string) => {
+      if (IS_MOCK) {
+        return {
+          available: true,
+        };
+      }
       const res = await apiClient.auth.checkId.query({
         body: { userid },
       });

@@ -15,6 +15,8 @@ export function CustomForm<TValues>({
   onSubmit,
   isValid,
   submitLabel,
+  onCancel,
+  cancelLabel,
 }: CustomFormProps<TValues>) {
   const [passwordVisible, setPasswordVisible] = useState<
     Record<string, boolean>
@@ -241,16 +243,27 @@ export function CustomForm<TValues>({
               .map((item) => renderField(item))}
           </FieldGroup>
 
-          <Button
-            type="submit"
-            className={`mt-4 h-15 w-full text-body1 rounded-xl transition-colors duration-200 ${
-              isValid
-                ? "bg-emphasis fc-secondary hover:bg-emphasis"
-                : "bg-gray-300 fc-gray-500 hover:bg-gray-300"
-            }`}
-          >
-            {submitLabel}
-          </Button>
+          <Column>
+            <Button
+              type="submit"
+              className={`mt-4 h-15 w-full text-body1 rounded-xl transition-colors duration-200 ${
+                isValid
+                  ? "bg-emphasis fc-secondary hover:bg-emphasis"
+                  : "bg-gray-300 fc-gray-500 hover:bg-gray-300"
+              }`}
+            >
+              {submitLabel}
+            </Button>
+            {cancelLabel && onCancel && (
+              <Button
+                type="button"
+                onClick={onCancel}
+                className="mt-2 h-15 w-full text-body1 bg-white fc-gray-700 rounded-xl border border-gray-200 hover:bg-gray-300"
+              >
+                {cancelLabel}
+              </Button>
+            )}
+          </Column>
         </FieldSet>
       </Column>
     </form>

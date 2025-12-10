@@ -32,4 +32,6 @@ export type CustomFormProps<TValues> = {
   onSubmit: () => void;
   isValid: boolean;
   submitLabel: string;
+  cancelLabel?: string;
+  onCancel?: () => void;
 };

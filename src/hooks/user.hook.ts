@@ -12,9 +12,7 @@ export const useUser = () => {
     queryFn: async () => {
       if (IS_MOCK) {
         return {
-          body: {
-            username: "홍길동",
-          },
+          username: "홍길동",
         };
       }
 

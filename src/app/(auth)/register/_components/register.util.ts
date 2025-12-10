@@ -1,4 +1,4 @@
-import { RegisterFormValues, RegisterStep } from "./register.type";
+import { RegisterFormValues } from "./register.type";
 
 export const validateStep1 = (
   values: RegisterFormValues,
@@ -16,25 +16,17 @@ export const validateStep1 = (
     isPasswordValid &&
     passwordConfirm !== "" &&
     password === passwordConfirm &&
-    values.nickname.trim() !== "" &&
-    values.email.trim() !== ""
+    values.nickname.trim() !== ""
   );
-};
-
-export const validateStep2 = (values: RegisterFormValues) => {
-  return values.tags.themes.length > 0 && values.tags.moods.length > 0;
 };
 
 export const generateRegisterUtil = (
   values: RegisterFormValues,
-  isUserIdAvailable: boolean | null,
-  step: RegisterStep
+  isUserIdAvailable: boolean | null
 ) => {
   const isStep1Valid = validateStep1(values, isUserIdAvailable);
-  const isStep2Valid = validateStep2(values);
-  const isValid = step === 1 ? isStep1Valid : isStep2Valid;
-
-  return { isStep1Valid, isStep2Valid, isValid };
+  const isValid = isStep1Valid;
+  return { isStep1Valid, isValid };
 };
 
 export const mapSliderToActivityIndex = (value: number) => {
