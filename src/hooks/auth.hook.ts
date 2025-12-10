@@ -22,12 +22,10 @@ export const useSignin = () => {
       if (IS_MOCK) {
         throw new Error("MOCK SIGNIN ERROR");
         // console.log("MOCK SIGNIN", userid, password);
-        // return {
-        //   body: {
+        // return
         //     token: "token",
         //     name: `MOCK-${userid}`,
         //     id: 9999,
-        //   },
         // };
       }
       const res = await apiClient.auth.signin.query({
@@ -38,14 +36,11 @@ export const useSignin = () => {
 
     onSuccess: (res) => {
       setAccessToken(res.accessToken);
-
       queryClient.invalidateQueries({ queryKey: ["me"] });
-      toast.success(`${res.body.userid}님의 새로운 여정을 환영합니다. `);
     },
 
     onError: () => {
       clear();
-      toast.error("아이디와 비밀번호를 정확히 입력해 주세요.");
     },
   });
 };

@@ -1,5 +1,5 @@
 import { CustomForm } from "@/components/ui/form/custom-form";
-import { useCheckUserId, useRegister } from "@/hooks/auth.hook";
+import { useCheckUserId, useRegister, useSignin } from "@/hooks/auth.hook";
 import { useState } from "react";
 import { toast } from "sonner";
 import { RegisterFormValues, RegisterStep } from "./register.type";
@@ -11,9 +11,11 @@ import RegisterStepHeader from "./register-step-header";
 import { Border } from "@/components/ui/border";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
+import WelcomeModal from "./welcome-modal";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
+  const [openWelcomeModal, setOpenWelcomeModal] = useState(false);
   const [step, setStep] = useState<RegisterStep>(1);
   const [values, setValues] = useState<RegisterFormValues>({
     userId: "",
@@ -38,6 +40,7 @@ const RegisterForm = () => {
 
   const checkId = useCheckUserId();
   const registerUser = useRegister();
+  const signin = useSignin();
 
   const { isStep1Valid } = generateRegisterUtil(values, isUserIdAvailable);
 
@@ -49,7 +52,12 @@ const RegisterForm = () => {
     }
     registerUser.mutate(values, {
       onSuccess: () => {
-        navigate({ to: ROUTES.Welcome });
+        setOpenWelcomeModal(true);
+        signin.mutate({
+          userid: values.userId,
+          password: values.password,
+          remember: false,
+        });
       },
     });
   };
@@ -110,6 +118,14 @@ const RegisterForm = () => {
           } else {
             setStep(1);
           }
+        }}
+      />
+      <WelcomeModal
+        open={openWelcomeModal}
+        onOpenChange={setOpenWelcomeModal}
+        onClose={() => {
+          setOpenWelcomeModal(false);
+          navigate({ to: ROUTES.Home });
         }}
       />
     </Column>
