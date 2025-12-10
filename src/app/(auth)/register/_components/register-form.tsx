@@ -49,7 +49,7 @@ const RegisterForm = () => {
     }
     registerUser.mutate(values, {
       onSuccess: () => {
-        navigate({ to: ROUTES.Welcome });
+        navigate({ to: ROUTES.Home });
       },
     });
   };
