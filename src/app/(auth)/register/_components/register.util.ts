@@ -1,5 +1,4 @@
-import { RegisterStep } from "./register-form";
-import { RegisterFormValues } from "./register.type";
+import { RegisterFormValues, RegisterStep } from "./register.type";
 
 export const validateStep1 = (
   values: RegisterFormValues,
@@ -23,11 +22,7 @@ export const validateStep1 = (
 };
 
 export const validateStep2 = (values: RegisterFormValues) => {
-  return (
-    values.travelStyle.length > 0 &&
-    values.companions.length > 0 &&
-    values.budgetRange !== ""
-  );
+  return values.tags.themes.length > 0 && values.tags.moods.length > 0;
 };
 
 export const generateRegisterUtil = (
@@ -40,4 +35,11 @@ export const generateRegisterUtil = (
   const isValid = step === 1 ? isStep1Valid : isStep2Valid;
 
   return { isStep1Valid, isStep2Valid, isValid };
+};
+
+export const mapSliderToActivityIndex = (value: number) => {
+  if (value < 25) return 0;
+  if (value < 50) return 1;
+  if (value < 75) return 2;
+  return 3;
 };

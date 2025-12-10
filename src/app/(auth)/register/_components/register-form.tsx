@@ -2,12 +2,13 @@ import { CustomForm } from "@/components/ui/form/custom-form";
 import { useCheckUserId } from "@/hooks/auth.hook";
 import { useState } from "react";
 import { toast } from "sonner";
-import { RegisterFormValues } from "./register.type";
+import { RegisterFormValues, RegisterStep } from "./register.type";
 import { generateRegisterUtil } from "./register.util";
 import { generateRegisterStep1Items } from "./step1-item.form";
 import { generateRegisterStep2Items } from "./step2-item.form";
-
-export type RegisterStep = 1 | 2;
+import Column from "@/components/common/container/column";
+import RegisterStepHeader from "./register-step-header";
+import { Border } from "@/components/ui/border";
 
 const RegisterForm = () => {
   const [step, setStep] = useState<RegisterStep>(1);
@@ -17,9 +18,15 @@ const RegisterForm = () => {
     passwordConfirm: "",
     nickname: "",
     email: "",
-    travelStyle: [],
-    companions: [],
-    budgetRange: "",
+    tags: {
+      themes: [],
+      moods: [],
+      dislikes: [],
+      foods: [],
+      cafes: [],
+      activity: null,
+      activityValue: 50,
+    },
   });
 
   const [isUserIdAvailable, setIsUserIdAvailable] = useState<boolean | null>(
@@ -72,7 +79,7 @@ const RegisterForm = () => {
   };
 
   const buildItems = () => {
-    if (step === 1) {
+    if (step === 2) {
       return generateRegisterStep1Items({
         values,
         setValues,
@@ -88,14 +95,18 @@ const RegisterForm = () => {
   const items = buildItems();
 
   return (
-    <CustomForm
-      values={values}
-      setValues={setValues}
-      items={items}
-      onSubmit={handleSubmit}
-      isValid={isValid}
-      submitLabel={step === 1 ? "다음" : "회원가입"}
-    />
+    <Column className="max-w-md">
+      <RegisterStepHeader step={2} />
+      <Border className="mt-4 mb-4 " />
+      <CustomForm
+        values={values}
+        setValues={setValues}
+        items={items}
+        onSubmit={handleSubmit}
+        isValid={isValid}
+        submitLabel={step === 1 ? "다음" : "회원가입"}
+      />
+    </Column>
   );
 };
 
