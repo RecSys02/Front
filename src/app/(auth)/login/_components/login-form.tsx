@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useSignin } from "@/hooks/auth.hook";
 import { CustomForm } from "@/components/ui/form/custom-form";
 import { generateLoginFormItems, LoginFormValues } from "./login-item.form";
+import { Surface } from "@/components/ui/surface";
 
 const LoginForm = () => {
   const [values, setValues] = useState<LoginFormValues>({
@@ -26,14 +27,16 @@ const LoginForm = () => {
   const items = generateLoginFormItems(values, setValues);
 
   return (
-    <CustomForm<LoginFormValues>
-      values={values}
-      setValues={setValues}
-      items={items}
-      onSubmit={handleSubmit}
-      isValid={isValid}
-      submitLabel="로그인"
-    />
+    <Surface className="max-w-md w-full">
+      <CustomForm<LoginFormValues>
+        values={values}
+        setValues={setValues}
+        items={items}
+        onSubmit={handleSubmit}
+        isValid={isValid}
+        submitLabel="로그인"
+      />
+    </Surface>
   );
 };
 

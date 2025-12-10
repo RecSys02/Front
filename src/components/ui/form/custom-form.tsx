@@ -233,7 +233,7 @@ export function CustomForm<TValues>({
 
   return (
     <form onSubmit={handleSubmit}>
-      <Column className="w-120 max-w-md">
+      <Column className="w-full">
         <FieldSet>
           <FieldGroup>
             {items
