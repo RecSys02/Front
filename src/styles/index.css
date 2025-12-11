@@ -16,10 +16,18 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: 'Pretendard', Arial;
-
   white-space: nowrap;
-  overflow-x: auto; 
+  overflow-x: auto;
+  scrollbar-gutter: stable;
+  overflow-y: auto !important;
 }
+
+[data-scroll-locked][data-scroll-locked] {
+  overflow-y: scroll !important;
+  overflow-x: scroll !important;
+  margin-right: 0 !important;
+}
+
 
 :root {
    /* Brand Colors */
@@ -122,16 +130,6 @@ body {
 
 }
 
-@custom-variant pc {
-  @media (min-width: 1024px) {
-    @slot;
-  }
-}
-@custom-variant mobile {
-  @media (max-width: 1023px) {
-    @slot;
-  }
-}
 
 @layer utilities {
   /* =======================
