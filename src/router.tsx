@@ -8,7 +8,7 @@ import Home from "./app/(home)/page";
 import LoginPage from "./app/(auth)/login/page";
 import RegisterPage from "./app/(auth)/register/page";
 import { PATH, ROUTES } from "./constants/routes";
-import ModelLayout from "./app/(model)/layout";
+import ModelLayout from "./app/(model)/moel.layout";
 import ModelPickPage from "./app/(model)/pick/page";
 
 const rootRoute = createRootRoute({ component: App });

@@ -15,7 +15,7 @@ export const HEADER_MENU_ITEMS: HeaderMenuConfig[] = [
   {
     key: "AI",
     menuName: "AI",
-    routeLink: ROUTES.Model,
+    routeLink: ROUTES.ModelPick,
   },
   {
     key: "HOT",
