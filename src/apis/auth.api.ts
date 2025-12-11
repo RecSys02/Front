@@ -57,7 +57,7 @@ export const authApi = c.router(
       method: "POST",
       path: "/register",
       body: z.object({
-        uesrid: z.string(),
+        userid: z.string(),
         password: z.string(),
         nickname: z.string(),
         email: z.string().optional(),
