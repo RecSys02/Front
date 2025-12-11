@@ -1,9 +1,9 @@
 import Row from "@/components/common/container/row";
 import { Locale } from "@/constants/types";
-import { CircleUserRoundIcon } from "lucide-react";
-import LocaleChanger from "./locale-changer";
+import LocaleMenu from "./locale-menu";
 import { useUser } from "@/hooks/user.hook";
 import LoginContainer from "./login-container";
+import UserMenu from "./user-menu";
 
 type Props = {
   locale: Locale;
@@ -15,17 +15,11 @@ const ETCContainer = ({ locale, onChange }: Props) => {
   const userName = data?.username;
 
   return (
-    <Row className="w-113 items-center gap-5">
-      <Row className="w-full flex justify-end">
-        <LoginContainer userName={userName} isLoggedIn={isSuccess} />
-      </Row>
-      <Row className="flex items-center gap-2 h-9 w-40">
-        <CircleUserRoundIcon
-          className="h-9 w-auto"
-          color="gray"
-          strokeWidth={1.0}
-        />
-        <LocaleChanger locale={locale} onChange={onChange} />
+    <Row className="w-fit items-center h-9 justify-end">
+      <LoginContainer userName={userName} isLoggedIn={isSuccess} />
+      <Row className="gap-2 pl-4 items-center">
+        <UserMenu isLoggedIn={false} />
+        <LocaleMenu locale={locale} onChange={onChange} />
       </Row>
     </Row>
   );

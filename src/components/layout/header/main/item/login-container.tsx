@@ -1,4 +1,5 @@
 import Body from "@/components/text/body";
+import { ROUTES } from "@/constants/routes";
 import { Link } from "@tanstack/react-router";
 
 type Props = {
@@ -10,13 +11,14 @@ const LoginContainer = ({ userName, isLoggedIn }: Props) => {
   if (!isLoggedIn) {
     return (
       <Link
-        to="/login"
+        to={ROUTES.Login}
         className="text-body2 md:text-body2 fc-gray-600 hover:fc-gray-900"
       >
         로그인
       </Link>
     );
   }
+
   if (isLoggedIn) {
     return (
       <>
