@@ -24,7 +24,7 @@ const BannerCarousel = ({ setIdx, setApi }: Props) => {
         containScroll: "trimSnaps",
         duration: 40,
       }}
-      className="w-238 pt-20 overflow-visible"
+      className="w-242 pt-20 overflow-visible"
     >
       <CarouselContent className="-ml-4">
         {BANNER_ITEMS.map((banner, i) => (

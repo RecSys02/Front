@@ -19,7 +19,7 @@ const MainNav = ({ locale, onChange }: Props) => {
   const { pathname } = useLocation();
 
   return (
-    <Row className="w-full items-center h-22.5 px-15 mobile:hidden">
+    <Row className="w-full items-center h-22.5 px-15">
       <LogoContainer />
       <Row className="gap-10">
         <NavigationMenu className="flex-1 flex justify-center">
