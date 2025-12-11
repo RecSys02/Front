@@ -8,6 +8,7 @@ import Column from "@/components/common/container/column";
 import { Button } from "@/components/common/button/button";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
+import { useSignout } from "@/hooks/auth.hook";
 
 type UserMenuProps = {
   isLoggedIn: boolean;
@@ -15,6 +16,8 @@ type UserMenuProps = {
 
 const UserMenu = ({ isLoggedIn }: UserMenuProps) => {
   const navigate = useNavigate();
+  const signout = useSignout();
+
   return (
     <HoverCard openDelay={0} closeDelay={120}>
       <HoverCardTrigger asChild>
@@ -46,7 +49,7 @@ const UserMenu = ({ isLoggedIn }: UserMenuProps) => {
           </Button>
           {isLoggedIn ? (
             <Button
-              onClick={() => navigate({ to: ROUTES.Login })}
+              onClick={() => signout.mutate()}
               className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer text-center text-red-500"
             >
               로그아웃
@@ -58,7 +61,7 @@ const UserMenu = ({ isLoggedIn }: UserMenuProps) => {
             >
               로그인
             </Button>
-          )}{" "}
+          )}
         </Column>
       </HoverCardContent>
     </HoverCard>
