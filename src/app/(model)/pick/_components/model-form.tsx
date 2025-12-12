@@ -19,7 +19,10 @@ const ModelForm = () => {
     address: null,
     budget: "",
   });
-  const isValid = values.budget !== "";
+  const isValid =
+    values.region.province !== "" &&
+    values.region.district !== "" &&
+    values.budget !== "";
 
   const handleSubmit = () => {
     if (!isValid) return;
