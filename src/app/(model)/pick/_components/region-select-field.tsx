@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { KOREA_REGIONS } from "@/constants/types";
+import { KOREA_REGIONS } from "@/constants/region.type";
 
 export type Region = {
   province: string;
@@ -27,7 +27,7 @@ const RegionSelectField = ({ value, onChange }: Props) => {
   return (
     <Column className="gap-2">
       <Row className="gap-2">
-        <div className="flex-1">
+        <Column className="flex-1">
           <Select
             value={value.province || undefined}
             onValueChange={(province) => {
@@ -49,9 +49,9 @@ const RegionSelectField = ({ value, onChange }: Props) => {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </Column>
 
-        <div className="flex-1">
+        <Column className="flex-1">
           <Select
             value={value.district || undefined}
             onValueChange={(district) => onChange({ ...value, district })}
@@ -68,12 +68,8 @@ const RegionSelectField = ({ value, onChange }: Props) => {
               ))}
             </SelectContent>
           </Select>
-        </div>
+        </Column>
       </Row>
-
-      {!value.province && (
-        <div className="text-xs text-gray-500">먼저 시/도를 선택해 주세요</div>
-      )}
     </Column>
   );
 };

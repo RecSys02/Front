@@ -64,7 +64,7 @@ const NeighborhoodTagInput = ({
             <Badge
               key={t}
               variant="outline"
-              className="flex items-center gap-1 px-3 py-1 text-xs bg-lime-100 text-lime-700 border-lime-200"
+              className="flex items-center gap-1 px-3 py-1 text-xs bg-lime-50 text-lime-700 border-lime-200"
             >
               #{t}
               <button

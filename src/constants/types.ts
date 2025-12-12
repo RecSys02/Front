@@ -48,7 +48,18 @@ export const ACTIVITY_TAGS = [
   "오래 걷는것 선호",
 ];
 
+export const COMPANION_TAGS = [
+  "친구",
+  "연인",
+  "가족",
+  "부모님",
+  "아이동반",
+  "반려동물",
+] as const;
+
+export const BUDGET_TAGS = ["저렴", "중간", "중간~높음", "높음"] as const;
+
 export const TAG_COLORS = [
   "bg-emphasis text-white border-transparent",
-  "bg-lime-100 text-lime-700 border-lime-200",
+  "bg-lime-50 text-lime-700 border-lime-200",
 ];
