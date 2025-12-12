@@ -42,7 +42,10 @@ const RegisterForm = () => {
   const registerUser = useRegister();
   const signin = useSignin();
 
-  const { isStep1Valid } = generateRegisterUtil(values, isUserIdAvailable);
+  const { isStep1Valid, isValid } = generateRegisterUtil(
+    values,
+    isUserIdAvailable
+  );
 
   const handleSubmit = () => {
     if (step === 1) {
@@ -109,7 +112,7 @@ const RegisterForm = () => {
         setValues={setValues}
         items={items}
         onSubmit={handleSubmit}
-        isValid={true}
+        isValid={isValid}
         submitLabel={step === 1 ? "다음" : "회원가입"}
         cancelLabel={step === 1 ? "취소" : "이전"}
         onCancel={() => {
