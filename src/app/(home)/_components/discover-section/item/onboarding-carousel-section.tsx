@@ -37,7 +37,7 @@ const OnboardingCarouselSection = () => {
         />
       </Row>
       <Button className="w-58 h-17 rounded-[36px] bg-primary">
-        <Link to={ROUTES.ModelPick} className="text-[24px] text-white">
+        <Link to={ROUTES.ModelContext} className="text-[24px] text-white">
           추천 받기
         </Link>
       </Button>

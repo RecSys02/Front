@@ -1,16 +1,16 @@
 export const PATH = {
   MODEL_BASE: "model",
-  MODEL_PICK: "pick",
+  MODEL_CONTEXT: "context",
   MODEL_SPOT: "spot",
-  MODEL_ROUTE: "route",
+  MODEL_RESULT: "result",
 } as const;
 
 const ROUTES = {
   Home: "/",
   Model: `/${PATH.MODEL_BASE}`,
-  ModelPick: `/${PATH.MODEL_BASE}/${PATH.MODEL_PICK}`,
+  ModelContext: `/${PATH.MODEL_BASE}/${PATH.MODEL_CONTEXT}`,
   ModelSpot: `/${PATH.MODEL_BASE}/${PATH.MODEL_SPOT}`,
-  ModelRoute: `/${PATH.MODEL_BASE}/${PATH.MODEL_ROUTE}`,
+  ModelResult: `/${PATH.MODEL_BASE}/${PATH.MODEL_RESULT}`,
   Hot: "/hot",
   Plan: "/plan",
   Register: "/register",

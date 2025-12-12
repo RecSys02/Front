@@ -9,7 +9,7 @@ import LoginPage from "./app/(auth)/login/page";
 import RegisterPage from "./app/(auth)/register/page";
 import { PATH, ROUTES } from "./constants/routes";
 import ModelLayout from "./app/(model)/moel.layout";
-import ModelPickPage from "./app/(model)/pick/page";
+import ModelContextPage from "./app/(model)/context/page";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -37,10 +37,10 @@ const modelRoute = createRoute({
   component: ModelLayout,
 });
 
-const modelPickRoute = createRoute({
+const modelContextRoute = createRoute({
   getParentRoute: () => modelRoute,
-  path: PATH.MODEL_PICK,
-  component: ModelPickPage,
+  path: PATH.MODEL_CONTEXT,
+  component: ModelContextPage,
 });
 
 // const modelSpotRoute = createRoute({
@@ -56,7 +56,7 @@ const modelPickRoute = createRoute({
 // });
 
 const modelTree = modelRoute.addChildren([
-  modelPickRoute,
+  modelContextRoute,
   // modelSpotRoute,
   // modelRouteRoute,
 ]);
