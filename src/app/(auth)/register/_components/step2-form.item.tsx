@@ -11,7 +11,7 @@ import {
   ACTIVITY_TAGS,
 } from "@/constants/types";
 import Column from "@/components/common/container/column";
-import { PreferenceSection } from "./preference-section";
+import { PreferenceSection } from "../../../../components/ui/preference-section";
 import { Slider } from "@/components/ui/slider";
 import { mapSliderToActivityIndex } from "./register.util";
 

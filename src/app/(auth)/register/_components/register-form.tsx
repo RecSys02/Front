@@ -4,8 +4,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { RegisterFormValues, RegisterStep } from "./register.type";
 import { generateRegisterUtil } from "./register.util";
-import { generateRegisterStep1Items } from "./step1-item.form";
-import { generateRegisterStep2Items } from "./step2-item.form";
+import { generateRegisterStep1Items } from "./step1-form.item";
+import { generateRegisterStep2Items } from "./step2-form.item";
 import Column from "@/components/common/container/column";
 import RegisterStepHeader from "./register-step-header";
 import { Border } from "@/components/ui/border";
@@ -42,7 +42,10 @@ const RegisterForm = () => {
   const registerUser = useRegister();
   const signin = useSignin();
 
-  const { isStep1Valid } = generateRegisterUtil(values, isUserIdAvailable);
+  const { isStep1Valid, isValid } = generateRegisterUtil(
+    values,
+    isUserIdAvailable
+  );
 
   const handleSubmit = () => {
     if (step === 1) {
@@ -109,7 +112,7 @@ const RegisterForm = () => {
         setValues={setValues}
         items={items}
         onSubmit={handleSubmit}
-        isValid={true}
+        isValid={isValid}
         submitLabel={step === 1 ? "다음" : "회원가입"}
         cancelLabel={step === 1 ? "취소" : "이전"}
         onCancel={() => {
