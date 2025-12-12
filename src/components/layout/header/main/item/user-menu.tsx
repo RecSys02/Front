@@ -26,7 +26,11 @@ const UserMenu = ({ isLoggedIn }: UserMenuProps) => {
             className="h-7.5 w-auto"
             color="gray"
             strokeWidth={1.0}
-            onClick={() => navigate({ to: ROUTES.My })}
+            onClick={
+              isLoggedIn
+                ? () => navigate({ to: ROUTES.My })
+                : () => navigate({ to: ROUTES.Login })
+            }
           />
         </div>
       </HoverCardTrigger>
