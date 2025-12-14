@@ -13,9 +13,7 @@ export type Route = {
   dateLabel: string;
   items: {
     time: string;
-    title: string;
     placeId?: string;
-    memo?: string;
   }[];
 };
 

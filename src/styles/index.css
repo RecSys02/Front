@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@custom-variant dark (&:is(.dark *));
+
 @font-face {
   font-family: "Pretendard";
   src: url("/fonts/PretendardVariable.woff2") format("woff2-variations");
@@ -27,7 +29,6 @@ body {
   overflow-x: scroll !important;
   margin-right: 0 !important;
 }
-
 
 :root {
    /* Brand Colors */
@@ -129,7 +130,6 @@ body {
   --sidebar-ring: oklch(0.708 0 0);
 
 }
-
 
 @layer utilities {
   /* =======================
