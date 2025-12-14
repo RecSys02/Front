@@ -10,6 +10,7 @@ import RegisterPage from "./app/(auth)/register/page";
 import { PATH, ROUTES } from "./constants/routes";
 import ModelLayout from "./app/(model)/moel.layout";
 import ModelContextPage from "./app/(model)/context/page";
+import ModelSpotPage from "./app/(model)/spot/page";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -43,11 +44,11 @@ const modelContextRoute = createRoute({
   component: ModelContextPage,
 });
 
-// const modelSpotRoute = createRoute({
-//   getParentRoute: () => modelRoute,
-//   path: PATH.MODEL_SPOT,,
-//   component: ModelSpotPage,
-// });
+const modelSpotRoute = createRoute({
+  getParentRoute: () => modelRoute,
+  path: PATH.MODEL_SPOT,
+  component: ModelSpotPage,
+});
 
 // const modelRouteRoute = createRoute({
 //   getParentRoute: () => modelRoute,
@@ -57,7 +58,7 @@ const modelContextRoute = createRoute({
 
 const modelTree = modelRoute.addChildren([
   modelContextRoute,
-  // modelSpotRoute,
+  modelSpotRoute,
   // modelRouteRoute,
 ]);
 
