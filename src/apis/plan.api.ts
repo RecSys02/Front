@@ -53,6 +53,19 @@ export const planApi = c.router(
         ),
       },
     },
+    plan: {
+      method: "GET",
+      path: "/plan",
+      responses: {
+        200: z.array(
+          z.object({
+            id: z.string(),
+            title: z.string(),
+            schedules: z.array(activitySchema),
+              })
+            ),
+          },
+    },
   },
   {
     pathPrefix: "/plan",
