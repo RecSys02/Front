@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useModelContext } from "../model.hook";
-import type { Place } from "../model.type";
+import type { Place, PlaceCategory } from "../model.type";
 import {
   Sidebar,
   SidebarInset,
@@ -22,16 +22,25 @@ const ModelSpotPage = () => {
     setActivePlaceId,
   } = useModelContext();
 
-  const places = firstResult?.places ?? [];
-
-  const activePlace =
-    places.find((p) => p.id === activePlaceId) ??
-    selectedPlaces[selectedPlaces.length - 1] ??
-    places[0] ??
-    null;
-
+  const [category, setCategory] = useState<PlaceCategory>("attraction");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const detailOpen = sidebarOpen && !!activePlaceId;
+  const [overlayOpen, setOverlayOpen] = useState(false);
+
+  const places: Place[] = useMemo(() => {
+    const categorized = firstResult ?? {
+      attractions: [],
+      restaurants: [],
+      cafes: [],
+    };
+
+    if (category === "attraction") return categorized.attractions;
+    if (category === "restaurant") return categorized.restaurants;
+    return categorized.cafes;
+  }, [category, firstResult]);
+
+  const activePlace = places.find((p) => p.id === activePlaceId) ?? null;
+
+  const detailOpen = sidebarOpen && overlayOpen && !!activePlace;
 
   const panelRight = detailOpen
     ? "right-200"
@@ -48,27 +57,34 @@ const ModelSpotPage = () => {
   };
 
   const [history, setHistory] = useState<string[]>([]);
-  const [ignorePush, setIgnorePush] = useState(false);
+  const isBackNavRef = useRef(false);
 
-  const focusPlace = (id: string | null) => {
-    if (ignorePush) {
-      setIgnorePush(false);
+  const focusPlace = (id: string | null, openOverlay?: boolean) => {
+    const openingOverlay = !!openOverlay && !overlayOpen;
+
+    if (isBackNavRef.current) {
+      isBackNavRef.current = false;
       setActivePlaceId(id);
+      if (openOverlay && id) setOverlayOpen(true);
       return;
     }
 
-    if (activePlaceId) {
+    if (openingOverlay) {
+      setHistory([]);
+    } else if (overlayOpen && activePlaceId && activePlaceId !== id) {
       setHistory((prev) =>
         prev[prev.length - 1] === activePlaceId
           ? prev
           : [...prev, activePlaceId]
       );
     }
+
     setActivePlaceId(id);
+    if (openOverlay && id) setOverlayOpen(true);
   };
 
   const handleMarkerClick = (id: string) => {
-    focusPlace(id);
+    focusPlace(id, true);
     const p = places.find((x) => x.id === id);
     if (p) toggleSelectPlace(p);
   };
@@ -84,24 +100,44 @@ const ModelSpotPage = () => {
   const hasPrev = history.length > 0;
 
   const goPrev = () => {
-    setHistory((prev) => {
-      const next = [...prev];
-      const prevId = next.pop();
+    const prevId = history[history.length - 1];
+    if (!prevId) {
+      isBackNavRef.current = false;
+      setOverlayOpen(false);
+      setHistory([]);
+      return;
+    }
 
-      if (!prevId) {
-        focusPlace(null);
-        return [];
-      }
-
-      setIgnorePush(true);
-      setActivePlaceId(prevId);
-      return next;
-    });
+    setHistory((prev) => prev.slice(0, -1));
+    isBackNavRef.current = true;
+    setActivePlaceId(prevId);
+    setOverlayOpen(true);
   };
 
   const closeOverlayOnly = () => {
+    isBackNavRef.current = false;
+    setOverlayOpen(false);
     setHistory([]);
-    setActivePlaceId(null);
+  };
+
+  const handleChangeCategory = (c: PlaceCategory) => {
+    const categorized = firstResult ?? {
+      attractions: [],
+      restaurants: [],
+      cafes: [],
+    };
+
+    const nextPlaces =
+      c === "attraction"
+        ? categorized.attractions
+        : c === "restaurant"
+        ? categorized.restaurants
+        : categorized.cafes;
+
+    setCategory(c);
+    setActivePlaceId(nextPlaces[0]?.id ?? null);
+    setOverlayOpen(false);
+    setHistory([]);
   };
 
   return (
@@ -113,10 +149,12 @@ const ModelSpotPage = () => {
           className={cn("border-l z-40 [--sidebar-width:400px]")}
         >
           <SpotSidebar
+            category={category}
+            onChangeCategory={handleChangeCategory}
             places={places}
-            activePlaceId={activePlaceId}
             selectedPlaces={selectedPlaces}
-            onFocusPlace={focusPlace}
+            activePlaceId={activePlaceId}
+            onFocusPlace={(id) => focusPlace(id, true)}
           />
         </Sidebar>
 
@@ -143,11 +181,14 @@ const ModelSpotPage = () => {
           <SpotMap
             places={places}
             activePlace={activePlace}
-            selectedPlaces={selectedPlaces}
             sidebarOpen={sidebarOpen}
             detailOpen={detailOpen}
             onMarkerClick={handleMarkerClick}
-            onMapClick={() => focusPlace(null)}
+            onMapClick={() => {
+              setOverlayOpen(false);
+              setHistory([]);
+              setActivePlaceId(null);
+            }}
           />
 
           <SpotDetailOverlay

@@ -7,6 +7,7 @@ import { Button } from "@/components/common/button/button";
 import Body from "@/components/text/body";
 import { ImageBox } from "@/components/common/container/image-box";
 import { Badge } from "@/components/ui/badge/badge";
+import Placeholder from "@/assets/banners/placeholder.png";
 
 type Props = {
   place: Place;
@@ -27,12 +28,10 @@ const SpotSidebarItem = ({ place, isActive, isSelected, onFocus }: Props) => {
       )}
     >
       <Row className="items-center gap-3">
-        {place.picture && (
-          <ImageBox
-            src={place.picture}
-            className="size-20 shrink-0 rounded-md object-cover"
-          />
-        )}
+        <ImageBox
+          src={place.picture ? place.picture : Placeholder}
+          className="size-20 shrink-0 rounded-md object-cover"
+        />
 
         <Column className="min-w-0 flex-1 gap-1">
           <Body variant="body2" className="font-semibold line-clamp-1">

@@ -1,11 +1,14 @@
 import Column from "@/components/common/container/column";
-import type { Place } from "../../model.type";
+import type { Place, PlaceCategory } from "../../model.type";
 import { SidebarHeader, SidebarContent } from "@/components/ui/sidebar/sidebar";
 import SpotSidebarItem from "./spot-sidebar-item";
 import Body from "@/components/text/body";
 import { Border } from "@/components/ui/border";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 type Props = {
+  category: PlaceCategory;
+  onChangeCategory: (c: PlaceCategory) => void;
   places: Place[];
   selectedPlaces: Place[];
   activePlaceId: string | null;
@@ -13,6 +16,8 @@ type Props = {
 };
 
 const SpotSidebar = ({
+  category,
+  onChangeCategory,
   places,
   selectedPlaces,
   activePlaceId,
@@ -20,23 +25,35 @@ const SpotSidebar = ({
 }: Props) => {
   return (
     <>
-      <SidebarHeader className="flex items-center justify-between border-b px-3 py-4 bg-white">
-        <Body className="font-semibold">AI 추천 장소</Body>
+      <SidebarHeader className="border-b px-3 py-4 bg-white">
+        <Column className="gap-3">
+          <Body className="font-semibold text-center">AI 추천 장소</Body>
+
+          <Tabs
+            value={category}
+            onValueChange={(v) => onChangeCategory(v as PlaceCategory)}
+          >
+            <TabsList className="w-full grid grid-cols-3">
+              <TabsTrigger value="attraction">관광지</TabsTrigger>
+              <TabsTrigger value="restaurant">음식점</TabsTrigger>
+              <TabsTrigger value="cafe">카페</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </Column>
       </SidebarHeader>
 
-      <SidebarContent className="h-full  bg-white">
+      <SidebarContent className="h-full bg-white">
         <Column className="gap-0">
           {places.map((p, idx) => (
-            <>
+            <Column key={p.id} className="gap-0">
               <SpotSidebarItem
-                key={p.id}
                 place={p}
                 isActive={p.id === activePlaceId}
                 isSelected={selectedPlaces.some((x) => x.id === p.id)}
-                onFocus={onFocusPlace}
+                onFocus={(id) => onFocusPlace(id)}
               />
               {idx < places.length - 1 && <Border />}
-            </>
+            </Column>
           ))}
         </Column>
       </SidebarContent>

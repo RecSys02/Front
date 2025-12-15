@@ -4,7 +4,6 @@ import type { Place } from "../../model.type";
 
 type Props = {
   places: Place[];
-  selectedPlaces: Place[];
   activePlace: Place | null;
   onMarkerClick?: (id: string) => void;
   onMapClick?: () => void;
@@ -39,13 +38,14 @@ const SpotMap = ({
     mapRef.current = new window.kakao.maps.Map(containerRef.current, options);
 
     if (onMapClick) {
-      window.kakao.maps.event.addListener(mapRef.current, "click", () =>
-        onMapClick()
-      );
+      window.kakao.maps.event.addListener(mapRef.current, "click", () => {
+        onMapClick();
+      });
     }
   }, [onMapClick]);
 
   useEffect(() => {
+    if (!window.kakao?.maps) return;
     const map = mapRef.current;
     if (!map) return;
 
@@ -58,9 +58,9 @@ const SpotMap = ({
       marker.setMap(map);
 
       if (onMarkerClick) {
-        window.kakao.maps.event.addListener(marker, "click", () =>
-          onMarkerClick(p.id)
-        );
+        window.kakao.maps.event.addListener(marker, "click", () => {
+          onMarkerClick(p.id);
+        });
       }
 
       markersRef.current.push(marker);
@@ -68,6 +68,7 @@ const SpotMap = ({
   }, [places, onMarkerClick]);
 
   useEffect(() => {
+    if (!window.kakao?.maps) return;
     const map = mapRef.current;
     if (!map) return;
 
