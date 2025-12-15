@@ -1,10 +1,12 @@
 import Row from "@/components/common/container/row";
+import Column from "@/components/common/container/column";
 import type { Place } from "../../model.type";
 import { cn } from "@/libs/utils";
 import { Check } from "lucide-react";
 import { Button } from "@/components/common/button/button";
 import Body from "@/components/text/body";
-import Column from "@/components/common/container/column";
+import { ImageBox } from "@/components/common/container/image-box";
+import { Badge } from "@/components/ui/badge/badge";
 
 type Props = {
   place: Place;
@@ -19,18 +21,49 @@ const SpotSidebarItem = ({ place, isActive, isSelected, onFocus }: Props) => {
       type="button"
       onClick={() => onFocus(place.id)}
       className={cn(
-        "w-full rounded-lg border px-3 py-2 text-left transition h-30",
-        isActive ? "bg-accent/30 border-accent" : "hover:bg-muted/50"
+        "w-full rounded-none border-0 px-3 py-3 text-left transition h-30",
+        "hover:bg-muted/50",
+        isActive && "bg-surface"
       )}
     >
-      <Row className="items-center justify-between">
-        <Column className="min-w-0">
-          <Body variant="body3" className="font-medium line-clamp-1">
+      <Row className="items-center gap-3">
+        {place.picture && (
+          <ImageBox
+            src={place.picture}
+            className="size-20 shrink-0 rounded-md object-cover"
+          />
+        )}
+
+        <Column className="min-w-0 flex-1 gap-1">
+          <Body variant="body2" className="font-semibold line-clamp-1">
             {place.name}
           </Body>
+
+          {place.description && (
+            <Body
+              variant="body3"
+              className="fc-gray-500 overflow-hidden text-ellipsis whitespace-nowrap"
+            >
+              {place.description}
+            </Body>
+          )}
+
+          {place.keywords && place.keywords.length > 0 && (
+            <Row className="mt-1 gap-1 flex-wrap">
+              {place.keywords.slice(0, 3).map((keyword) => (
+                <Badge
+                  key={keyword}
+                  variant="secondary"
+                  className="px-2 py-0.5 text-[11px] font-normal"
+                >
+                  #{keyword}
+                </Badge>
+              ))}
+            </Row>
+          )}
         </Column>
 
-        {isSelected && <Check className="h-5 w-5 text-green-600" />}
+        {isSelected && <Check className="h-5 w-5 shrink-0 text-green-600" />}
       </Row>
     </Button>
   );

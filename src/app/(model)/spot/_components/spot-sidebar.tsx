@@ -3,6 +3,7 @@ import type { Place } from "../../model.type";
 import { SidebarHeader, SidebarContent } from "@/components/ui/sidebar/sidebar";
 import SpotSidebarItem from "./spot-sidebar-item";
 import Body from "@/components/text/body";
+import { Border } from "@/components/ui/border";
 
 type Props = {
   places: Place[];
@@ -19,22 +20,23 @@ const SpotSidebar = ({
 }: Props) => {
   return (
     <>
-      <SidebarHeader className="flex items-center justify-between border-b px-3 py-4">
-        <Body variant="body1" className="font-semibold">
-          AI 추천 장소
-        </Body>
+      <SidebarHeader className="flex items-center justify-between border-b px-3 py-4 bg-white">
+        <Body className="font-semibold">AI 추천 장소</Body>
       </SidebarHeader>
 
-      <SidebarContent className="h-full p-2">
-        <Column className="gap-2">
-          {places.map((p) => (
-            <SpotSidebarItem
-              key={p.id}
-              place={p}
-              isActive={p.id === activePlaceId}
-              isSelected={selectedPlaces.some((x) => x.id === p.id)}
-              onFocus={(id) => onFocusPlace(id)}
-            />
+      <SidebarContent className="h-full  bg-white">
+        <Column className="gap-0">
+          {places.map((p, idx) => (
+            <>
+              <SpotSidebarItem
+                key={p.id}
+                place={p}
+                isActive={p.id === activePlaceId}
+                isSelected={selectedPlaces.some((x) => x.id === p.id)}
+                onFocus={onFocusPlace}
+              />
+              {idx < places.length - 1 && <Border />}
+            </>
           ))}
         </Column>
       </SidebarContent>

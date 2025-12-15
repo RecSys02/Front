@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import Column from "@/components/common/container/column";
 import type { Place } from "../../model.type";
-import Subtitle from "@/components/text/subtitle";
 
 type Props = {
   places: Place[];
@@ -96,12 +95,6 @@ const SpotMap = ({
 
   return (
     <Column className="relative h-full w-full">
-      <Column className="absolute left-0 top-0 z-10 w-full border-b bg-white/80 backdrop-blur px-6 py-4">
-        <Subtitle variant="subtitle3" className="font-bold fc-gray-800">
-          여행지 선택
-        </Subtitle>
-      </Column>
-
       <div ref={containerRef} className="h-full w-full" />
     </Column>
   );

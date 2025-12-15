@@ -3,6 +3,10 @@ export type Place = {
   name: string;
   latitude: number;
   longitude: number;
+  address: string;
+  description: string;
+  picture?: string;
+  keywords?: string[];
 };
 
 export type ModelResult = {

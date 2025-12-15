@@ -30,6 +30,15 @@ const ModelSpotPage = () => {
     places[0] ??
     null;
 
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const detailOpen = sidebarOpen && !!activePlaceId;
+
+  const panelRight = detailOpen
+    ? "right-200"
+    : sidebarOpen
+    ? "right-100"
+    : "right-0";
+
   const toggleSelectPlace = (p: Place) => {
     setSelectedPlaces((prev) =>
       prev.some((x) => x.id === p.id)
@@ -38,14 +47,62 @@ const ModelSpotPage = () => {
     );
   };
 
-  const handleMarkerClick = (id: string) => {
+  const [history, setHistory] = useState<string[]>([]);
+  const [ignorePush, setIgnorePush] = useState(false);
+
+  const focusPlace = (id: string | null) => {
+    if (ignorePush) {
+      setIgnorePush(false);
+      setActivePlaceId(id);
+      return;
+    }
+
+    if (activePlaceId) {
+      setHistory((prev) =>
+        prev[prev.length - 1] === activePlaceId
+          ? prev
+          : [...prev, activePlaceId]
+      );
+    }
     setActivePlaceId(id);
+  };
+
+  const handleMarkerClick = (id: string) => {
+    focusPlace(id);
     const p = places.find((x) => x.id === id);
     if (p) toggleSelectPlace(p);
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const detailOpen = sidebarOpen && !!activePlaceId;
+  const handleTogglePanel = () => {
+    if (detailOpen) {
+      setSidebarOpen(false);
+      return;
+    }
+    setSidebarOpen((v) => !v);
+  };
+
+  const hasPrev = history.length > 0;
+
+  const goPrev = () => {
+    setHistory((prev) => {
+      const next = [...prev];
+      const prevId = next.pop();
+
+      if (!prevId) {
+        focusPlace(null);
+        return [];
+      }
+
+      setIgnorePush(true);
+      setActivePlaceId(prevId);
+      return next;
+    });
+  };
+
+  const closeOverlayOnly = () => {
+    setHistory([]);
+    setActivePlaceId(null);
+  };
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -59,30 +116,29 @@ const ModelSpotPage = () => {
             places={places}
             activePlaceId={activePlaceId}
             selectedPlaces={selectedPlaces}
-            onFocusPlace={setActivePlaceId}
+            onFocusPlace={focusPlace}
           />
         </Sidebar>
 
         <SidebarInset className="relative h-full w-full">
-          {!detailOpen && (
-            <Button
-              type="button"
-              variant="secondary"
-              size="icon"
-              onClick={() => setSidebarOpen((v) => !v)}
-              className={cn(
-                "absolute z-50 top-1/2 -translate-y-1/2 rounded-full shadow-md",
-                "transition-[right,opacity,transform] duration-300 ease-in-out",
-                sidebarOpen ? "right-[400px]" : "right-3"
-              )}
-            >
-              {sidebarOpen ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
-            </Button>
-          )}
+          <Button
+            type="button"
+            size="icon"
+            onClick={handleTogglePanel}
+            className={cn(
+              "absolute z-50 top-1/2 -translate-y-1/2",
+              "h-12 w-8 rounded-l-md rounded-r-none",
+              "bg-white border border-r-0",
+              "transition-opacity duration-150 ease-out",
+              panelRight
+            )}
+          >
+            {!sidebarOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
 
           <SpotMap
             places={places}
@@ -91,7 +147,7 @@ const ModelSpotPage = () => {
             sidebarOpen={sidebarOpen}
             detailOpen={detailOpen}
             onMarkerClick={handleMarkerClick}
-            onMapClick={() => setActivePlaceId(null)}
+            onMapClick={() => focusPlace(null)}
           />
 
           <SpotDetailOverlay
@@ -101,8 +157,10 @@ const ModelSpotPage = () => {
               !!activePlace &&
               selectedPlaces.some((x) => x.id === activePlace.id)
             }
-            onClose={() => setActivePlaceId(null)}
+            onClose={closeOverlayOnly}
             onToggleSelect={() => activePlace && toggleSelectPlace(activePlace)}
+            hasPrev={hasPrev}
+            onPrev={goPrev}
           />
         </SidebarInset>
       </div>
