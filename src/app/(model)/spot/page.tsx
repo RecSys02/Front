@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useModelContext } from "../model.hook";
 import type { Place, PlaceCategory } from "../model.type";
 import {
@@ -12,6 +12,8 @@ import SpotSidebar from "./_components/spot-sidebar";
 import { ChevronRight, ChevronLeft } from "lucide-react";
 import { cn } from "@/libs/utils";
 import { Button } from "@/components/common/button/button";
+import { useSpotOverlayNav } from "./_lib/spot.hook";
+import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
 
 const ModelSpotPage = () => {
   const {
@@ -24,21 +26,23 @@ const ModelSpotPage = () => {
 
   const [category, setCategory] = useState<PlaceCategory>("attraction");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [overlayOpen, setOverlayOpen] = useState(false);
 
-  const places: Place[] = useMemo(() => {
-    const categorized = firstResult ?? {
-      attractions: [],
-      restaurants: [],
-      cafes: [],
-    };
-
-    if (category === "attraction") return categorized.attractions;
-    if (category === "restaurant") return categorized.restaurants;
-    return categorized.cafes;
-  }, [category, firstResult]);
+  const places: Place[] = useMemo(
+    () => getPlacesByCategory(firstResult, category),
+    [firstResult, category]
+  );
 
   const activePlace = places.find((p) => p.id === activePlaceId) ?? null;
+
+  const {
+    overlayOpen,
+    setOverlayOpen,
+    setHistory,
+    hasPrev,
+    focusPlace,
+    goPrev,
+    closeOverlayOnly,
+  } = useSpotOverlayNav({ activePlaceId, setActivePlaceId });
 
   const detailOpen = sidebarOpen && overlayOpen && !!activePlace;
 
@@ -49,38 +53,7 @@ const ModelSpotPage = () => {
     : "right-0";
 
   const toggleSelectPlace = (p: Place) => {
-    setSelectedPlaces((prev) =>
-      prev.some((x) => x.id === p.id)
-        ? prev.filter((x) => x.id !== p.id)
-        : [...prev, p]
-    );
-  };
-
-  const [history, setHistory] = useState<string[]>([]);
-  const isBackNavRef = useRef(false);
-
-  const focusPlace = (id: string | null, openOverlay?: boolean) => {
-    const openingOverlay = !!openOverlay && !overlayOpen;
-
-    if (isBackNavRef.current) {
-      isBackNavRef.current = false;
-      setActivePlaceId(id);
-      if (openOverlay && id) setOverlayOpen(true);
-      return;
-    }
-
-    if (openingOverlay) {
-      setHistory([]);
-    } else if (overlayOpen && activePlaceId && activePlaceId !== id) {
-      setHistory((prev) =>
-        prev[prev.length - 1] === activePlaceId
-          ? prev
-          : [...prev, activePlaceId]
-      );
-    }
-
-    setActivePlaceId(id);
-    if (openOverlay && id) setOverlayOpen(true);
+    setSelectedPlaces((prev) => toggleSelectedPlaces(prev, p));
   };
 
   const handleMarkerClick = (id: string) => {
@@ -97,43 +70,8 @@ const ModelSpotPage = () => {
     setSidebarOpen((v) => !v);
   };
 
-  const hasPrev = history.length > 0;
-
-  const goPrev = () => {
-    const prevId = history[history.length - 1];
-    if (!prevId) {
-      isBackNavRef.current = false;
-      setOverlayOpen(false);
-      setHistory([]);
-      return;
-    }
-
-    setHistory((prev) => prev.slice(0, -1));
-    isBackNavRef.current = true;
-    setActivePlaceId(prevId);
-    setOverlayOpen(true);
-  };
-
-  const closeOverlayOnly = () => {
-    isBackNavRef.current = false;
-    setOverlayOpen(false);
-    setHistory([]);
-  };
-
   const handleChangeCategory = (c: PlaceCategory) => {
-    const categorized = firstResult ?? {
-      attractions: [],
-      restaurants: [],
-      cafes: [],
-    };
-
-    const nextPlaces =
-      c === "attraction"
-        ? categorized.attractions
-        : c === "restaurant"
-        ? categorized.restaurants
-        : categorized.cafes;
-
+    const nextPlaces = getPlacesByCategory(firstResult, c);
     setCategory(c);
     setActivePlaceId(nextPlaces[0]?.id ?? null);
     setOverlayOpen(false);
