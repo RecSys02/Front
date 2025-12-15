@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 import { RefreshCcw,ImagePlus,LockOpen,UserRoundMinus } from "lucide-react";
 
-type ProfileDropdownConfig = {
+type ProfileDropdownProps = {
   name: string;
   icon: ReactNode;
   routeLink?: string;
 };
 
-export const PROFILE_DROPDOWN_ITEMS: ProfileDropdownConfig[] = [
+export const PROFILE_DROPDOWN_ITEMS: ProfileDropdownProps[] = [
   {
     name: "닉네임 변경",
     icon: <RefreshCcw/>,

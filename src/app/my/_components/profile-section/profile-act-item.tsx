@@ -4,14 +4,14 @@ import Tag from "@/assets/tag.svg?react";
 import Question from "@/assets/question.svg?react";
 //import { IconName } from "lucide-react";
 
-type ProfileActConfig = {
+type ProfileActProps = {
   key: "PLAN" | "TAG" | "QNA" | "QNA2" ;
   act: string;
   icon: ReactNode;
   routeLink: string;
 };
 
-export const PROFILE_ACT_ITEMS: ProfileActConfig[] = [
+export const PROFILE_ACT_ITEMS: ProfileActProps[] = [
   {
     key: "PLAN",
     act: "저장된 플랜",
