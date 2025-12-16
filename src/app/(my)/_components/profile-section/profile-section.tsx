@@ -1,8 +1,8 @@
 import Column from "@/components/common/container/column"
-import Profile from "./profile"
-import ProfileActContainer from "./profile-act-container";
+import Profile from "./item/profile"
+import ProfileActContainer from "./item/profile-act-container";
 
-const ProfileContainer = () => {
+const ProfileSection = () => {
     return(
         <Column className="w-fit h-fit gap-10">
             <Profile />
@@ -11,4 +11,4 @@ const ProfileContainer = () => {
     )
 }
 
-export default ProfileContainer;
+export default ProfileSection;

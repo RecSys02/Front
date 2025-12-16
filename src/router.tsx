@@ -11,7 +11,7 @@ import { PATH, ROUTES } from "./constants/routes";
 import ModelLayout from "./app/(model)/moel.layout";
 import ModelContextPage from "./app/(model)/context/page";
 import ModelSpotPage from "./app/(model)/spot/page";
-import Mypage from "./app/my/page";
+import Mypage from "./app/(my)/page";
 
 const rootRoute = createRootRoute({ component: App });
 
