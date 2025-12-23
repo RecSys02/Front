@@ -9,16 +9,14 @@ type Props = {
 
 const getInitialActivePlaceId = (r: ModelResult | null) => {
   if (!r) return null;
-  return r.attractions[0]?.id ?? r.restaurants[0]?.id ?? r.cafes[0]?.id ?? null;
+  return r.tourspots[0]?.id ?? r.restaurants[0]?.id ?? r.cafes[0]?.id ?? null;
 };
 
 export const ModelProvider = ({ children }: Props) => {
-  const [firstResult, setFirstResult] = useState<ModelResult | null>(
-    MOCK_MODEL_RESULT
-  );
+  const [firstResult, setFirstResult] = useState<ModelResult | null>(null);
   const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([]);
   const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
-  const [activePlaceId, setActivePlaceId] = useState<string | null>(() =>
+  const [activePlaceId, setActivePlaceId] = useState<number | null>(() =>
     getInitialActivePlaceId(MOCK_MODEL_RESULT)
   );
 

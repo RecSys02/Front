@@ -2,8 +2,8 @@ import { useRef, useState } from "react";
 import { appendHistory } from "./spot.util";
 
 type UseSpotOverlayNavParams = {
-  activePlaceId: string | null;
-  setActivePlaceId: (id: string | null) => void;
+  activePlaceId: number | null;
+  setActivePlaceId: (id: number | null) => void;
 };
 
 export const useSpotOverlayNav = ({
@@ -11,27 +11,27 @@ export const useSpotOverlayNav = ({
   setActivePlaceId,
 }: UseSpotOverlayNavParams) => {
   const [overlayOpen, setOverlayOpen] = useState(false);
-  const [history, setHistory] = useState<string[]>([]);
+  const [history, setHistory] = useState<number[]>([]);
   const isBackNavRef = useRef(false);
 
-  const focusPlace = (id: string | null, openOverlay?: boolean) => {
+  const focusPlace = (id: number | null, openOverlay?: boolean) => {
     const openingOverlay = !!openOverlay && !overlayOpen;
 
     if (isBackNavRef.current) {
       isBackNavRef.current = false;
       setActivePlaceId(id);
-      if (openOverlay && id) setOverlayOpen(true);
+      if (openOverlay && id !== null) setOverlayOpen(true);
       return;
     }
 
     if (openingOverlay) {
       setHistory([]);
-    } else if (overlayOpen && activePlaceId && activePlaceId !== id) {
+    } else if (overlayOpen && activePlaceId !== null && activePlaceId !== id) {
       setHistory((prev) => appendHistory(prev, activePlaceId));
     }
 
     setActivePlaceId(id);
-    if (openOverlay && id) setOverlayOpen(true);
+    if (openOverlay && id !== null) setOverlayOpen(true);
   };
 
   const closeOverlayOnly = () => {
@@ -42,7 +42,8 @@ export const useSpotOverlayNav = ({
 
   const goPrev = () => {
     const prevId = history[history.length - 1];
-    if (!prevId) {
+
+    if (prevId === undefined) {
       isBackNavRef.current = false;
       setOverlayOpen(false);
       setHistory([]);

@@ -1,19 +1,22 @@
-export type PlaceCategory = "attraction" | "restaurant" | "cafe";
+export type PlaceCategory = "tourspot" | "restaurant" | "cafe";
 
 export type Place = {
-  id: string;
+  id: number;
   name: string;
   latitude: number;
   longitude: number;
   address: string;
-  category: PlaceCategory;
   description: string;
-  picture?: string;
+  duration: string;
+  images?: string[];
   keywords?: string[];
+  category: PlaceCategory;
+  province: string;
+  placeId: number;
 };
 
 export type ModelResult = {
-  attractions: Place[];
+  tourspots: Place[];
   restaurants: Place[];
   cafes: Place[];
 };

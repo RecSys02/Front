@@ -5,14 +5,15 @@ import SpotSidebarItem from "./spot-sidebar-item";
 import Body from "@/components/text/body";
 import { Border } from "@/components/ui/border";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/common/button/button";
 
 type Props = {
   category: PlaceCategory;
   onChangeCategory: (c: PlaceCategory) => void;
   places: Place[];
   selectedPlaces: Place[];
-  activePlaceId: string | null;
-  onFocusPlace: (id: string | null) => void;
+  activePlaceId: number | null;
+  onFocusPlace: (id: number | null) => void;
 };
 
 const SpotSidebar = ({
@@ -34,7 +35,7 @@ const SpotSidebar = ({
             onValueChange={(v) => onChangeCategory(v as PlaceCategory)}
           >
             <TabsList className="w-full grid grid-cols-3">
-              <TabsTrigger value="attraction">관광지</TabsTrigger>
+              <TabsTrigger value="tourspot">관광지</TabsTrigger>
               <TabsTrigger value="restaurant">음식점</TabsTrigger>
               <TabsTrigger value="cafe">카페</TabsTrigger>
             </TabsList>
@@ -56,6 +57,8 @@ const SpotSidebar = ({
             </Column>
           ))}
         </Column>
+
+        <Button className="fixed bottom-0">ss</Button>
       </SidebarContent>
     </>
   );

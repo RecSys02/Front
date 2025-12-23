@@ -9,8 +9,8 @@ export type ModelContextValue = {
   selectedPlaces: Place[];
   setSelectedPlaces: Dispatch<SetStateAction<Place[]>>;
 
-  activePlaceId: string | null;
-  setActivePlaceId: Dispatch<SetStateAction<string | null>>;
+  activePlaceId: number | null;
+  setActivePlaceId: Dispatch<SetStateAction<number | null>>;
 
   routeResult: RouteResult | null;
   setRouteResult: Dispatch<SetStateAction<RouteResult | null>>;

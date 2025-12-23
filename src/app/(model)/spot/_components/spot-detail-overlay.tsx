@@ -50,7 +50,7 @@ const SpotDetailOverlay = ({
     >
       <Column className="relative w-full h-100 overflow-hidden">
         <ImageBox
-          src={place.picture ? place.picture : Placeholder}
+          src={place.images ? place.images[0] : Placeholder}
           className="w-full h-full"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/35 to-transparent" />

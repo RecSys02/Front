@@ -5,7 +5,7 @@ import type { Place } from "../../model.type";
 type Props = {
   places: Place[];
   activePlace: Place | null;
-  onMarkerClick?: (id: string) => void;
+  onMarkerClick?: (id: number) => void;
   onMapClick?: () => void;
   sidebarOpen?: boolean;
   detailOpen?: boolean;

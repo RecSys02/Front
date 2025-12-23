@@ -13,7 +13,7 @@ type Props = {
   place: Place;
   isActive: boolean;
   isSelected: boolean;
-  onFocus: (id: string) => void;
+  onFocus: (id: number) => void;
 };
 
 const SpotSidebarItem = ({ place, isActive, isSelected, onFocus }: Props) => {
@@ -29,7 +29,7 @@ const SpotSidebarItem = ({ place, isActive, isSelected, onFocus }: Props) => {
     >
       <Row className="items-center gap-3">
         <ImageBox
-          src={place.picture ? place.picture : Placeholder}
+          src={place.images ? place.images[0] : Placeholder}
           className="size-20 shrink-0 rounded-md object-cover"
         />
 

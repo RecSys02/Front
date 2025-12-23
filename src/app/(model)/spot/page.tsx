@@ -24,7 +24,7 @@ const ModelSpotPage = () => {
     setActivePlaceId,
   } = useModelContext();
 
-  const [category, setCategory] = useState<PlaceCategory>("attraction");
+  const [category, setCategory] = useState<PlaceCategory>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const places: Place[] = useMemo(
@@ -56,7 +56,7 @@ const ModelSpotPage = () => {
     setSelectedPlaces((prev) => toggleSelectedPlaces(prev, p));
   };
 
-  const handleMarkerClick = (id: string) => {
+  const handleMarkerClick = (id: number) => {
     focusPlace(id, true);
     const p = places.find((x) => x.id === id);
     if (p) toggleSelectPlace(p);
