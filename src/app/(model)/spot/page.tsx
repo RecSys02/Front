@@ -17,7 +17,7 @@ import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
 
 const ModelSpotPage = () => {
   const {
-    firstResult,
+    modelResult,
     selectedPlaces,
     setSelectedPlaces,
     activePlaceId,
@@ -28,10 +28,9 @@ const ModelSpotPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const places: Place[] = useMemo(
-    () => getPlacesByCategory(firstResult, category),
-    [firstResult, category]
+    () => getPlacesByCategory(modelResult, category),
+    [modelResult, category]
   );
-
   const activePlace = places.find((p) => p.id === activePlaceId) ?? null;
 
   const {
@@ -71,7 +70,7 @@ const ModelSpotPage = () => {
   };
 
   const handleChangeCategory = (c: PlaceCategory) => {
-    const nextPlaces = getPlacesByCategory(firstResult, c);
+    const nextPlaces = getPlacesByCategory(modelResult, c);
     setCategory(c);
     setActivePlaceId(nextPlaces[0]?.id ?? null);
     setOverlayOpen(false);

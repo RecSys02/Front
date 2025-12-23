@@ -1,30 +1,32 @@
 import { useState, ReactNode } from "react";
 import { ModelResult, Place, RouteResult } from "./model.type";
 import { ModelContext } from "./model.context";
-import { MOCK_MODEL_RESULT } from "./spot/_components/model.mock";
+import { ModelStore } from "@/stores/model.store";
 
 type Props = {
   children: ReactNode;
 };
 
-const getInitialActivePlaceId = (r: ModelResult | null) => {
-  if (!r) return null;
-  return r.tourspots[0]?.id ?? r.restaurants[0]?.id ?? r.cafes[0]?.id ?? null;
-};
-
 export const ModelProvider = ({ children }: Props) => {
-  const [firstResult, setFirstResult] = useState<ModelResult | null>(null);
+  const [modelResult, setModelResultState] = useState<ModelResult | null>(() =>
+    ModelStore.actions.getModelResult()
+  );
   const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([]);
   const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
-  const [activePlaceId, setActivePlaceId] = useState<number | null>(() =>
-    getInitialActivePlaceId(MOCK_MODEL_RESULT)
-  );
+  const [activePlaceId, setActivePlaceId] = useState<number | null>(null);
+
+  const setModelResult = (result: ModelResult | null) => {
+    if (result) ModelStore.actions.setModelResult(result);
+    else ModelStore.actions.clear();
+
+    setModelResultState(result);
+  };
 
   return (
     <ModelContext.Provider
       value={{
-        firstResult,
-        setFirstResult,
+        modelResult,
+        setModelResult,
         selectedPlaces,
         setSelectedPlaces,
         routeResult,

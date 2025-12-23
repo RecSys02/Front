@@ -3,8 +3,8 @@ import type { Dispatch, SetStateAction } from "react";
 import { ModelResult, Place, RouteResult } from "./model.type";
 
 export type ModelContextValue = {
-  firstResult: ModelResult | null;
-  setFirstResult: Dispatch<SetStateAction<ModelResult | null>>;
+  modelResult: ModelResult | null;
+  setModelResult: (result: ModelResult | null) => void;
 
   selectedPlaces: Place[];
   setSelectedPlaces: Dispatch<SetStateAction<Place[]>>;
@@ -15,7 +15,6 @@ export type ModelContextValue = {
   routeResult: RouteResult | null;
   setRouteResult: Dispatch<SetStateAction<RouteResult | null>>;
 };
-
 export const ModelContext = createContext<ModelContextValue | undefined>(
   undefined
 );
