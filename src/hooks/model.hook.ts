@@ -1,6 +1,7 @@
 import { apiClient } from "@/apis/client/ts-rest/client";
 import { MOCK_MODEL_RESULT } from "@/app/(model)/spot/_components/model.mock";
 import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -17,6 +18,7 @@ type ModelArgs = {
   selectedPlaces?: PlaceRef[];
   historyPlaces?: PlaceRef[];
 };
+
 export const useModel = () => {
   return useMutation({
     mutationFn: async ({
@@ -41,6 +43,9 @@ export const useModel = () => {
       });
 
       return res.body;
+    },
+    onError: () => {
+      toast.error("추천 생성 중 오류가 발생했습니다.");
     },
   });
 };
