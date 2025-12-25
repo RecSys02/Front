@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useModelContext } from "../model.hook";
-import type { Place, PlaceCategory } from "../model.type";
+import type { Place, TabValue } from "../model.type";
 import {
   Sidebar,
   SidebarInset,
@@ -22,21 +22,34 @@ const ModelSpotPage = () => {
     setSelectedPlaces,
     activePlaceId,
     setActivePlaceId,
+    historyPlaces,
   } = useModelContext();
 
-  const [category, setCategory] = useState<PlaceCategory>("tourspot");
+  const [tab, setTab] = useState<TabValue>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
-  const places: Place[] = useMemo(
-    () => getPlacesByCategory(modelResult, category),
-    [modelResult, category]
-  );
-  const activePlace = places.find((p) => p.id === activePlaceId) ?? null;
+  const places: Place[] = useMemo(() => {
+    if (tab === "saved") return [];
+    return getPlacesByCategory(modelResult, tab);
+  }, [modelResult, tab]);
+
+  const activePlacePool: Place[] = useMemo(() => {
+    const map = new Map<number, Place>();
+
+    places.forEach((p) => map.set(p.id, p));
+    historyPlaces.forEach((p) => map.set(p.id, p));
+    selectedPlaces.forEach((p) => map.set(p.id, p));
+
+    return Array.from(map.values());
+  }, [places, historyPlaces, selectedPlaces]);
+
+  const activePlace =
+    activePlacePool.find((p) => p.id === activePlaceId) ?? null;
 
   const {
     overlayOpen,
     setOverlayOpen,
-    setHistory,
+    setNavHistory,
     hasPrev,
     focusPlace,
     goPrev,
@@ -57,8 +70,6 @@ const ModelSpotPage = () => {
 
   const handleMarkerClick = (id: number) => {
     focusPlace(id, true);
-    const p = places.find((x) => x.id === id);
-    if (p) toggleSelectPlace(p);
   };
 
   const handleTogglePanel = () => {
@@ -67,14 +78,6 @@ const ModelSpotPage = () => {
       return;
     }
     setSidebarOpen((v) => !v);
-  };
-
-  const handleChangeCategory = (c: PlaceCategory) => {
-    const nextPlaces = getPlacesByCategory(modelResult, c);
-    setCategory(c);
-    setActivePlaceId(nextPlaces[0]?.id ?? null);
-    setOverlayOpen(false);
-    setHistory([]);
   };
 
   return (
@@ -86,12 +89,28 @@ const ModelSpotPage = () => {
           className={cn("border-l z-40 [--sidebar-width:400px]")}
         >
           <SpotSidebar
-            category={category}
-            onChangeCategory={handleChangeCategory}
+            tab={tab}
+            onChangeTab={(next) => {
+              setTab(next);
+              if (next !== "saved") {
+                const nextPlaces = getPlacesByCategory(modelResult, next);
+                setActivePlaceId(nextPlaces[0]?.id ?? null);
+                setOverlayOpen(false);
+                setNavHistory([]);
+              }
+            }}
             places={places}
             selectedPlaces={selectedPlaces}
             activePlaceId={activePlaceId}
             onFocusPlace={(id) => focusPlace(id, true)}
+            onCloseOverlay={() => {
+              setOverlayOpen(false);
+              setNavHistory([]);
+              setActivePlaceId(null);
+            }}
+            onCreatePlan={() => {
+              throw new Error("Function not implemented.");
+            }}
           />
         </Sidebar>
 
@@ -118,12 +137,13 @@ const ModelSpotPage = () => {
           <SpotMap
             places={places}
             activePlace={activePlace}
+            historyPlaces={historyPlaces}
             sidebarOpen={sidebarOpen}
             detailOpen={detailOpen}
             onMarkerClick={handleMarkerClick}
             onMapClick={() => {
               setOverlayOpen(false);
-              setHistory([]);
+              setNavHistory([]);
               setActivePlaceId(null);
             }}
           />
@@ -139,6 +159,7 @@ const ModelSpotPage = () => {
             onToggleSelect={() => activePlace && toggleSelectPlace(activePlace)}
             hasPrev={hasPrev}
             onPrev={goPrev}
+            hideSelectButton={tab == "saved"}
           />
         </SidebarInset>
       </div>

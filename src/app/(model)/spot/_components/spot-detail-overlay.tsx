@@ -17,6 +17,7 @@ type Props = {
   onToggleSelect: () => void;
   onPrev?: () => void;
   hasPrev?: boolean;
+  hideSelectButton?: boolean;
 };
 
 const SpotDetailOverlay = ({
@@ -27,6 +28,7 @@ const SpotDetailOverlay = ({
   onToggleSelect,
   onPrev,
   hasPrev,
+  hideSelectButton,
 }: Props) => {
   if (!place) return null;
 
@@ -108,17 +110,19 @@ const SpotDetailOverlay = ({
           </Body>
         )}
 
-        <Button
-          className={cn(
-            "mt-2 cursor-pointer",
-            isSelected
-              ? "bg-white border border-gray-200"
-              : "bg-emphasis text-white"
-          )}
-          onClick={onToggleSelect}
-        >
-          {isSelected ? "해제" : "추가"}
-        </Button>
+        {!hideSelectButton && (
+          <Button
+            className={cn(
+              "mt-2 cursor-pointer",
+              isSelected
+                ? "bg-white border border-gray-200"
+                : "bg-emphasis text-white"
+            )}
+            onClick={onToggleSelect}
+          >
+            {isSelected ? "해제" : "추가"}
+          </Button>
+        )}
       </Column>
     </Column>
   );
