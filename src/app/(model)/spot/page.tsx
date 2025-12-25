@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useModelContext } from "../model.hook";
-import type { Place } from "../model.type";
+import type { Place, TabValue } from "../model.type";
 import {
   Sidebar,
   SidebarInset,
@@ -10,42 +10,107 @@ import SpotMap from "./_components/spot-map";
 import SpotDetailOverlay from "./_components/spot-detail-overlay";
 import SpotSidebar from "./_components/spot-sidebar";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { cn } from "@/libs/utils";
+import { cn, toYYYYMMDD } from "@/libs/utils";
 import { Button } from "@/components/common/button/button";
+import { useSpotOverlayNav } from "./_lib/spot.hook";
+import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
+import { useCreatePlan } from "@/hooks/plan.hook";
+import { ModelInputStore } from "@/stores/model-input.store";
 
 const ModelSpotPage = () => {
   const {
-    firstResult,
+    modelResult,
     selectedPlaces,
     setSelectedPlaces,
     activePlaceId,
     setActivePlaceId,
+    historyPlaces,
   } = useModelContext();
 
-  const places = firstResult?.places ?? [];
+  const [tab, setTab] = useState<TabValue>("tourspot");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const createPlan = useCreatePlan();
+
+  const places: Place[] = useMemo(() => {
+    if (tab === "saved") return [];
+    return getPlacesByCategory(modelResult, tab);
+  }, [modelResult, tab]);
+
+  const activePlacePool: Place[] = useMemo(() => {
+    const map = new Map<number, Place>();
+
+    places.forEach((p) => map.set(p.id, p));
+    historyPlaces.forEach((p) => map.set(p.id, p));
+    selectedPlaces.forEach((p) => map.set(p.id, p));
+
+    return Array.from(map.values());
+  }, [places, historyPlaces, selectedPlaces]);
 
   const activePlace =
-    places.find((p) => p.id === activePlaceId) ??
-    selectedPlaces[selectedPlaces.length - 1] ??
-    places[0] ??
-    null;
+    activePlacePool.find((p) => p.id === activePlaceId) ?? null;
+
+  const {
+    overlayOpen,
+    setOverlayOpen,
+    setNavHistory,
+    hasPrev,
+    focusPlace,
+    goPrev,
+    closeOverlayOnly,
+  } = useSpotOverlayNav({ activePlaceId, setActivePlaceId });
+
+  const detailOpen = sidebarOpen && overlayOpen && !!activePlace;
+
+  const panelRight = detailOpen
+    ? "right-200"
+    : sidebarOpen
+    ? "right-100"
+    : "right-0";
 
   const toggleSelectPlace = (p: Place) => {
-    setSelectedPlaces((prev) =>
-      prev.some((x) => x.id === p.id)
-        ? prev.filter((x) => x.id !== p.id)
-        : [...prev, p]
-    );
+    setSelectedPlaces((prev) => toggleSelectedPlaces(prev, p));
   };
 
-  const handleMarkerClick = (id: string) => {
-    setActivePlaceId(id);
-    const p = places.find((x) => x.id === id);
-    if (p) toggleSelectPlace(p);
+  const handleMarkerClick = (id: number) => {
+    focusPlace(id, true);
   };
 
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const detailOpen = sidebarOpen && !!activePlaceId;
+  const handleTogglePanel = () => {
+    if (detailOpen) {
+      setSidebarOpen(false);
+      return;
+    }
+    setSidebarOpen((v) => !v);
+  };
+
+  const onCreatePlan = () => {
+    if (createPlan.isPending) return;
+
+    const input = ModelInputStore.actions.getModelInput();
+
+    const from = toYYYYMMDD(input?.dateRange?.from ?? null);
+    const to = toYYYYMMDD(input?.dateRange?.to ?? null);
+
+    if (!from || !to) {
+      return;
+    }
+
+    const merged = new Map<number, Place>();
+    historyPlaces.forEach((p) => merged.set(p.id, p));
+    selectedPlaces.forEach((p) => merged.set(p.id, p));
+
+    const placesPayload = Array.from(merged.values()).map((p) => ({
+      placeId: p.placeId,
+      category: p.category,
+      province: p.province,
+    }));
+
+    createPlan.mutate({
+      from,
+      to,
+      places: placesPayload,
+    });
+  };
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -56,42 +121,61 @@ const ModelSpotPage = () => {
           className={cn("border-l z-40 [--sidebar-width:400px]")}
         >
           <SpotSidebar
+            tab={tab}
+            onChangeTab={(next) => {
+              setTab(next);
+              if (next !== "saved") {
+                const nextPlaces = getPlacesByCategory(modelResult, next);
+                setActivePlaceId(nextPlaces[0]?.id ?? null);
+                setOverlayOpen(false);
+                setNavHistory([]);
+              }
+            }}
             places={places}
-            activePlaceId={activePlaceId}
             selectedPlaces={selectedPlaces}
-            onFocusPlace={setActivePlaceId}
+            activePlaceId={activePlaceId}
+            onFocusPlace={(id) => focusPlace(id, true)}
+            onCloseOverlay={() => {
+              setOverlayOpen(false);
+              setNavHistory([]);
+              setActivePlaceId(null);
+            }}
+            onCreatePlan={onCreatePlan}
           />
         </Sidebar>
 
         <SidebarInset className="relative h-full w-full">
-          {!detailOpen && (
-            <Button
-              type="button"
-              variant="secondary"
-              size="icon"
-              onClick={() => setSidebarOpen((v) => !v)}
-              className={cn(
-                "absolute z-50 top-1/2 -translate-y-1/2 rounded-full shadow-md",
-                "transition-[right,opacity,transform] duration-300 ease-in-out",
-                sidebarOpen ? "right-[400px]" : "right-3"
-              )}
-            >
-              {sidebarOpen ? (
-                <ChevronRight className="h-4 w-4" />
-              ) : (
-                <ChevronLeft className="h-4 w-4" />
-              )}
-            </Button>
-          )}
+          <Button
+            type="button"
+            size="icon"
+            onClick={handleTogglePanel}
+            className={cn(
+              "absolute z-50 top-1/2 -translate-y-1/2",
+              "h-12 w-8 rounded-l-md rounded-r-none",
+              "bg-white border border-r-0",
+              "transition-opacity duration-150 ease-out",
+              panelRight
+            )}
+          >
+            {!sidebarOpen ? (
+              <ChevronLeft className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </Button>
 
           <SpotMap
             places={places}
             activePlace={activePlace}
-            selectedPlaces={selectedPlaces}
+            historyPlaces={historyPlaces}
             sidebarOpen={sidebarOpen}
             detailOpen={detailOpen}
             onMarkerClick={handleMarkerClick}
-            onMapClick={() => setActivePlaceId(null)}
+            onMapClick={() => {
+              setOverlayOpen(false);
+              setNavHistory([]);
+              setActivePlaceId(null);
+            }}
           />
 
           <SpotDetailOverlay
@@ -101,8 +185,11 @@ const ModelSpotPage = () => {
               !!activePlace &&
               selectedPlaces.some((x) => x.id === activePlace.id)
             }
-            onClose={() => setActivePlaceId(null)}
+            onClose={closeOverlayOnly}
             onToggleSelect={() => activePlace && toggleSelectPlace(activePlace)}
+            hasPrev={hasPrev}
+            onPrev={goPrev}
+            hideSelectButton={tab == "saved"}
           />
         </SidebarInset>
       </div>

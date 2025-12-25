@@ -12,20 +12,17 @@ const App = () => {
   }, [pathname]);
 
   const isFullscreen = pathname.startsWith(ROUTES.ModelSpot);
-  if (isFullscreen) {
-    return <Outlet />;
-  }
 
   return (
     <>
       <div className="flex flex-col w-[1920px] mx-auto">
         <div className="min-h-screen flex flex-col w-full mx-auto">
-          <Header />
-          <main className="flex flex-1 flex-col">
+          {!isFullscreen && <Header />}
+          <main className={isFullscreen ? "flex-1" : "flex flex-1 flex-col"}>
             <Outlet />
           </main>
         </div>
-        <Footer />
+        {!isFullscreen && <Footer />}
       </div>
     </>
   );

@@ -7,11 +7,63 @@ import AddressSearchField from "./address-search-field";
 import NeighborhoodTagInput from "./neighborhood-tag-input";
 import RegionSelectField from "./region-select-field";
 import Column from "@/components/common/container/column";
+import DateField from "@/components/ui/date-field";
+import Row from "@/components/common/container/row";
+import Body from "@/components/text/body";
 
 export const generateModelFormItems = (
   values: ModelFormValues,
   setValues: React.Dispatch<React.SetStateAction<ModelFormValues>>
 ): FormItemConfig<ModelFormValues>[] => [
+  {
+    key: "dateRange",
+    children: (
+      <PreferenceSection
+        title="여행 날짜"
+        helper="시작/종료 날짜를 선택해 주세요"
+      >
+        <Row className="items-center w-full gap-4">
+          <DateField
+            className="flex-1 min-w-0 w-full"
+            placeholder="여행 시작일"
+            value={values.dateRange.from}
+            disabledBefore={new Date()}
+            onChange={(from) =>
+              setValues((prev) => ({
+                ...prev,
+                dateRange: {
+                  ...prev.dateRange,
+                  from,
+                  to:
+                    prev.dateRange.to && from && prev.dateRange.to < from
+                      ? null
+                      : prev.dateRange.to,
+                },
+              }))
+            }
+          />
+          <Body variant="body3" className="shirink-0">
+            ~
+          </Body>
+          <DateField
+            className="flex-1 min-w-0 w-full"
+            placeholder="여행 종료일"
+            value={values.dateRange.to}
+            disabledBefore={values.dateRange.from ?? new Date()}
+            onChange={(to) =>
+              setValues((prev) => ({
+                ...prev,
+                dateRange: {
+                  ...prev.dateRange,
+                  to,
+                },
+              }))
+            }
+          />
+        </Row>
+      </PreferenceSection>
+    ),
+  },
   {
     key: "region",
     children: (
@@ -19,6 +71,7 @@ export const generateModelFormItems = (
         <PreferenceSection
           title="여행 지역"
           helper="시/도와 시/군/구는 필수 선택"
+          withDivider
         >
           <RegionSelectField
             value={values.region}

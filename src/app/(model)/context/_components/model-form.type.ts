@@ -9,4 +9,8 @@ export type ModelFormValues = {
   companion?: string[] | null;
   address?: string | null;
   budget: string;
+  dateRange: {
+    from: Date | null;
+    to: Date | null;
+  };
 };

@@ -8,9 +8,10 @@ import Home from "./app/(home)/page";
 import LoginPage from "./app/(auth)/login/page";
 import RegisterPage from "./app/(auth)/register/page";
 import { PATH, ROUTES } from "./constants/routes";
-import ModelLayout from "./app/(model)/moel.layout";
+import ModelLayout from "./app/(model)/model.layout";
 import ModelContextPage from "./app/(model)/context/page";
 import ModelSpotPage from "./app/(model)/spot/page";
+import ModelPlanPage from "./app/(model)/plan/page";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -50,16 +51,16 @@ const modelSpotRoute = createRoute({
   component: ModelSpotPage,
 });
 
-// const modelRouteRoute = createRoute({
-//   getParentRoute: () => modelRoute,
-//   path: PATH.MODEL_ROUTE,
-//   component: ModelRoutePage,
-// });
+const modelPlanRoute = createRoute({
+  getParentRoute: () => modelRoute,
+  path: PATH.MODEL_PLAN,
+  component: ModelPlanPage,
+});
 
 const modelTree = modelRoute.addChildren([
   modelContextRoute,
   modelSpotRoute,
-  // modelRouteRoute,
+  modelPlanRoute,
 ]);
 
 const routeTree = rootRoute.addChildren([

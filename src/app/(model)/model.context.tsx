@@ -1,19 +1,21 @@
 import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { ModelResult, Place, RouteResult } from "./model.type";
+import type { ModelResult, Place } from "./model.type";
 
 export type ModelContextValue = {
-  firstResult: ModelResult | null;
-  setFirstResult: Dispatch<SetStateAction<ModelResult | null>>;
+  modelResult: ModelResult | null;
+  setModelResult: (result: ModelResult | null) => void;
 
   selectedPlaces: Place[];
   setSelectedPlaces: Dispatch<SetStateAction<Place[]>>;
 
-  activePlaceId: string | null;
-  setActivePlaceId: Dispatch<SetStateAction<string | null>>;
+  activePlaceId: number | null;
+  setActivePlaceId: Dispatch<SetStateAction<number | null>>;
 
-  routeResult: RouteResult | null;
-  setRouteResult: Dispatch<SetStateAction<RouteResult | null>>;
+  historyPlaces: Place[];
+  setHistoryPlaces: Dispatch<SetStateAction<Place[]>>;
+
+  resetSession: (opts?: { clearInput?: boolean }) => void;
 };
 
 export const ModelContext = createContext<ModelContextValue | undefined>(

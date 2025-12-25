@@ -1,9 +1,13 @@
 import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
-import { X } from "lucide-react";
+import { ChevronLeft, MapPin, X } from "lucide-react";
 import type { Place } from "../../model.type";
 import Body from "@/components/text/body";
 import { Button } from "@/components/common/button/button";
+import { ImageBox } from "@/components/common/container/image-box";
+import { Badge } from "@/components/ui/badge/badge";
+import Placeholder from "@/assets/banners/placeholder.png";
+import { cn } from "@/libs/utils";
 
 type Props = {
   open: boolean;
@@ -11,6 +15,9 @@ type Props = {
   isSelected: boolean;
   onClose: () => void;
   onToggleSelect: () => void;
+  onPrev?: () => void;
+  hasPrev?: boolean;
+  hideSelectButton?: boolean;
 };
 
 const SpotDetailOverlay = ({
@@ -19,36 +26,103 @@ const SpotDetailOverlay = ({
   isSelected,
   onClose,
   onToggleSelect,
+  onPrev,
+  hasPrev,
+  hideSelectButton,
 }: Props) => {
-  if (!open || !place) return null;
+  if (!place) return null;
+
+  const handlePrev = () => {
+    if (hasPrev && onPrev) {
+      onPrev();
+      return;
+    }
+    onClose();
+  };
 
   return (
-    <Column className="absolute inset-y-0 right-100 w-100 z-30 border-l bg-background backdrop-blur">
-      <Row className="items-center justify-between border-b px-3 py-2">
-        <Body variant="body2" className="font-semibold line-clamp-1 pt-2 pl-2">
+    <Column
+      className={cn(
+        "absolute inset-y-0 w-100 z-30 border-l bg-background",
+        "transition-[right,transform,opacity] duration-300 ease-in-out",
+        open
+          ? "right-100 translate-x-0 opacity-100 pointer-events-auto"
+          : "right-0 translate-x-full opacity-0 pointer-events-none"
+      )}
+    >
+      <Column className="relative w-full h-100 overflow-hidden">
+        <ImageBox
+          src={place.images ? place.images[0] : Placeholder}
+          className="w-full h-full"
+        />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/35 to-transparent" />
+
+        <Row className="absolute left-3 right-3 top-3 w-auto items-center justify-between">
+          <Button
+            type="button"
+            onClick={handlePrev}
+            className="h-9 w-9 grid place-items-center rounded-md bg-transparent p-0"
+          >
+            <ChevronLeft className="size-6 text-white" />
+          </Button>
+
+          <Button
+            type="button"
+            onClick={onClose}
+            className="h-9 w-9 grid place-items-center rounded-md bg-transparent p-0"
+          >
+            <X className="size-6 text-white" />
+          </Button>
+        </Row>
+      </Column>
+
+      <Column className="h-full overflow-y-auto p-4 gap-3">
+        <Body variant="body1" className="font-semibold line-clamp-2">
           {place.name}
         </Body>
-        <Button
-          type="button"
-          variant="ghost"
-          size="icon"
-          onClick={onClose}
-          aria-label="상세 닫기"
-        >
-          <X className="h-4 w-4" />
-        </Button>
-      </Row>
 
-      <Column className="h-full overflow-y-auto p-3 gap-3">
-        <div>장소 디테일</div>
+        {place.address && (
+          <Row className="items-center gap-1">
+            <MapPin className="h-4 w-4 shrink-0 text-gray-400" />
+            <Body variant="body3" className="fc-gray-500 line-clamp-2">
+              {place.address}
+            </Body>
+          </Row>
+        )}
 
-        <Button
-          className="cursor-pointer"
-          variant="outline"
-          onClick={onToggleSelect}
-        >
-          {isSelected ? "선택 해제" : "선택 추가"}
-        </Button>
+        {place.keywords && place.keywords.length > 0 && (
+          <Row className="flex-wrap gap-1">
+            {place.keywords.slice(0, 6).map((k) => (
+              <Badge
+                key={k}
+                variant="secondary"
+                className="px-2 py-0.5 text-[11px] font-normal"
+              >
+                #{k}
+              </Badge>
+            ))}
+          </Row>
+        )}
+
+        {place.description && (
+          <Body variant="body3" className="fc-gray-600 whitespace-pre-line">
+            {place.description}
+          </Body>
+        )}
+
+        {!hideSelectButton && (
+          <Button
+            className={cn(
+              "mt-2 cursor-pointer",
+              isSelected
+                ? "bg-white border border-gray-200"
+                : "bg-emphasis text-white"
+            )}
+            onClick={onToggleSelect}
+          >
+            {isSelected ? "해제" : "추가"}
+          </Button>
+        )}
       </Column>
     </Column>
   );

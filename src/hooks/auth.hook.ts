@@ -41,6 +41,7 @@ export const useSignin = () => {
 
     onError: () => {
       clear();
+      toast.error("로그인 중 오류가 발생했습니다.");
     },
   });
 };
