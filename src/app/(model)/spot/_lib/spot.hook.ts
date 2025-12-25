@@ -11,7 +11,7 @@ export const useSpotOverlayNav = ({
   setActivePlaceId,
 }: UseSpotOverlayNavParams) => {
   const [overlayOpen, setOverlayOpen] = useState(false);
-  const [history, setHistory] = useState<number[]>([]);
+  const [navHistory, setNavHistory] = useState<number[]>([]);
   const isBackNavRef = useRef(false);
 
   const focusPlace = (id: number | null, openOverlay?: boolean) => {
@@ -25,9 +25,9 @@ export const useSpotOverlayNav = ({
     }
 
     if (openingOverlay) {
-      setHistory([]);
+      setNavHistory([]);
     } else if (overlayOpen && activePlaceId !== null && activePlaceId !== id) {
-      setHistory((prev) => appendHistory(prev, activePlaceId));
+      setNavHistory((prev) => appendHistory(prev, activePlaceId));
     }
 
     setActivePlaceId(id);
@@ -37,20 +37,20 @@ export const useSpotOverlayNav = ({
   const closeOverlayOnly = () => {
     isBackNavRef.current = false;
     setOverlayOpen(false);
-    setHistory([]);
+    setNavHistory([]);
   };
 
   const goPrev = () => {
-    const prevId = history[history.length - 1];
+    const prevId = navHistory[navHistory.length - 1];
 
     if (prevId === undefined) {
       isBackNavRef.current = false;
       setOverlayOpen(false);
-      setHistory([]);
+      setNavHistory([]);
       return;
     }
 
-    setHistory((prev) => prev.slice(0, -1));
+    setNavHistory((prev) => prev.slice(0, -1));
     isBackNavRef.current = true;
     setActivePlaceId(prevId);
     setOverlayOpen(true);
@@ -59,9 +59,9 @@ export const useSpotOverlayNav = ({
   return {
     overlayOpen,
     setOverlayOpen,
-    history,
-    setHistory,
-    hasPrev: history.length > 0,
+    navHistory,
+    setNavHistory,
+    hasPrev: navHistory.length > 0,
     focusPlace,
     goPrev,
     closeOverlayOnly,
