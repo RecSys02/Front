@@ -25,6 +25,6 @@ export const HEADER_MENU_ITEMS: HeaderMenuConfig[] = [
   {
     key: "PLAN",
     menuName: "PLAN",
-    routeLink: ROUTES.Plan,
+    routeLink: ROUTES.Plans,
   },
 ];
