@@ -1,25 +1,36 @@
-import { useState, ReactNode } from "react";
-import { ModelResult, Place, RouteResult } from "./model.type";
+import { useState } from "react";
+import type { Place, ModelResult, RouteResult } from "./model.type";
 import { ModelContext } from "./model.context";
 import { ModelStore } from "@/stores/model.store";
+import { ModelHistoryStore } from "@/stores/model-history.store";
 
-type Props = {
-  children: ReactNode;
-};
-
-export const ModelProvider = ({ children }: Props) => {
-  const [modelResult, setModelResultState] = useState<ModelResult | null>(() =>
+export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
+  const [modelResult, _setModelResult] = useState<ModelResult | null>(() =>
     ModelStore.actions.getModelResult()
   );
-  const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([]);
-  const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
-  const [activePlaceId, setActivePlaceId] = useState<number | null>(null);
 
   const setModelResult = (result: ModelResult | null) => {
+    _setModelResult(result);
     if (result) ModelStore.actions.setModelResult(result);
     else ModelStore.actions.clear();
+  };
 
-    setModelResultState(result);
+  const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([]);
+  const [activePlaceId, setActivePlaceId] = useState<number | null>(null);
+  const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
+
+  const [historyPlaces, _setHistoryPlaces] = useState<Place[]>(() =>
+    ModelHistoryStore.actions.getHistoryPlaces()
+  );
+
+  const setHistoryPlaces: React.Dispatch<React.SetStateAction<Place[]>> = (
+    next
+  ) => {
+    _setHistoryPlaces((prev) => {
+      const resolved = typeof next === "function" ? next(prev) : next;
+      ModelHistoryStore.actions.setHistoryPlaces(resolved);
+      return resolved;
+    });
   };
 
   return (
@@ -29,10 +40,12 @@ export const ModelProvider = ({ children }: Props) => {
         setModelResult,
         selectedPlaces,
         setSelectedPlaces,
-        routeResult,
-        setRouteResult,
         activePlaceId,
         setActivePlaceId,
+        routeResult,
+        setRouteResult,
+        historyPlaces,
+        setHistoryPlaces,
       }}
     >
       {children}

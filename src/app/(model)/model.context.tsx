@@ -1,6 +1,6 @@
 import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import { ModelResult, Place, RouteResult } from "./model.type";
+import type { ModelResult, Place, RouteResult } from "./model.type";
 
 export type ModelContextValue = {
   modelResult: ModelResult | null;
@@ -14,7 +14,11 @@ export type ModelContextValue = {
 
   routeResult: RouteResult | null;
   setRouteResult: Dispatch<SetStateAction<RouteResult | null>>;
+
+  historyPlaces: Place[];
+  setHistoryPlaces: Dispatch<SetStateAction<Place[]>>;
 };
+
 export const ModelContext = createContext<ModelContextValue | undefined>(
   undefined
 );
