@@ -24,7 +24,7 @@ const DEFAULT_VALUES: ModelFormValues = {
 const ModelForm = () => {
   const navigate = useNavigate();
   const model = useModel();
-  const { setModelResult } = useModelContext();
+const { setModelResult, resetSession } = useModelContext();
 
   const persisted = ModelInputStore.actions.getModelInput();
 
@@ -48,6 +48,8 @@ const ModelForm = () => {
   const handleSubmit = () => {
     if (!isValid || model.isPending) return;
 
+    resetSession({ clearInput: false });
+
     const region = `${values.region.province} ${values.region.district}`.trim();
 
     model.mutate(
@@ -56,7 +58,7 @@ const ModelForm = () => {
         companion: values.companion ?? undefined,
         budget: values.budget,
         selectedPlaces: [],
-        historyPlaces: undefined,
+        historyPlaces: [],
       },
       {
         onSuccess: (result) => {

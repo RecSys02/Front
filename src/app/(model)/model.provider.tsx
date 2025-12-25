@@ -1,8 +1,9 @@
 import { useState } from "react";
-import type { Place, ModelResult, RouteResult } from "./model.type";
+import type { Place, ModelResult } from "./model.type";
 import { ModelContext } from "./model.context";
 import { ModelStore } from "@/stores/model.store";
 import { ModelHistoryStore } from "@/stores/model-history.store";
+import { ModelInputStore } from "@/stores/model-input.store";
 
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [modelResult, _setModelResult] = useState<ModelResult | null>(() =>
@@ -17,7 +18,6 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
 
   const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([]);
   const [activePlaceId, setActivePlaceId] = useState<number | null>(null);
-  const [routeResult, setRouteResult] = useState<RouteResult | null>(null);
 
   const [historyPlaces, _setHistoryPlaces] = useState<Place[]>(() =>
     ModelHistoryStore.actions.getHistoryPlaces()
@@ -33,6 +33,20 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
     });
   };
 
+  const resetSession = (opts?: { clearInput?: boolean }) => {
+    _setModelResult(null);
+    setSelectedPlaces([]);
+    setActivePlaceId(null);
+    _setHistoryPlaces([]);
+
+    ModelStore.actions.clear();
+    ModelHistoryStore.actions.clearHistoryPlaces();
+
+    if (opts?.clearInput) {
+      ModelInputStore.actions.clearModelInput();
+    }
+  };
+
   return (
     <ModelContext.Provider
       value={{
@@ -42,10 +56,9 @@ export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
         setSelectedPlaces,
         activePlaceId,
         setActivePlaceId,
-        routeResult,
-        setRouteResult,
         historyPlaces,
         setHistoryPlaces,
+        resetSession,
       }}
     >
       {children}
