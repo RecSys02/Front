@@ -10,10 +10,12 @@ import SpotMap from "./_components/spot-map";
 import SpotDetailOverlay from "./_components/spot-detail-overlay";
 import SpotSidebar from "./_components/spot-sidebar";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { cn } from "@/libs/utils";
+import { cn, toYYYYMMDD } from "@/libs/utils";
 import { Button } from "@/components/common/button/button";
 import { useSpotOverlayNav } from "./_lib/spot.hook";
 import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
+import { useCreatePlan } from "@/hooks/plan.hook";
+import { ModelInputStore } from "@/stores/model-input.store";
 
 const ModelSpotPage = () => {
   const {
@@ -27,6 +29,7 @@ const ModelSpotPage = () => {
 
   const [tab, setTab] = useState<TabValue>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const createPlan = useCreatePlan();
 
   const places: Place[] = useMemo(() => {
     if (tab === "saved") return [];
@@ -80,6 +83,35 @@ const ModelSpotPage = () => {
     setSidebarOpen((v) => !v);
   };
 
+  const onCreatePlan = () => {
+    if (createPlan.isPending) return;
+
+    const input = ModelInputStore.actions.getModelInput();
+
+    const from = toYYYYMMDD(input?.dateRange?.from ?? null);
+    const to = toYYYYMMDD(input?.dateRange?.to ?? null);
+
+    if (!from || !to) {
+      return;
+    }
+
+    const merged = new Map<number, Place>();
+    historyPlaces.forEach((p) => merged.set(p.id, p));
+    selectedPlaces.forEach((p) => merged.set(p.id, p));
+
+    const placesPayload = Array.from(merged.values()).map((p) => ({
+      placeId: p.placeId,
+      category: p.category,
+      province: p.province,
+    }));
+
+    createPlan.mutate({
+      from,
+      to,
+      places: placesPayload,
+    });
+  };
+
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
       <div className="h-dvh w-dvw overflow-hidden">
@@ -108,9 +140,7 @@ const ModelSpotPage = () => {
               setNavHistory([]);
               setActivePlaceId(null);
             }}
-            onCreatePlan={() => {
-              throw new Error("Function not implemented.");
-            }}
+            onCreatePlan={onCreatePlan}
           />
         </Sidebar>
 

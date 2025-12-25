@@ -21,15 +21,3 @@ export type ModelResult = {
   restaurants: Place[];
   cafes: Place[];
 };
-
-export type Route = {
-  dateLabel: string;
-  items: {
-    time: string;
-    placeId?: string;
-  }[];
-};
-
-export type RouteResult = {
-  days: Route[];
-};
