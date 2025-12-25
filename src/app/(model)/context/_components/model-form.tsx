@@ -19,12 +19,13 @@ const DEFAULT_VALUES: ModelFormValues = {
   companion: null,
   address: null,
   budget: "",
+  dateRange: { from: null, to: null },
 };
 
 const ModelForm = () => {
   const navigate = useNavigate();
   const model = useModel();
-const { setModelResult, resetSession } = useModelContext();
+  const { setModelResult, resetSession } = useModelContext();
 
   const persisted = ModelInputStore.actions.getModelInput();
 
@@ -43,7 +44,9 @@ const { setModelResult, resetSession } = useModelContext();
   const isValid =
     values.region.province !== "" &&
     values.region.district !== "" &&
-    values.budget !== "";
+    values.budget !== "" &&
+    values.dateRange.from !== null &&
+    values.dateRange.to !== null;
 
   const handleSubmit = () => {
     if (!isValid || model.isPending) return;
