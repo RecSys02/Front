@@ -4,7 +4,7 @@ import axiosInstance from "../axios/axios";
 import { initQueryClient } from "@ts-rest/react-query";
 
 export const apiClient = initQueryClient(contract, {
-  baseUrl: import.meta.env.VITE_PUBLIC_BASE_URL ?? "http://localhost:3000",
+  baseUrl: import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "http://localhost:3000",
   baseHeaders: {},
   fetchApi: async (args: ApiFetcherArgs) => {
     const result = await axiosInstance({

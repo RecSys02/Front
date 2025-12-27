@@ -6,7 +6,7 @@ import axios, {
 import { AuthStore } from "@/stores/auth.store";
 
 const BASE_URL =
-  import.meta.env.VITE_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
 
 const { getAccessToken, setAccessToken, clear } = AuthStore.actions;
 
