@@ -9,12 +9,12 @@ import { toast } from "sonner";
 
 const LoginForm = () => {
   const [values, setValues] = useState<LoginFormValues>({
-    userId: "",
+    email: "",
     password: "",
-    remember: false,
+    //remember: false,
   });
 
-  const isValid = values.userId.trim() !== "" && values.password.trim() !== "";
+  const isValid = values.password.trim() !== "";
   const signin = useSignin();
   const navigate = useNavigate();
 
@@ -22,19 +22,19 @@ const LoginForm = () => {
     if (!isValid) return;
 
     try {
-      const res = await signin.mutateAsync({
-        userid: values.userId,
+      await signin.mutateAsync({
+        email: values.email,
         password: values.password,
-        remember: values.remember,
+        //remember: values.remember,
       });
 
-      toast.success(`${res.userid}님, 환영합니다!`);
+      //toast.success(`${res.userid}님, 환영합니다!`);
       navigate({ to: ROUTES.Home });
     } catch {
       toast.error("아이디와 비밀번호를 정확히 입력해 주세요.");
     }
   };
-  const items = generateLoginFormItems(values, setValues);
+  const items = generateLoginFormItems();
 
   return (
     <Surface className="max-w-md w-full">

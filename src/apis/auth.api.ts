@@ -7,11 +7,11 @@ export const authApi = c.router(
   {
     signin: {
       method: "POST",
-      path: "/token",
+      path: "/login",
       body: z.object({
-        userid: z.string(),
+        email: z.string(),
         password: z.string(),
-        remember: z.boolean().optional(),
+        //remember: z.boolean().optional(),
       }),
       responses: {
         200: z.object({
@@ -55,9 +55,8 @@ export const authApi = c.router(
     },
     register: {
       method: "POST",
-      path: "/register",
+      path: "/join",
       body: z.object({
-        userid: z.string(),
         password: z.string(),
         nickname: z.string(),
         email: z.string().optional(),
