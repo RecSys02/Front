@@ -11,6 +11,7 @@ export const userApi = c.router(
       responses: {
         200: z.object({
           username: z.string(),
+          userimg: z.string(),
         }),
       },
     },

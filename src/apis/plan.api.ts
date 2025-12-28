@@ -4,9 +4,10 @@ import { z } from "zod";
 const c = initContract();
 
 const activitySchema = z.object({
-  id: z.number(),
   name: z.string(),
+  placeId: z.number(),
   category: z.string(),
+  province: z.string(),
   startTime: z.string(),
   endTime: z.string(),
 });
@@ -52,6 +53,23 @@ export const planApi = c.router(
           })
         ),
       },
+    },
+    plan: {
+      method: "GET",
+      path: "/plan",
+      // query: z.object({
+      //   from: z.string(), 
+      //   to: z.string(), 
+      // }),
+      responses: {
+        200: z.array(
+          z.object({
+            id: z.string(),
+            title: z.string(),
+            schedules: z.array(activitySchema),
+              })
+            ),
+          },
     },
   },
   {
