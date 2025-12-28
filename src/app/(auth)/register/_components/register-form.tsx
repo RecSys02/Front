@@ -75,7 +75,7 @@ const RegisterForm = () => {
     setIsUserIdAvailable(null);
 
     checkId.mutate(userid, {
-      onSuccess: (res) => {
+      onSuccess: (res: any) => {
         if (res.available) {
           setIsUserIdAvailable(true);
           toast.success("사용 가능한 아이디입니다.");
