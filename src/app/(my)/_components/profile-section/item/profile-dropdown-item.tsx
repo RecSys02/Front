@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { RefreshCcw,ImagePlus,LockOpen,UserRoundMinus } from "lucide-react";
+import { RefreshCcwIcon, ImagePlusIcon, LockOpenIcon, UserRoundMinusIcon } from "lucide-react";
 
 type ProfileDropdownProps = {
   name: string;
@@ -10,18 +10,18 @@ type ProfileDropdownProps = {
 export const PROFILE_DROPDOWN_ITEMS: ProfileDropdownProps[] = [
   {
     name: "닉네임 변경",
-    icon: <RefreshCcw/>,
+    icon: <RefreshCcwIcon/>,
   },
   {
     name: "프로필 이미지 변경",
-    icon: <ImagePlus/>,
+    icon: <ImagePlusIcon/>,
   },
   {
     name: "로그아웃",
-    icon: <LockOpen/>,
+    icon: <LockOpenIcon/>,
   },
   {
     name: "회원탈퇴",
-    icon: <UserRoundMinus/>,
+    icon: <UserRoundMinusIcon/>,
   },
 ];

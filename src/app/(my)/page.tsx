@@ -7,10 +7,10 @@ import MyPlanSection from "./_components/myplan-section/myplan-section";
 
 const Mypage = () => {
   return(
-    <Column className="items-center">
+    <Column className="items-center pb-20">
       <Column className="w-fit items-start">
         <ProfileHeading />
-        <Row className="justify-center gap-9 pt-10 pb-20">
+        <Row className="justify-center gap-9 pt-6 pb-20">
           <ProfileSection />
           <MyPlanSection/>
         </Row>

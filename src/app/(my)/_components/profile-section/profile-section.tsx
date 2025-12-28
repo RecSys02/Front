@@ -4,11 +4,11 @@ import ProfileActContainer from "./item/profile-act-container";
 
 const ProfileSection = () => {
     return(
-        <Column className="w-fit h-fit gap-10">
+        <Column className="w-fit h-fit gap-15">
             <Profile />
             <ProfileActContainer />
         </Column>
-    )
-}
+    );
+};
 
 export default ProfileSection;

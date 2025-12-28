@@ -18,7 +18,7 @@ const Profile = () => {
                 <ProfileDropdown/>
             </Row>
             <Row className="justify-center">
-                <img className="w-32 rounded-full" src = {userImg === null ? Placeholder : userImg}/>
+                <img className="w-32 rounded-full" src = {!userImg ? Placeholder : userImg}/>
 
             </Row>
             <Column className="h-53 items-center justify-center gap-3">
@@ -26,7 +26,7 @@ const Profile = () => {
                 <Title variant="title2" className="fc-gray-800 font-bold">{userName} 님</Title>
             </Column>
         </Column>
-    )
-}
+    );
+};
 
 export default Profile;

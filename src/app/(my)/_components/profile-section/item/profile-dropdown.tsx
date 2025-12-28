@@ -6,7 +6,7 @@ const ProfileDropdown = () => {
     return(
         <DropdownMenu>
             <DropdownMenuTrigger>
-                <EllipsisVerticalFilled className="h-12 w-12 cursor-pointer mt-8 mr-4" strokeWidth={1.0}/>
+                <EllipsisVerticalFilled className="h-10 w-10 cursor-pointer mt-8 mr-4" strokeWidth={1.0}/>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="start" className="bg-white fc-gray-800 p-3">
                 {PROFILE_DROPDOWN_ITEMS.map((item, i) => (
@@ -17,7 +17,7 @@ const ProfileDropdown = () => {
                 ))}
             </DropdownMenuContent>
         </DropdownMenu>
-    )
-}
+    );
+};
 
 export default ProfileDropdown;
