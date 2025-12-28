@@ -14,7 +14,7 @@ const TimeContainer = () => {
                 </Row>
             ))}
         </Column>
-    )
-}
+    );
+};
 
 export default TimeContainer;
