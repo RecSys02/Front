@@ -1,11 +1,11 @@
 import { ReactNode } from "react";
+import { TagIcon } from "lucide-react";
 import Map1 from "@/assets/map1.svg?react";
-import Tag from "@/assets/tag.svg?react";
 import Question from "@/assets/question.svg?react";
-//import { IconName } from "lucide-react";
+
 
 type ProfileActProps = {
-  key: "PLAN" | "TAG" | "QNA" | "QNA2" ;
+  key: "PLAN" | "MYTAG" | "QNA" | "QNA2" ;
   act: string;
   icon: ReactNode;
   routeLink: string;
@@ -19,9 +19,9 @@ export const PROFILE_ACT_ITEMS: ProfileActProps[] = [
     routeLink: ""
   },
   {
-    key: "TAG",
+    key: "MYTAG",
     act: "태그 수정",
-    icon: <Tag/>,
+    icon: <TagIcon className="w-12 h-12" strokeWidth={1}/>,
     routeLink: ""
   },
   {
