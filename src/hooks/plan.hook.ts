@@ -1,5 +1,5 @@
-import { apiClient } from "@/apis/client/ts-rest/client";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { tsr } from "@/apis/client/ts-rest/client";
+import { useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
 import Banner1 from "@/assets/banners/banner1.jpg";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
@@ -59,16 +59,18 @@ const MOCK_POPULAR: PopularItem[] = [
 ];
 
 export const usePopular = () => {
-  return useQuery({
-    queryKey: ["popular"],
-    queryFn: async () => {
-      if (IS_MOCK) {
-        return MOCK_POPULAR;
-      }
-      const res = await apiClient.plan.popular.query();
-      return res.body;
-    },
+  const real = tsr.plan.popular.useQuery({
+    queryKey: ["plan", "popular"],
+    enabled: !IS_MOCK,
   });
+
+  const mock = useQuery({
+    queryKey: ["plan", "popular"],
+    queryFn: async () => MOCK_POPULAR,
+    enabled: IS_MOCK,
+  });
+
+  return IS_MOCK ? mock : real;
 };
 
 const MOCK_CREATE_PLAN = {
@@ -77,16 +79,18 @@ const MOCK_CREATE_PLAN = {
       date: "2026-01-02",
       activities: [
         {
-          id: 1,
           name: "성수 카페",
+          placeId: 1,
           category: "cafe",
+          province: "종로구",
           startTime: "09:30",
           endTime: "11:00",
         },
         {
-          id: 2,
           name: "성수 음식점",
+          placeId: 2,
           category: "restaurant",
+          province: "종로구",
           startTime: "12:30",
           endTime: "14:00",
         },
@@ -96,16 +100,18 @@ const MOCK_CREATE_PLAN = {
       date: "2026-01-03",
       activities: [
         {
-          id: 3,
           name: "성수 팝업스토어",
+          placeId: 3,
           category: "tourspot",
+          province: "종로구",
           startTime: "09:30",
           endTime: "11:00",
         },
         {
-          id: 4,
           name: "성수 음식점",
+          placeId: 4,
           category: "restaurant",
+          province: "종로구",
           startTime: "12:30",
           endTime: "14:00",
         },
@@ -126,21 +132,22 @@ export type CreatePlanResponseDTO = {
 
 export const useCreatePlan = () => {
   const navigate = useNavigate();
-  return useMutation<CreatePlanResponseDTO, Error, CreatePlanRequestDTO>({
-    mutationFn: async (body) => {
-      if (IS_MOCK) return MOCK_CREATE_PLAN;
 
-      const res = await apiClient.plan.create.mutation({ body });
-
-      return res.body;
-    },
-
+  const real = tsr.plan.create.useMutation({
     onSuccess: () => {
       navigate({ to: ROUTES.ModelPlan });
     },
   });
-};
 
+  const mock = useMutation<CreatePlanResponseDTO, Error, CreatePlanRequestDTO>({
+    mutationFn: async () => MOCK_CREATE_PLAN,
+    onSuccess: () => {
+      navigate({ to: ROUTES.ModelPlan });
+    },
+  });
+
+  return IS_MOCK ? mock : real;
+};
 export type Activity = {
   name: string;
   placeId: number;
@@ -151,14 +158,14 @@ export type Activity = {
 };
 
 export type Schedule = {
-    date: string;
-    activities: Activity[];
+  date: string;
+  activities: Activity[];
 };
 
 export type PlanItem = {
-    id: number;
-    title: string;
-    schedules: Schedule[];
+  id: number;
+  title: string;
+  schedules: Schedule[];
 };
 
 const MOCK_PLAN: PlanItem[] = [
@@ -169,81 +176,81 @@ const MOCK_PLAN: PlanItem[] = [
       {
         date: "2025-12-24",
         activities: [
-          { 
-            name: "남산타워", 
-            startTime: "16:00", 
-            endTime: "17:00", 
+          {
+            name: "남산타워",
+            startTime: "16:00",
+            endTime: "17:00",
             category: "관광지",
             placeId: 101,
-            province: "서울"
+            province: "서울",
           },
-          { 
-            name: "보니스 피자펍", 
-            startTime: "18:00", 
-            endTime: "19:00", 
+          {
+            name: "보니스 피자펍",
+            startTime: "18:00",
+            endTime: "19:00",
             category: "식당",
             placeId: 102,
-            province: "서울"
+            province: "서울",
           },
-        ]    
+        ],
       },
       {
         date: "2025-12-25",
         activities: [
-          { 
-            name: "숭례문", 
-            startTime: "09:00", 
-            endTime: "11:00", 
+          {
+            name: "숭례문",
+            startTime: "09:00",
+            endTime: "11:00",
             category: "관광지",
             placeId: 103,
-            province: "서울"
+            province: "서울",
           },
-          { 
-            name: "그라운드시소 센트럴", 
-            startTime: "15:00", 
-            endTime: "16:00", 
+          {
+            name: "그라운드시소 센트럴",
+            startTime: "15:00",
+            endTime: "16:00",
             category: "관광지",
             placeId: 104,
-            province: "서울"
+            province: "서울",
           },
-          { 
-            name: "Matches", 
-            startTime: "20:00", 
-            endTime: "21:00", 
+          {
+            name: "Matches",
+            startTime: "20:00",
+            endTime: "21:00",
             category: "식당",
             placeId: 105,
-            province: "서울"
+            province: "서울",
           },
-        ]
+        ],
       },
       {
         date: "2025-12-26",
         activities: [
-          { 
-            name: "도량", 
-            startTime: "11:00", 
-            endTime: "12:00", 
+          {
+            name: "도량",
+            startTime: "11:00",
+            endTime: "12:00",
             category: "식당",
             placeId: 106,
-            province: "서울"
+            province: "서울",
           },
-          { 
-            name: "경복궁", 
-            startTime: "13:00", 
-            endTime: "15:00", 
+          {
+            name: "경복궁",
+            startTime: "13:00",
+            endTime: "15:00",
             category: "관광지",
             placeId: 107,
-            province: "서울"
+            province: "서울",
           },
-          { 
-            name: "카페", 
-            startTime: "16:00", 
-            endTime: "17:00", 
+          {
+            name: "카페",
+            startTime: "16:00",
+            endTime: "17:00",
             category: "카페",
             placeId: 108,
-            province: "서울"
+            province: "서울",
           },
-        ]    
+        ],
       },
     ],
   },
@@ -254,50 +261,64 @@ const MOCK_PLAN: PlanItem[] = [
       {
         date: "2025-09-12",
         activities: [
-          { 
-            name: "장소", 
-            startTime: "12:00", 
-            endTime: "13:00", 
+          {
+            name: "장소",
+            startTime: "12:00",
+            endTime: "13:00",
             category: "관광지",
             placeId: 201,
-            province: "경기"
+            province: "경기",
           },
-          { 
-            name: "커피", 
-            startTime: "09:00", 
-            endTime: "10:00", 
+          {
+            name: "커피",
+            startTime: "09:00",
+            endTime: "10:00",
             category: "카페",
             placeId: 202,
-            province: "경기"
+            province: "경기",
           },
-        ]
+        ],
       },
       {
         date: "2025-09-13",
         activities: [
-          { 
-            name: "밥", 
-            startTime: "12:00", 
-            endTime: "13:00", 
+          {
+            name: "밥",
+            startTime: "12:00",
+            endTime: "13:00",
             category: "식당",
             placeId: 203,
-            province: "경기"
+            province: "경기",
           },
-        ]
-      },    
+        ],
+      },
     ],
   },
 ];
+export type SearchFilterDTO = {
+  from: string;
+  to: string;
+};
+export const usePlan = (
+  params?: SearchFilterDTO
+): UseQueryResult<PlanItem[]> => {
+  const key = [
+    "plan",
+    "read",
+    params?.from ?? null,
+    params?.to ?? null,
+  ] as const;
 
-export const usePlan = () => {
-  return useQuery<PlanItem[]>({
-    queryKey: ["plan"],
-    queryFn: async () => {
-      if (IS_MOCK) {
-        return MOCK_PLAN;
-      }
-      const res = await apiClient.plan.plan.query();
-      return res.body;
-    },
+  const real = tsr.plan.read.useQuery({
+    queryKey: key,
+    query: params,
+    enabled: !IS_MOCK,
   });
+
+  const mock = useQuery<PlanItem[]>({
+    queryKey: key,
+    queryFn: async () => MOCK_PLAN,
+    enabled: IS_MOCK,
+  });
+  return (IS_MOCK ? mock : real) as unknown as UseQueryResult<PlanItem[]>;
 };
