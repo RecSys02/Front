@@ -54,7 +54,7 @@ export const planApi = c.router(
         ),
       },
     },
-    plan: {
+    read: {
       method: "GET",
       path: "/plan",
       // query: z.object({
@@ -67,9 +67,9 @@ export const planApi = c.router(
             id: z.string(),
             title: z.string(),
             schedules: z.array(activitySchema),
-              })
-            ),
-          },
+          })
+        ),
+      },
     },
   },
   {
