@@ -16,9 +16,9 @@ const getRowLength = (start: string, end: string) => {
     return Number(end.split(":")[0]) - Number(start.split(":")[0]);
 };
 
-const ActivityBlock = ({ name, start, end, category }: Activity ) => {
-    const rowStart = getRowStart(start);
-    const rowLength = getRowLength(start, end);
+const ActivityBlock = ({ name, startTime, endTime, category }: Activity ) => {
+    const rowStart = getRowStart(startTime);
+    const rowLength = getRowLength(startTime, endTime);
     return(
         <div
         className={`${CATEGORY_COLORS[category]} border-b border-r`}

@@ -2,14 +2,13 @@ import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
 import Subtitle from "@/components/text/subtitle";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import MyPlanContent from "./myplan-accordion-content";
+import MyPlanContent from "./myplan-content";
 import { MapPinIcon } from "lucide-react";
 import { usePlan } from "@/hooks/plan.hook";
 
 const MyPlanAccordion = () => {
     const { data } = usePlan();
     const plans = data ?? [];
-
     return(
         <Column className="w-fit items-center border border-primary rounded-2xl">            
             <Accordion
