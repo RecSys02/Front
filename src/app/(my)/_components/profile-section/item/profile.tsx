@@ -8,7 +8,7 @@ import Placeholder from "@/assets/banners/placeholder.png";
 import { useUser } from "@/hooks/user.hook";
 
 const Profile = () => {
-    const { data, isSuccess } = useUser();
+    const { data } = useUser();
     const userName = data?.username;
     const userImg = data?.userimg;
     
