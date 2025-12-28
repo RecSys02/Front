@@ -10,6 +10,7 @@ import { ROUTES } from "@/constants/routes";
 import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
+import { ModelResult } from "../../model.type";
 
 const DEFAULT_VALUES: ModelFormValues = {
   region: {
@@ -64,7 +65,7 @@ const ModelForm = () => {
         historyPlaces: [],
       },
       {
-        onSuccess: (result) => {
+        onSuccess: (result: ModelResult) => {
           setModelResult(result);
           navigate({ to: ROUTES.ModelSpot });
         },

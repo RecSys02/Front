@@ -1,12 +1,12 @@
 import { ApiFetcherArgs } from "@ts-rest/core";
 import { contract } from "./contract";
 import axiosInstance from "../axios/axios";
-import { initQueryClient } from "@ts-rest/react-query";
+import { initTsrReactQuery } from "@ts-rest/react-query/v5";
 
-export const apiClient = initQueryClient(contract, {
+export const tsr = initTsrReactQuery(contract, {
   baseUrl: import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "http://localhost:3000",
   baseHeaders: {},
-  fetchApi: async (args: ApiFetcherArgs) => {
+  api: async (args: ApiFetcherArgs) => {
     const result = await axiosInstance({
       url: args.path,
       method: args.method,
@@ -17,7 +17,7 @@ export const apiClient = initQueryClient(contract, {
     return {
       status: result.status,
       body: result.data,
-      headers: result.headers,
+      headers: new Headers(result.headers as Record<string, string>),
     };
   },
 });

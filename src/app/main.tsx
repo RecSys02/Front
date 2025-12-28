@@ -5,6 +5,7 @@ import { router } from "@/router";
 import { RouterProvider } from "@tanstack/react-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
+import { tsr } from "@/apis/client/ts-rest/client";
 
 const root = createRoot(document.getElementById("root")!);
 const queryClient = new QueryClient({
@@ -24,8 +25,10 @@ const queryClient = new QueryClient({
 root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      <Toaster richColors position="top-center" />
+      <tsr.ReactQueryProvider>
+        <RouterProvider router={router} />
+        <Toaster richColors position="top-center" />
+      </tsr.ReactQueryProvider>
     </QueryClientProvider>
   </StrictMode>
 );

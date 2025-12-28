@@ -54,22 +54,24 @@ export const planApi = c.router(
         ),
       },
     },
-    plan: {
+    read: {
       method: "GET",
-      path: "/plan",
-      // query: z.object({
-      //   from: z.string(), 
-      //   to: z.string(), 
-      // }),
+      path: "/",
+      query: z
+        .object({
+          from: z.string(),
+          to: z.string(),
+        })
+        .optional(),
       responses: {
         200: z.array(
           z.object({
             id: z.string(),
             title: z.string(),
             schedules: z.array(activitySchema),
-              })
-            ),
-          },
+          })
+        ),
+      },
     },
   },
   {

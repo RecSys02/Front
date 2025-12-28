@@ -1,7 +1,7 @@
-import { apiClient } from "@/apis/client/ts-rest/client";
+import { tsr } from "@/apis/client/ts-rest/client";
 import { MOCK_MODEL_RESULT } from "@/app/(model)/spot/_components/model.mock";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useMutation } from "@tanstack/react-query";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -11,7 +11,7 @@ type PlaceRef = {
   placeId: number;
 };
 
-type ModelArgs = {
+export type ModelArgs = {
   region: string;
   companion?: string[];
   budget: string;
@@ -20,32 +20,17 @@ type ModelArgs = {
 };
 
 export const useModel = () => {
-  return useMutation({
-    mutationFn: async ({
-      region,
-      companion,
-      budget,
-      selectedPlaces,
-      historyPlaces,
-    }: ModelArgs) => {
-      if (IS_MOCK) {
-        await new Promise((r) => setTimeout(r, 500));
-        return MOCK_MODEL_RESULT;
-      }
-      const res = await apiClient.model.generate.query({
-        body: {
-          region,
-          companion,
-          budget,
-          selectedPlaces,
-          historyPlaces,
-        },
-      });
+  const onError = () => toast.error("추천 생성 중 오류가 발생했습니다.");
 
-      return res.body;
+  const real = tsr.model.generate.useMutation({ onError });
+
+  const mock = useMutation({
+    mutationFn: async () => {
+      await new Promise((r) => setTimeout(r, 500));
+      return MOCK_MODEL_RESULT;
     },
-    onError: () => {
-      toast.error("추천 생성 중 오류가 발생했습니다.");
-    },
+    onError,
   });
+
+  return IS_MOCK ? mock : real;
 };
