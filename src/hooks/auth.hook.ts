@@ -17,8 +17,11 @@ export const useSignin = () => {
 
   const onSuccess = (res: ApiOk<LoginResponseDto>) => {
     setAccessToken(res.body.accessToken);
+    queryClient.setQueryData(["me"], {
+      userName: res.body.userName,
+      userImg: null,
+    });
     toast.success(`${res.body.userName}님, 환영합니다!`);
-    queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
   const onError = () => {
@@ -37,7 +40,7 @@ export const useSignin = () => {
         status: 200,
         body: {
           accessToken: "mock-access-token",
-          userName: "mockUser",
+          userName: "홍길동",
         },
         headers: new Headers(),
       };
