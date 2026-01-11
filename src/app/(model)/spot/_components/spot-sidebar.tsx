@@ -14,6 +14,8 @@ import { TEMP_MODEL_RESULTS } from "./temp";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { PlaceDto } from "@/types/place/place.type";
+import { ApiOk } from "@/types/util.type";
+import { ModelResponseDto, ModelRequestDto } from "@/types/model/model.type";
 
 type Props = {
   tab: TabValue;
@@ -25,6 +27,7 @@ type Props = {
   onCreatePlan: () => void;
   onCloseOverlay?: () => void;
 };
+const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 const SpotSidebar = ({
   tab,
@@ -39,7 +42,7 @@ const SpotSidebar = ({
   const model = useModel();
   const tempIdxRef = useRef(0);
 
-  const pickTempResult = () => {
+  const pickTempResult = (): ModelResponseDto => {
     const idx = tempIdxRef.current % TEMP_MODEL_RESULTS.length;
     tempIdxRef.current += 1;
     return TEMP_MODEL_RESULTS[idx];
@@ -55,6 +58,12 @@ const SpotSidebar = ({
   }, [historyPlaces]);
 
   const listPlaces = tab === "saved" ? savedPlaces : places;
+
+  const resolveModelResult = (
+    res: ApiOk<ModelResponseDto>
+  ): ModelResponseDto => {
+    return IS_MOCK ? pickTempResult() : res.body;
+  };
 
   const onGeneratePlaces = () => {
     if (model.isPending) return;
@@ -75,26 +84,31 @@ const SpotSidebar = ({
 
     const region = `${input.region.province} ${input.region.district}`.trim();
 
+    const payload: ModelRequestDto = {
+      region,
+      companion: input.companion ?? undefined,
+      budget: input.budget,
+      selectedPlaces: selectedPlaces.map((p) => ({
+        placeId: p.placeId,
+        category: p.category,
+        province: p.province,
+      })),
+      historyPlaces: nextHistory.map((p) => ({
+        placeId: p.placeId,
+        category: p.category,
+        province: p.province,
+      })),
+    };
+
     model.mutate(
+      { body: payload },
       {
-        region,
-        companion: input.companion ?? undefined,
-        budget: input.budget,
-        selectedPlaces: selectedPlaces.map((p) => ({
-          placeId: p.placeId,
-          category: p.category,
-          province: p.province,
-        })),
-        historyPlaces: nextHistory.map((p) => ({
-          placeId: p.placeId,
-          category: p.category,
-          province: p.province,
-        })),
-      },
-      {
-        onSuccess: () => {
+        onSuccess: (res: ApiOk<ModelResponseDto>) => {
+          const nextResult = resolveModelResult(res);
+
           setSelectedPlaces([]);
-          setModelResult(pickTempResult());
+          setModelResult(nextResult);
+
           onCloseOverlay?.();
           onChangeTab("tourspot");
         },

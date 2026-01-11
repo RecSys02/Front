@@ -11,6 +11,7 @@ import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import { ModelResponseDto } from "@/types/model/model.type";
+import { ApiOk } from "@/types/util.type";
 
 const DEFAULT_VALUES: ModelFormValues = {
   region: {
@@ -56,17 +57,19 @@ const ModelForm = () => {
 
     const region = `${values.region.province} ${values.region.district}`.trim();
 
+    const payload = {
+      region,
+      companion: values.companion ?? undefined,
+      budget: values.budget,
+      selectedPlaces: [],
+      historyPlaces: [],
+    };
+
     model.mutate(
+      { body: payload },
       {
-        region,
-        companion: values.companion ?? undefined,
-        budget: values.budget,
-        selectedPlaces: [],
-        historyPlaces: [],
-      },
-      {
-        onSuccess: (result: ModelResponseDto) => {
-          setModelResult(result);
+        onSuccess: (res: ApiOk<ModelResponseDto>) => {
+          setModelResult(res.body);
           navigate({ to: ROUTES.ModelSpot });
         },
       }
