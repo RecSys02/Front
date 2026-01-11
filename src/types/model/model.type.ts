@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import { PlaceIdSchema, PlaceSchema } from "../place/place.type";
 
 export const ModelRequestSchema = z.object({

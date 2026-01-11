@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 import { PlanSchema } from "./plan.type";
 import { PlaceIdSchema } from "../place/place.type";
 
