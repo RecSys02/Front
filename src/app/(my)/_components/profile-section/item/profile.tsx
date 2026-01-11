@@ -10,7 +10,7 @@ import { useUser } from "@/hooks/user.hook";
 const Profile = () => {
   const { data } = useUser();
   const userName = data?.userName;
-  const userImg = data?.userimg;
+  const userImg = data?.userImg;
 
   return (
     <Column className="w-110 h-145 bg-base rounded-2xl">

@@ -11,7 +11,7 @@ export const userApi = c.router(
       responses: {
         200: z.object({
           userName: z.string(),
-          userimg: z.string(),
+          userImg: z.string().nullish(),
         }),
       },
     },

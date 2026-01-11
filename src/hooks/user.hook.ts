@@ -18,7 +18,7 @@ export const useUser = () => {
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({
       userName: "홍길동",
-      userimg: null,
+      userImg: null,
     }),
   });
 
