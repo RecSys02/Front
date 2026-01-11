@@ -1,4 +1,4 @@
-import { ModelResult } from "@/app/(model)/model.type";
+import { ModelResponseDto } from "@/app/(model)/model.type";
 import storage from "@/storage/storage";
 
 const MODEL_RESULT_KEY = "model_result";
@@ -9,16 +9,16 @@ export const ModelStore = {
       return ModelStore.actions.getModelResult() !== null;
     },
 
-    setModelResult: (result: ModelResult) => {
+    setModelResult: (result: ModelResponseDto) => {
       storage.setItem(MODEL_RESULT_KEY, JSON.stringify(result));
     },
 
-    getModelResult: (): ModelResult | null => {
+    getModelResult: (): ModelResponseDto | null => {
       const raw = storage.getItem(MODEL_RESULT_KEY);
       if (!raw) return null;
 
       try {
-        return JSON.parse(raw) as ModelResult;
+        return JSON.parse(raw) as ModelResponseDto;
       } catch {
         return null;
       }

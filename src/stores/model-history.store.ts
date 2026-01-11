@@ -1,19 +1,19 @@
-import type { Place } from "@/app/(model)/model.type";
+import type { PlaceDto } from "@/app/(model)/model.type";
 
 const MODEL_HISTORY_KEY = "model_history_places";
 
 export const ModelHistoryStore = {
   actions: {
-    setHistoryPlaces: (places: Place[]) => {
+    setHistoryPlaces: (places: PlaceDto[]) => {
       sessionStorage.setItem(MODEL_HISTORY_KEY, JSON.stringify(places));
     },
 
-    getHistoryPlaces: (): Place[] => {
+    getHistoryPlaces: (): PlaceDto[] => {
       const raw = sessionStorage.getItem(MODEL_HISTORY_KEY);
       if (!raw) return [];
 
       try {
-        const parsed = JSON.parse(raw) as Place[];
+        const parsed = JSON.parse(raw) as PlaceDto[];
         return Array.isArray(parsed) ? parsed : [];
       } catch {
         return [];
@@ -28,7 +28,7 @@ export const ModelHistoryStore = {
       sessionStorage.removeItem(MODEL_HISTORY_KEY);
     },
 
-    appendHistoryPlaces: (prev: Place[], next: Place[]) => {
+    appendHistoryPlaces: (prev: PlaceDto[], next: PlaceDto[]) => {
       const merged = [...prev, ...next];
       return Array.from(new Map(merged.map((p) => [p.id, p])).values());
     },

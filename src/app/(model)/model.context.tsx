@@ -1,19 +1,20 @@
+import { PlaceDto } from "@/types/model/model.type";
+import { ModelResponseDto } from "@/types/model/model.wrapper.type";
 import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
-import type { ModelResult, Place } from "./model.type";
 
 export type ModelContextValue = {
-  modelResult: ModelResult | null;
-  setModelResult: (result: ModelResult | null) => void;
+  modelResult: ModelResponseDto | null;
+  setModelResult: (result: ModelResponseDto | null) => void;
 
-  selectedPlaces: Place[];
-  setSelectedPlaces: Dispatch<SetStateAction<Place[]>>;
+  selectedPlaces: PlaceDto[];
+  setSelectedPlaces: Dispatch<SetStateAction<PlaceDto[]>>;
 
   activePlaceId: number | null;
   setActivePlaceId: Dispatch<SetStateAction<number | null>>;
 
-  historyPlaces: Place[];
-  setHistoryPlaces: Dispatch<SetStateAction<Place[]>>;
+  historyPlaces: PlaceDto[];
+  setHistoryPlaces: Dispatch<SetStateAction<PlaceDto[]>>;
 
   resetSession: (opts?: { clearInput?: boolean }) => void;
 };

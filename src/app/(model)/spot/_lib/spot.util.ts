@@ -1,22 +1,27 @@
-import { ModelResult, PlaceCategory, Place } from "../../model.type";
+import { PlaceDto } from "@/types/model/model.type";
+import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { PlaceCategory } from "../../model.type";
 
-export const emptyModelResult: ModelResult = {
+export const emptyModelResult: ModelResponseDto = {
   tourspots: [],
   restaurants: [],
   cafes: [],
 };
 
 export const getPlacesByCategory = (
-  result: ModelResult | null,
+  result: ModelResponseDto | null,
   category: PlaceCategory
-): Place[] => {
+): PlaceDto[] => {
   const r = result ?? emptyModelResult;
   if (category === "tourspot") return r.tourspots;
   if (category === "restaurant") return r.restaurants;
   return r.cafes;
 };
 
-export const toggleSelectedPlaces = (prev: Place[], p: Place): Place[] => {
+export const toggleSelectedPlaces = (
+  prev: PlaceDto[],
+  p: PlaceDto
+): PlaceDto[] => {
   return prev.some((x) => x.id === p.id)
     ? prev.filter((x) => x.id !== p.id)
     : [...prev, p];
@@ -59,10 +64,9 @@ export const createKakaoMarkerImage = (
   return new maps.MarkerImage(url, size, option);
 };
 
-
 export const getInitialCenter = (
-  places: Place[],
-  historyPlaces: Place[]
+  places: PlaceDto[],
+  historyPlaces: PlaceDto[]
 ): { lat: number; lng: number } | null => {
   const first = places[0] ?? historyPlaces[0] ?? null;
   if (!first) return null;
@@ -73,7 +77,7 @@ export const getInitialCenter = (
   };
 };
 
-export const buildBounds = (maps: KakaoMaps, places: Place[]) => {
+export const buildBounds = (maps: KakaoMaps, places: PlaceDto[]) => {
   const bounds = new maps.LatLngBounds();
   places.forEach((p) => {
     bounds.extend(new maps.LatLng(p.latitude, p.longitude));
@@ -86,7 +90,7 @@ export const clearMarkers = (markers: any[]) => {
   markers.length = 0;
 };
 
-export const makePlaceIdSet = (places: Place[]) => {
+export const makePlaceIdSet = (places: PlaceDto[]) => {
   return new Set<number>(places.map((p) => p.id));
 };
 
@@ -104,7 +108,7 @@ export const createMainMarker = (params: {
   maps: KakaoMaps;
   map: any;
   images: { normal: any; active: any };
-  place: Place;
+  place: PlaceDto;
   isActive: boolean;
 }) => {
   const { maps, map, images, place, isActive } = params;
@@ -125,7 +129,7 @@ export const createHistoryMarker = (params: {
   maps: KakaoMaps;
   map: any;
   image: any;
-  place: Place;
+  place: PlaceDto;
 }) => {
   const { maps, map, image, place } = params;
 
