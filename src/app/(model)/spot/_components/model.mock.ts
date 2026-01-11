@@ -1,4 +1,4 @@
-import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 
 export const MOCK_MODEL_RESULT: ModelResponseDto = {
   tourspots: [

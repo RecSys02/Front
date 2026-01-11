@@ -1,7 +1,7 @@
 import {
   ModelRequestSchema,
   ModelResponseSchema,
-} from "@/types/model/model.wrapper.type";
+} from "@/types/model/model.type";
 import { initContract } from "@ts-rest/core";
 
 const c = initContract();

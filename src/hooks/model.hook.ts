@@ -3,10 +3,7 @@ import { MOCK_MODEL_RESULT } from "@/app/(model)/spot/_components/model.mock";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import type { ApiOk } from "@/types/util.type";
-import {
-  ModelResponseDto,
-  ModelRequestDto,
-} from "@/types/model/model.wrapper.type";
+import { ModelResponseDto, ModelRequestDto } from "@/types/model/model.type";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 

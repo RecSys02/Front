@@ -1,24 +1,18 @@
-import { z } from "zod";
+import z from "zod";
+import { PlaceIdSchema, PlaceSchema } from "../place/place.type";
 
-export const PlaceSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  latitude: z.number(),
-  longitude: z.number(),
-  address: z.string(),
-  description: z.string(),
-  duration: z.string(),
-  images: z.array(z.string()).nullish(),
-  keywords: z.array(z.string()).nullish(),
-  category: z.string(),
-  province: z.string(),
-  placeId: z.number(),
+export const ModelRequestSchema = z.object({
+  region: z.string(),
+  companion: z.array(z.string()).nullish(),
+  budget: z.string(),
+  selectedPlaces: z.array(PlaceIdSchema).nullish(),
+  historyPlaces: z.array(PlaceIdSchema).nullish(),
 });
-export type PlaceDto = z.infer<typeof PlaceSchema>;
+export type ModelRequestDto = z.infer<typeof ModelRequestSchema>;
 
-export const PlaceIdSchema = PlaceSchema.pick({
-  category: true,
-  province: true,
-  placeId: true,
+export const ModelResponseSchema = z.object({
+  tourspots: z.array(PlaceSchema),
+  restaurants: z.array(PlaceSchema),
+  cafes: z.array(PlaceSchema),
 });
-export type PlaceIdDto = z.infer<typeof PlaceIdSchema>;
+export type ModelResponseDto = z.infer<typeof ModelResponseSchema>;

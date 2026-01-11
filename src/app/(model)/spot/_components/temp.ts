@@ -1,4 +1,4 @@
-import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 
 export const TEMP_MODEL_RESULTS: ModelResponseDto[] = [
   {

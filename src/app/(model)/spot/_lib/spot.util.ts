@@ -1,5 +1,5 @@
-import { PlaceDto } from "@/types/model/model.type";
-import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { PlaceDto } from "@/types/place/place.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 import { PlaceCategory } from "../../model.type";
 
 export const emptyModelResult: ModelResponseDto = {

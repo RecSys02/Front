@@ -13,7 +13,7 @@ import { ModelHistoryStore } from "@/stores/model-history.store";
 import { TEMP_MODEL_RESULTS } from "./temp";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
-import { PlaceDto } from "@/types/model/model.type";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
   tab: TabValue;

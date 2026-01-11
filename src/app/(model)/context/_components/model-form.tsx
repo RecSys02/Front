@@ -10,7 +10,7 @@ import { ROUTES } from "@/constants/routes";
 import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
-import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 
 const DEFAULT_VALUES: ModelFormValues = {
   region: {

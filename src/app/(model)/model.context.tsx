@@ -1,5 +1,5 @@
-import { PlaceDto } from "@/types/model/model.type";
-import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { PlaceDto } from "@/types/place/place.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 import { createContext } from "react";
 import type { Dispatch, SetStateAction } from "react";
 

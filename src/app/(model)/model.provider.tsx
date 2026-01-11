@@ -3,8 +3,8 @@ import { ModelContext } from "./model.context";
 import { ModelStore } from "@/stores/model.store";
 import { ModelHistoryStore } from "@/stores/model-history.store";
 import { ModelInputStore } from "@/stores/model-input.store";
-import { PlaceDto } from "@/types/model/model.type";
-import { ModelResponseDto } from "@/types/model/model.wrapper.type";
+import { PlaceDto } from "@/types/place/place.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
   const [modelResult, _setModelResult] = useState<ModelResponseDto | null>(() =>

@@ -16,7 +16,7 @@ import { useSpotOverlayNav } from "./_lib/spot.hook";
 import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
 import { useCreatePlan } from "@/hooks/plan.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
-import { PlaceDto } from "@/types/model/model.type";
+import { PlaceDto } from "@/types/place/place.type";
 
 const ModelSpotPage = () => {
   const {

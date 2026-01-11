@@ -7,7 +7,7 @@ import Body from "@/components/text/body";
 import { ImageBox } from "@/components/common/container/image-box";
 import { Badge } from "@/components/ui/badge/badge";
 import Placeholder from "@/assets/banners/placeholder.png";
-import { PlaceDto } from "@/types/model/model.type";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
   place: PlaceDto;

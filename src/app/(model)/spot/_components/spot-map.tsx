@@ -12,7 +12,7 @@ import {
   createLucideMapPinSvgUrl,
   createMainMarker,
 } from "../_lib/spot.util";
-import { PlaceDto } from "@/types/model/model.type";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
   places: PlaceDto[];
