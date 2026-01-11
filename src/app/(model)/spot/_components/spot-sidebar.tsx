@@ -1,5 +1,5 @@
 import Column from "@/components/common/container/column";
-import type { Place, TabValue } from "../../model.type";
+import type { TabValue } from "../../model.type";
 import { SidebarHeader, SidebarContent } from "@/components/ui/sidebar/sidebar";
 import SpotSidebarItem from "./spot-sidebar-item";
 import Body from "@/components/text/body";
@@ -13,12 +13,13 @@ import { ModelHistoryStore } from "@/stores/model-history.store";
 import { TEMP_MODEL_RESULTS } from "./temp";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
   tab: TabValue;
   onChangeTab: (tab: TabValue) => void;
-  places: Place[];
-  selectedPlaces: Place[];
+  places: PlaceDto[];
+  selectedPlaces: PlaceDto[];
   activePlaceId: number | null;
   onFocusPlace: (id: number | null) => void;
   onCreatePlan: () => void;
@@ -48,7 +49,7 @@ const SpotSidebar = ({
     useModelContext();
 
   const savedPlaces = useMemo(() => {
-    const map = new Map<number, Place>();
+    const map = new Map<number, PlaceDto>();
     historyPlaces.forEach((p) => map.set(p.id, p));
     return Array.from(map.values());
   }, [historyPlaces]);

@@ -2,6 +2,12 @@ import { tsr } from "@/apis/client/ts-rest/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
+import { ApiOk } from "@/types/util.type";
+import {
+  AvailabilityResponse,
+  CreateUserDto,
+  LoginResponseDto,
+} from "@/types/auth/auth.type";
 
 const { setAccessToken, clear } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -9,31 +15,38 @@ const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 export const useSignin = () => {
   const queryClient = useQueryClient();
 
-  const real = tsr.auth.signin.useMutation({
-    onSuccess: (res: any) => {
-      const body: any = (res as any).body ?? res;
+  const onSuccess = (res: ApiOk<LoginResponseDto>) => {
+    setAccessToken(res.body.accessToken);
+    queryClient.setQueryData(["me"], {
+      userName: res.body.userName,
+      userImg: null,
+    });
+    toast.success(`${res.body.userName}님, 환영합니다!`);
+  };
 
-      setAccessToken(body.accessToken);
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-    },
-    onError: () => {
-      clear();
-      toast.error("로그인 중 오류가 발생했습니다.");
-    },
+  const onError = () => {
+    clear();
+    toast.error("이메일과 비밀번호를 정확히 입력해 주세요.");
+  };
+
+  const real = tsr.auth.signin.useMutation({
+    onSuccess,
+    onError,
   });
 
-  const mock = useMutation({
+  const mock = useMutation<ApiOk<LoginResponseDto>>({
     mutationFn: async () => {
-      throw new Error("MOCK SIGNIN ERROR");
+      return {
+        status: 200,
+        body: {
+          accessToken: "mock-access-token",
+          userName: "홍길동",
+        },
+        headers: new Headers(),
+      };
     },
-    onSuccess: (body: any) => {
-      setAccessToken(body.accessToken);
-      queryClient.invalidateQueries({ queryKey: ["me"] });
-    },
-    onError: () => {
-      clear();
-      toast.error("로그인 중 오류가 발생했습니다.");
-    },
+    onSuccess,
+    onError,
   });
 
   return IS_MOCK ? mock : real;
@@ -42,86 +55,95 @@ export const useSignin = () => {
 export const useSignout = () => {
   const queryClient = useQueryClient();
 
+  const onSuccess = () => {
+    clear();
+    queryClient.removeQueries({ queryKey: ["me"] });
+    window.location.href = "/";
+  };
+
+  const onError = () => {
+    clear();
+    queryClient.removeQueries({ queryKey: ["me"] });
+    window.location.href = "/login";
+    toast.error("로그아웃 중 오류가 발생했습니다.");
+  };
+
   const real = tsr.auth.signout.useMutation({
-    onSuccess: () => {
-      clear();
-      queryClient.removeQueries({ queryKey: ["me"] });
-      window.location.href = "/";
-    },
-    onError: () => {
-      clear();
-      queryClient.removeQueries({ queryKey: ["me"] });
-      window.location.href = "/login";
-      toast.error("로그아웃 중 오류가 발생했습니다.");
-    },
+    onSuccess,
+    onError,
   });
 
-  const mock = useMutation({
-    mutationFn: async () => {
-      if (import.meta.env.DEV) {
-        console.log("MOCK SIGNOUT");
-      }
-      return { success: true };
-    },
-    onSuccess: () => {
-      clear();
-      queryClient.removeQueries({ queryKey: ["me"] });
-      window.location.href = "/";
-    },
-    onError: () => {
-      clear();
-      queryClient.removeQueries({ queryKey: ["me"] });
-      window.location.href = "/login";
-      toast.error("로그아웃 중 오류가 발생했습니다.");
-    },
+  const mock = useMutation<void>({
+    mutationFn: async () => undefined,
+    onSuccess,
+    onError,
   });
 
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckUserId = () => {
-  const real = tsr.auth.checkId.useMutation({
-    onError: () => {
-      toast.error("중복 확인 중 오류가 발생했습니다.");
-    },
+export const useCheckEmail = () => {
+  const onError = () => {
+    toast.error("중복 확인 중 오류가 발생했습니다.");
+  };
+
+  const real = tsr.auth.checkEmail.useMutation({
+    onError,
   });
 
-  const mock = useMutation({
-    mutationFn: async () => {
-      return { available: true };
-    },
-    onError: () => {
-      toast.error("중복 확인 중 오류가 발생했습니다.");
-    },
+  const mock = useMutation<
+    ApiOk<AvailabilityResponse>,
+    Error,
+    { body: { email: string } }
+  >({
+    mutationFn: async () => ({
+      status: 200,
+      body: { available: true },
+      headers: new Headers(),
+    }),
+    onError,
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const useCheckName = () => {
+  const onError = () => {
+    toast.error("중복 확인 중 오류가 발생했습니다.");
+  };
+
+  const real = tsr.auth.checkName.useMutation({
+    onError,
+  });
+
+  const mock = useMutation<
+    ApiOk<AvailabilityResponse>,
+    Error,
+    { body: { userName: string } }
+  >({
+    mutationFn: async () => ({
+      status: 200,
+      body: { available: true },
+      headers: new Headers(),
+    }),
+    onError,
   });
 
   return IS_MOCK ? mock : real;
 };
 
 export const useRegister = () => {
+  const onError = () => {
+    toast.error("회원가입 중 오류가 발생했습니다.");
+  };
+
   const real = tsr.auth.register.useMutation({
-    onError: () => {
-      toast.error("회원가입 중 오류가 발생했습니다.");
-    },
+    onError,
   });
 
-  const mock = useMutation({
-    mutationFn: async (_vars: {
-      body: {
-        userid: string;
-        password: string;
-        nickname: string;
-        email: string;
-        tags: string[];
-      };
-    }) => {
-      const { userid, password, nickname, email, tags } = _vars.body;
-      console.log(userid, password, nickname, email, tags);
-      return { success: true };
-    },
-    onError: () => {
-      toast.error("회원가입 중 오류가 발생했습니다.");
-    },
+  const mock = useMutation<void, Error, { body: CreateUserDto }>({
+    mutationFn: async () => undefined,
+    onError,
   });
 
   return IS_MOCK ? mock : real;

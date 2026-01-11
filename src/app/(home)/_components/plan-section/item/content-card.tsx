@@ -1,5 +1,4 @@
 import Column from "@/components/common/container/column";
-import { ContentConfig } from "./content.type";
 import { ImageBox } from "@/components/common/container/image-box";
 import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
@@ -7,9 +6,10 @@ import { Border } from "@/components/ui/border";
 import Heading from "@/components/text/heading";
 import { HeartIcon } from "lucide-react";
 import { Pill } from "@/components/ui/pill";
+import { PopularPlanCardDto } from "@/types/plan/plan.wrapper.type";
 
 type Props = {
-  content: ContentConfig;
+  content: PopularPlanCardDto;
 };
 
 const ContentCard = ({ content }: Props) => {
@@ -31,7 +31,7 @@ const ContentCard = ({ content }: Props) => {
           variant="heading2"
           className="w-full flex items-center font-bold fc-gray-800"
         >
-          {content.title}
+          {content.name}
         </Heading>
         <Row className="w-16 shrink-0 gap-3 justify-start items-center ">
           <HeartIcon
@@ -42,7 +42,7 @@ const ContentCard = ({ content }: Props) => {
             }
           />
           <Body variant="body2" className="w-fit fc-gray-800 font-semibold">
-            {content.likes > 99 ? "99+" : content.likes}
+            {content.likeCount > 99 ? "99+" : content.likeCount}
           </Body>
         </Row>
       </Row>

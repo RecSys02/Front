@@ -1,5 +1,5 @@
 import Body from "@/components/text/body";
-import { Activity } from "@/hooks/plan.hook";
+import { Activity } from "@/types/plan/plan.type";
 
 const CATEGORY_COLORS: Record<string, string> = {
     관광지 : "bg-[#CBE1B9]", // 초록

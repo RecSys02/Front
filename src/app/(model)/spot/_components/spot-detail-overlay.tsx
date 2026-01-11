@@ -1,17 +1,17 @@
 import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
 import { ChevronLeft, MapPin, X } from "lucide-react";
-import type { Place } from "../../model.type";
 import Body from "@/components/text/body";
 import { Button } from "@/components/common/button/button";
 import { ImageBox } from "@/components/common/container/image-box";
 import { Badge } from "@/components/ui/badge/badge";
 import Placeholder from "@/assets/banners/placeholder.png";
 import { cn } from "@/libs/utils";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
   open: boolean;
-  place: Place | null;
+  place: PlaceDto | null;
   isSelected: boolean;
   onClose: () => void;
   onToggleSelect: () => void;

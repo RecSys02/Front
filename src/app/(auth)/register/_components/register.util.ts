@@ -2,7 +2,7 @@ import { RegisterFormValues } from "./register.type";
 
 export const validateStep1 = (
   values: RegisterFormValues,
-  isUserIdAvailable: boolean | null
+  isEmailAvailable: boolean | null
 ) => {
   const password = values.password.trim();
   const passwordConfirm = values.passwordConfirm.trim();
@@ -11,20 +11,20 @@ export const validateStep1 = (
   const isPasswordValid = passwordRegex.test(password);
 
   return (
-    isUserIdAvailable === true &&
-    values.userId.trim() !== "" &&
+    isEmailAvailable === true &&
+    values.email.trim() !== "" &&
     isPasswordValid &&
     passwordConfirm !== "" &&
     password === passwordConfirm &&
-    values.nickname.trim() !== ""
+    values.userName.trim() !== ""
   );
 };
 
 export const generateRegisterUtil = (
   values: RegisterFormValues,
-  isUserIdAvailable: boolean | null
+  isEmailAvailable: boolean | null
 ) => {
-  const isStep1Valid = validateStep1(values, isUserIdAvailable);
+  const isStep1Valid = validateStep1(values, isEmailAvailable);
   const isValid = isStep1Valid;
   return { isStep1Valid, isValid };
 };

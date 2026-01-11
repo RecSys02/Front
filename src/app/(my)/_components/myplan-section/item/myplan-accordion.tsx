@@ -9,10 +9,10 @@ import {
 } from "@/components/ui/accordion";
 import MyPlanContent from "./myplan-content";
 import { MapPinIcon } from "lucide-react";
-import { usePlan } from "@/hooks/plan.hook";
+import { usePlanListByUser } from "@/hooks/plan.hook";
 
 const MyPlanAccordion = () => {
-  const { data } = usePlan();
+  const { data } = usePlanListByUser();
   const plans = data ?? [];
   return (
     <Column className="w-fit items-center border border-primary rounded-2xl">
@@ -26,12 +26,12 @@ const MyPlanAccordion = () => {
                   variant="subtitle2"
                   className=" font-normal items-center"
                 >
-                  {plan.title}
+                  {plan.name}
                 </Subtitle>
               </Row>
             </AccordionTrigger>
             <AccordionContent className="flex justify-center">
-              <MyPlanContent schedules={plan.schedules} />
+              <MyPlanContent schedule={plan.schedule} />
             </AccordionContent>
           </AccordionItem>
         ))}

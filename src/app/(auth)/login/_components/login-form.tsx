@@ -5,36 +5,36 @@ import { generateLoginFormItems, LoginFormValues } from "./login-item.form";
 import { Surface } from "@/components/ui/surface";
 import { ROUTES } from "@/constants/routes";
 import { useNavigate } from "@tanstack/react-router";
-import { toast } from "sonner";
 
 const LoginForm = () => {
   const [values, setValues] = useState<LoginFormValues>({
     email: "",
     password: "",
-    //remember: false,
+    remember: false,
   });
 
   const isValid = values.password.trim() !== "";
   const signin = useSignin();
   const navigate = useNavigate();
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!isValid) return;
 
-    try {
-      await signin.mutateAsync({
+    signin.mutate(
+      {
         email: values.email,
         password: values.password,
-        //remember: values.remember,
-      });
-
-      //toast.success(`${res.userid}님, 환영합니다!`);
-      navigate({ to: ROUTES.Home });
-    } catch {
-      toast.error("아이디와 비밀번호를 정확히 입력해 주세요.");
-    }
+        remember: values.remember,
+      },
+      {
+        onSuccess: () => {
+          navigate({ to: ROUTES.Home });
+        },
+      }
+    );
   };
-  const items = generateLoginFormItems();
+
+  const items = generateLoginFormItems(values, setValues);
 
   return (
     <Surface className="max-w-md w-full">

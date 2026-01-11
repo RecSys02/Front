@@ -12,7 +12,7 @@ type Props = {
 
 const ETCContainer = ({ locale, onChange }: Props) => {
   const { data, isSuccess } = useUser();
-  const userName = data?.username;
+  const userName = data?.userName;
 
   return (
     <Row className="w-fit items-center h-9 justify-end">

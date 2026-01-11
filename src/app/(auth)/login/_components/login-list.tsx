@@ -7,7 +7,7 @@ const LoginList = () => {
   return (
     <Row className="h-4.5 w-fit mt-10">
       <Link to={ROUTES.Register} className="fc-gray-700">
-        아이디 찾기
+        이메일 찾기
       </Link>
       <Border direction="vertical" className="mx-4" />
       <Link to={ROUTES.Register} className="fc-gray-700">

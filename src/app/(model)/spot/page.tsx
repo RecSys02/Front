@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useModelContext } from "../model.hook";
-import type { Place, TabValue } from "../model.type";
+import type { TabValue } from "../model.type";
 import {
   Sidebar,
   SidebarInset,
@@ -16,6 +16,7 @@ import { useSpotOverlayNav } from "./_lib/spot.hook";
 import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
 import { useCreatePlan } from "@/hooks/plan.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
+import { PlaceDto } from "@/types/place/place.type";
 
 const ModelSpotPage = () => {
   const {
@@ -31,13 +32,13 @@ const ModelSpotPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const createPlan = useCreatePlan();
 
-  const places: Place[] = useMemo(() => {
+  const places: PlaceDto[] = useMemo(() => {
     if (tab === "saved") return [];
     return getPlacesByCategory(modelResult, tab);
   }, [modelResult, tab]);
 
-  const activePlacePool: Place[] = useMemo(() => {
-    const map = new Map<number, Place>();
+  const activePlacePool: PlaceDto[] = useMemo(() => {
+    const map = new Map<number, PlaceDto>();
 
     places.forEach((p) => map.set(p.id, p));
     historyPlaces.forEach((p) => map.set(p.id, p));
@@ -67,7 +68,7 @@ const ModelSpotPage = () => {
     ? "right-100"
     : "right-0";
 
-  const toggleSelectPlace = (p: Place) => {
+  const toggleSelectPlace = (p: PlaceDto) => {
     setSelectedPlaces((prev) => toggleSelectedPlaces(prev, p));
   };
 
@@ -95,7 +96,7 @@ const ModelSpotPage = () => {
       return;
     }
 
-    const merged = new Map<number, Place>();
+    const merged = new Map<number, PlaceDto>();
     historyPlaces.forEach((p) => merged.set(p.id, p));
     selectedPlaces.forEach((p) => merged.set(p.id, p));
 

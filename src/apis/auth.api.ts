@@ -1,3 +1,10 @@
+import {
+  LoginRequestSchema,
+  CreateUserSchema,
+  AuthTokenResponseSchema,
+  AvailabilityResponseSchema,
+  LoginResponseSchema,
+} from "@/types/auth/auth.type";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 
@@ -8,71 +15,53 @@ export const authApi = c.router(
     signin: {
       method: "POST",
       path: "/login",
-      body: z.object({
-        email: z.string(),
-        password: z.string(),
-        //remember: z.boolean().optional(),
-      }),
+      body: LoginRequestSchema,
       responses: {
-        200: z.object({
-          accessToken: z.string(),
-          name: z.string(),
-          id: z.number(),
-        }),
+        200: LoginResponseSchema,
       },
     },
     signout: {
       method: "POST",
       path: "/logout",
-      body: z.object({}).optional(),
+      body: z.object({}),
       responses: {
-        200: z.object({
-          success: z.boolean(),
-        }),
+        200: z.void(),
       },
     },
-    refresh: {
+    reissue: {
       method: "POST",
-      path: "/refresh",
-      body: z.object({}).optional(),
+      path: "/reissue",
+      body: z.object({}),
       responses: {
-        200: z.object({
-          accessToken: z.string(),
-        }),
+        200: AuthTokenResponseSchema,
       },
     },
-    checkId: {
+    checkEmail: {
       method: "POST",
-      path: "/check",
+      path: "/check/email",
       body: z.object({
-        userid: z.string(),
+        email: z.string(),
       }),
       responses: {
-        200: z.object({
-          available: z.boolean(),
-        }),
+        200: AvailabilityResponseSchema,
+      },
+    },
+    checkName: {
+      method: "POST",
+      path: "/check/name",
+      body: z.object({
+        userName: z.string(),
+      }),
+      responses: {
+        200: AvailabilityResponseSchema,
       },
     },
     register: {
       method: "POST",
       path: "/join",
-      body: z.object({
-        password: z.string(),
-        nickname: z.string(),
-        email: z.string().optional(),
-        tags: z.object({
-          themes: z.array(z.string()).optional(),
-          moods: z.array(z.string()).optional(),
-          dislikes: z.array(z.string()).optional(),
-          foods: z.array(z.string()).optional(),
-          cafes: z.array(z.string()).optional(),
-          activity: z.string().optional(),
-        }),
-      }),
+      body: CreateUserSchema,
       responses: {
-        200: z.object({
-          success: z.boolean(),
-        }),
+        200: z.void(),
       },
     },
   },

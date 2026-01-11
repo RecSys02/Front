@@ -1,29 +1,30 @@
 import { useState } from "react";
-import type { Place, ModelResult } from "./model.type";
 import { ModelContext } from "./model.context";
 import { ModelStore } from "@/stores/model.store";
 import { ModelHistoryStore } from "@/stores/model-history.store";
 import { ModelInputStore } from "@/stores/model-input.store";
+import { PlaceDto } from "@/types/place/place.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 
 export const ModelProvider = ({ children }: { children: React.ReactNode }) => {
-  const [modelResult, _setModelResult] = useState<ModelResult | null>(() =>
+  const [modelResult, _setModelResult] = useState<ModelResponseDto | null>(() =>
     ModelStore.actions.getModelResult()
   );
 
-  const setModelResult = (result: ModelResult | null) => {
+  const setModelResult = (result: ModelResponseDto | null) => {
     _setModelResult(result);
     if (result) ModelStore.actions.setModelResult(result);
     else ModelStore.actions.clear();
   };
 
-  const [selectedPlaces, setSelectedPlaces] = useState<Place[]>([]);
+  const [selectedPlaces, setSelectedPlaces] = useState<PlaceDto[]>([]);
   const [activePlaceId, setActivePlaceId] = useState<number | null>(null);
 
-  const [historyPlaces, _setHistoryPlaces] = useState<Place[]>(() =>
+  const [historyPlaces, _setHistoryPlaces] = useState<PlaceDto[]>(() =>
     ModelHistoryStore.actions.getHistoryPlaces()
   );
 
-  const setHistoryPlaces: React.Dispatch<React.SetStateAction<Place[]>> = (
+  const setHistoryPlaces: React.Dispatch<React.SetStateAction<PlaceDto[]>> = (
     next
   ) => {
     _setHistoryPlaces((prev) => {

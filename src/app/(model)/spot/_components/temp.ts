@@ -1,6 +1,6 @@
-import type { ModelResult } from "../../model.type";
+import { ModelResponseDto } from "@/types/model/model.type";
 
-export const TEMP_MODEL_RESULTS: ModelResult[] = [
+export const TEMP_MODEL_RESULTS: ModelResponseDto[] = [
   {
     tourspots: [
       {

@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
-import type { Place } from "../../model.type";
 import { Switch } from "@/components/ui/switch";
 import {
   attachMarkerClick,
@@ -13,11 +12,12 @@ import {
   createLucideMapPinSvgUrl,
   createMainMarker,
 } from "../_lib/spot.util";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
-  places: Place[];
-  activePlace: Place | null;
-  historyPlaces?: Place[];
+  places: PlaceDto[];
+  activePlace: PlaceDto | null;
+  historyPlaces?: PlaceDto[];
   onMarkerClick?: (id: number) => void;
   onMapClick?: () => void;
   sidebarOpen?: boolean;

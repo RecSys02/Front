@@ -1,6 +1,5 @@
 import Row from "@/components/common/container/row";
 import Column from "@/components/common/container/column";
-import type { Place } from "../../model.type";
 import { cn } from "@/libs/utils";
 import { Check } from "lucide-react";
 import { Button } from "@/components/common/button/button";
@@ -8,9 +7,10 @@ import Body from "@/components/text/body";
 import { ImageBox } from "@/components/common/container/image-box";
 import { Badge } from "@/components/ui/badge/badge";
 import Placeholder from "@/assets/banners/placeholder.png";
+import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
-  place: Place;
+  place: PlaceDto;
   isActive: boolean;
   isSelected: boolean;
   onFocus: (id: number) => void;
