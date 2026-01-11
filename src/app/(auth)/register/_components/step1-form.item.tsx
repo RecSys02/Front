@@ -9,41 +9,41 @@ import { Check } from "lucide-react";
 export type GenerateRegisterStep1ItemsProps = {
   values: RegisterFormValues;
   setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>;
-  onCheckUserId: () => void;
-  isCheckingUserId: boolean;
-  resetUserIdAvailable: () => void;
-  isUserIdAvailable: boolean | null;
+  onCheckEmail: () => void;
+  isCheckingEmail: boolean;
+  resetEmailAvailable: () => void;
+  isEmailAvailable: boolean | null;
 };
 
 export const generateRegisterStep1Items = ({
   values,
   setValues,
-  onCheckUserId,
-  isCheckingUserId,
-  resetUserIdAvailable,
-  isUserIdAvailable,
+  onCheckEmail,
+  isCheckingEmail,
+  resetEmailAvailable,
+  isEmailAvailable,
 }: GenerateRegisterStep1ItemsProps): FormItemConfig<RegisterFormValues>[] => [
   {
-    key: "userId",
-    label: "아이디",
-    rules: [{ required: true, message: "아이디를 입력해주세요." }],
+    key: "email",
+    label: "이메일",
+    rules: [{ required: true, message: "이메일를 입력해주세요." }],
     children: (
       <Column className="w-full gap-2">
         <Row className="w-full items-center gap-2">
           <Row className="relative flex-1">
             <Input
-              id="userId"
+              id="email"
               type="text"
-              placeholder="아이디 입력"
+              placeholder="이메일 입력"
               className="h-15 text-body2 w-full pr-10"
-              value={values.userId}
+              value={values.email}
               onChange={(e) => {
-                resetUserIdAvailable();
-                setValues((prev) => ({ ...prev, userId: e.target.value }));
+                resetEmailAvailable();
+                setValues((prev) => ({ ...prev, email: e.target.value }));
               }}
             />
 
-            {isUserIdAvailable === true && !isCheckingUserId && (
+            {isEmailAvailable === true && !isCheckingEmail && (
               <Check
                 size={18}
                 className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500"
@@ -53,8 +53,8 @@ export const generateRegisterStep1Items = ({
           <Button
             type="button"
             className="h-15 px-4 text-body3 w-20 text-white bg-emphasis"
-            onClick={onCheckUserId}
-            isLoading={isCheckingUserId}
+            onClick={onCheckEmail}
+            isLoading={isCheckingEmail}
           >
             중복 확인
           </Button>
@@ -99,7 +99,7 @@ export const generateRegisterStep1Items = ({
     ],
   },
   {
-    key: "nickname",
+    key: "userName",
     type: "text",
     label: "닉네임",
     placeholder: "닉네임 입력",

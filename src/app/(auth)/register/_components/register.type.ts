@@ -9,11 +9,10 @@ export type Tags = {
 };
 
 export type RegisterFormValues = {
-  userId: string;
+  email: string;
   password: string;
   passwordConfirm: string;
-  nickname: string;
-  email: string;
+  userName: string;
   tags: Tags;
 };
 

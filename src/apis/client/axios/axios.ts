@@ -23,7 +23,7 @@ export const axiosInstance = axios.create({
   withCredentials: true,
 });
 
-const refreshClient = axios.create({
+const reissueClient = axios.create({
   baseURL: BASE_URL,
   timeout: 10_000,
   headers: {
@@ -32,7 +32,7 @@ const refreshClient = axios.create({
   withCredentials: true,
 });
 
-let isRefreshing = false;
+let isReissueing = false;
 let pendingQueue: Array<(token: string | null) => void> = [];
 
 const processQueue = (token: string | null) => {
@@ -71,7 +71,7 @@ axiosInstance.interceptors.response.use(
     }
 
     if (response.status === 401) {
-      if (isRefreshing) {
+      if (isReissueing) {
         return new Promise((resolve, reject) => {
           pendingQueue.push((newToken) => {
             if (!newToken) {
@@ -86,14 +86,14 @@ axiosInstance.interceptors.response.use(
       }
 
       originalRequest._retry = true;
-      isRefreshing = true;
+      isReissueing = true;
 
       try {
-        const refreshRes = await refreshClient.post("/auth/refresh");
-        const newToken: string | undefined = refreshRes.data?.accessToken;
+        const reissueRes = await reissueClient.post("/auth/reissue");
+        const newToken: string | undefined = reissueRes.data?.accessToken;
 
         if (!newToken) {
-          throw new Error("No accessToken in refresh response");
+          throw new Error("No accessToken in reissue response");
         }
 
         setAccessToken(newToken);
@@ -103,13 +103,13 @@ axiosInstance.interceptors.response.use(
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
 
         return axiosInstance(originalRequest);
-      } catch (refreshError) {
+      } catch (reissueError) {
         processQueue(null);
         clear();
         window.location.href = "/login";
-        return Promise.reject(refreshError);
+        return Promise.reject(reissueError);
       } finally {
-        isRefreshing = false;
+        isReissueing = false;
       }
     }
 
