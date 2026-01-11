@@ -1,4 +1,4 @@
-import type { PlaceDto } from "@/app/(model)/model.type";
+import { PlaceDto } from "@/types/place/place.type";
 
 const MODEL_HISTORY_KEY = "model_history_places";
 

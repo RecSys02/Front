@@ -3,56 +3,55 @@ import { useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
 import Banner1 from "@/assets/banners/banner1.jpg";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
+import {
+  CreatePlanRequestDto,
+  CreatePlanResponseDto,
+  MyPlanListResponseDto,
+  PopularPlanCardDto,
+} from "@/types/plan/plan.wrapper.type";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
-type PopularItem = {
-  title: string;
-  tags: string[];
-  likes: number;
-  isActive: boolean;
-  imgSrc: string;
-};
-const MOCK_POPULAR: PopularItem[] = [
+const MOCK_POPULAR: PopularPlanCardDto[] = [
   {
-    title: "제주도 3박 4일",
+    name: "제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
-    likes: 120,
+    likeCount: 120,
     isActive: true,
     imgSrc: Banner1,
   },
   {
-    title: "강릉으로 떠나는 2박 3일",
+    name: "강릉으로 떠나는 2박 3일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
-    likes: 80,
+    likeCount: 80,
     isActive: false,
     imgSrc: Banner1,
   },
   {
-    title: "제주도 3박 4일",
+    name: "제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
-    likes: 75,
+    likeCount: 75,
     isActive: false,
     imgSrc: Banner1,
   },
   {
-    title: "강릉으로 떠나는 2박 3일",
+    name: "강릉으로 떠나는 2박 3일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
-    likes: 50,
+    likeCount: 50,
     isActive: true,
     imgSrc: Banner1,
   },
   {
-    title: "제주도 3박 4일",
+    name: "제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
-    likes: 40,
+    likeCount: 40,
     isActive: false,
     imgSrc: Banner1,
   },
   {
-    title: "강릉으로 떠나는 2박 3일",
+    name: "강릉으로 떠나는 2박 3일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
-    likes: 20,
+    likeCount: 20,
     isActive: false,
     imgSrc: Banner1,
   },
@@ -74,7 +73,7 @@ export const usePopular = () => {
 };
 
 const MOCK_CREATE_PLAN = {
-  schedules: [
+  schedule: [
     {
       date: "2026-01-02",
       activities: [
@@ -120,16 +119,6 @@ const MOCK_CREATE_PLAN = {
   ],
 };
 
-export type CreatePlanRequestDTO = {
-  from: string;
-  to: string;
-  places: { placeId: number; category: string; province: string }[];
-};
-
-export type CreatePlanResponseDTO = {
-  schedules: Schedule[];
-};
-
 export const useCreatePlan = () => {
   const navigate = useNavigate();
 
@@ -139,7 +128,7 @@ export const useCreatePlan = () => {
     },
   });
 
-  const mock = useMutation<CreatePlanResponseDTO, Error, CreatePlanRequestDTO>({
+  const mock = useMutation<CreatePlanResponseDto, Error, CreatePlanRequestDto>({
     mutationFn: async () => MOCK_CREATE_PLAN,
     onSuccess: () => {
       navigate({ to: ROUTES.ModelPlan });
@@ -148,31 +137,12 @@ export const useCreatePlan = () => {
 
   return IS_MOCK ? mock : real;
 };
-export type Activity = {
-  name: string;
-  placeId: number;
-  category: string;
-  province: string;
-  startTime: string;
-  endTime: string;
-};
 
-export type Schedule = {
-  date: string;
-  activities: Activity[];
-};
-
-export type PlanItem = {
-  id: number;
-  title: string;
-  schedules: Schedule[];
-};
-
-const MOCK_PLAN: PlanItem[] = [
+const MOCK_PLAN: MyPlanListResponseDto = [
   {
     id: 1,
-    title: "서울역 여행",
-    schedules: [
+    name: "서울역 여행",
+    schedule: [
       {
         date: "2025-12-24",
         activities: [
@@ -256,8 +226,8 @@ const MOCK_PLAN: PlanItem[] = [
   },
   {
     id: 2,
-    title: "가을 여행",
-    schedules: [
+    name: "가을 여행",
+    schedule: [
       {
         date: "2025-09-12",
         activities: [
@@ -299,9 +269,9 @@ export type SearchFilterDTO = {
   from: string;
   to: string;
 };
-export const usePlan = (
+export const usePlanListByUser = (
   params?: SearchFilterDTO
-): UseQueryResult<PlanItem[]> => {
+): UseQueryResult<MyPlanListResponseDto> => {
   const key = [
     "plan",
     "read",
@@ -309,16 +279,18 @@ export const usePlan = (
     params?.to ?? null,
   ] as const;
 
-  const real = tsr.plan.read.useQuery({
+  const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
     query: params,
     enabled: !IS_MOCK,
   });
 
-  const mock = useQuery<PlanItem[]>({
+  const mock = useQuery<MyPlanListResponseDto>({
     queryKey: key,
     queryFn: async () => MOCK_PLAN,
     enabled: IS_MOCK,
   });
-  return (IS_MOCK ? mock : real) as unknown as UseQueryResult<PlanItem[]>;
+  return (IS_MOCK
+    ? mock
+    : real) as unknown as UseQueryResult<MyPlanListResponseDto>;
 };

@@ -1,5 +1,5 @@
-import { ModelResponseDto } from "@/app/(model)/model.type";
 import storage from "@/storage/storage";
+import { ModelResponseDto } from "@/types/model/model.type";
 
 const MODEL_RESULT_KEY = "model_result";
 
