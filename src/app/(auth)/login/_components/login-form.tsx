@@ -19,13 +19,13 @@ const LoginForm = () => {
 
   const handleSubmit = () => {
     if (!isValid) return;
-
+    const payload = {
+      email: values.email,
+      password: values.password,
+      remember: values.remember,
+    };
     signin.mutate(
-      {
-        email: values.email,
-        password: values.password,
-        remember: values.remember,
-      },
+      { body: payload },
       {
         onSuccess: () => {
           navigate({ to: ROUTES.Home });
