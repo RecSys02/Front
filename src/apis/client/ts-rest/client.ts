@@ -4,11 +4,11 @@ import axiosInstance from "../axios/axios";
 import { initTsrReactQuery } from "@ts-rest/react-query/v5";
 
 export const tsr = initTsrReactQuery(contract, {
-  baseUrl: import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "http://localhost:3000",
+  baseUrl: "",
   baseHeaders: {},
   api: async (args: ApiFetcherArgs) => {
     const result = await axiosInstance({
-      url: "",
+      url: args.path,
       method: args.method,
       headers: args.headers,
       data: args.body,
