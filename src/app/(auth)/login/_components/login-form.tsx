@@ -22,7 +22,7 @@ const LoginForm = () => {
     const payload = {
       email: values.email,
       password: values.password,
-      remember: values.remember,
+      //remember: values.remember,
     };
     signin.mutate(
       { body: payload },

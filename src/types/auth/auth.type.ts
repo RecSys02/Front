@@ -35,4 +35,3 @@ export const CreateUserSchema = z.object({
   tagIds: z.array(z.number()),
 });
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;
-
