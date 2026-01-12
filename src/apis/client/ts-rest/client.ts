@@ -8,7 +8,7 @@ export const tsr = initTsrReactQuery(contract, {
   baseHeaders: {},
   api: async (args: ApiFetcherArgs) => {
     const result = await axiosInstance({
-      url: args.path,
+      url: "",
       method: args.method,
       headers: args.headers,
       data: args.body,
