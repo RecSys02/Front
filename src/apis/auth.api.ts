@@ -1,5 +1,4 @@
 import {
-  LoginRequestSchema,
   CreateUserSchema,
   AuthTokenResponseSchema,
   AvailabilityResponseSchema,
@@ -15,7 +14,10 @@ export const authApi = c.router(
     signin: {
       method: "POST",
       path: "/login",
-      body: LoginRequestSchema,
+      body: z.object({
+        email: z.string(),
+        password: z.string(),
+      }),
       responses: {
         200: LoginResponseSchema,
       },
