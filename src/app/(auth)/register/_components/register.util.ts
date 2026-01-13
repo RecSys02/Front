@@ -1,8 +1,11 @@
 import { RegisterFormValues } from "./register.type";
 
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 export const validateStep1 = (
   values: RegisterFormValues,
-  isEmailAvailable: boolean | null
+  isEmailAvailable: boolean | null,
+  isUserNameAvailable: boolean | null
 ) => {
   const password = values.password.trim();
   const passwordConfirm = values.passwordConfirm.trim();
@@ -12,6 +15,7 @@ export const validateStep1 = (
 
   return (
     isEmailAvailable === true &&
+    isUserNameAvailable === true &&
     values.email.trim() !== "" &&
     isPasswordValid &&
     passwordConfirm !== "" &&
@@ -22,9 +26,14 @@ export const validateStep1 = (
 
 export const generateRegisterUtil = (
   values: RegisterFormValues,
-  isEmailAvailable: boolean | null
+  isEmailAvailable: boolean | null,
+  isUserNameAvailable: boolean | null
 ) => {
-  const isStep1Valid = validateStep1(values, isEmailAvailable);
+  const isStep1Valid = validateStep1(
+    values,
+    isEmailAvailable,
+    isUserNameAvailable
+  );
   const isValid = isStep1Valid;
   return { isStep1Valid, isValid };
 };
