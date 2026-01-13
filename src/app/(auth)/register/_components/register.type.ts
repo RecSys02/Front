@@ -1,10 +1,10 @@
 export type Tags = {
-  themes: string[] | null;
-  moods: string[] | null;
-  dislikes: string[] | null;
-  foods: string[] | null;
-  cafes: string[] | null;
-  activity: string | null;
+  themeIds: number[] | null;
+  moodIds: number[] | null;
+  dislikeIds: number[] | null;
+  foodIds: number[] | null;
+  cafeIds: number[] | null;
+  activityTagId: number | null;
   activityValue: number;
 };
 

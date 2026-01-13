@@ -1,23 +1,16 @@
 import { FormItemConfig } from "@/components/ui/form/form.type";
 import { RegisterFormValues } from "./register.type";
 import { TagSelector } from "@/components/ui/tag-selector";
-import {
-  THEME_TAGS,
-  MOOD_TAGS,
-  CAFE_TAGS,
-  FOOD_TAGS,
-  DISLIKE_TAGS,
-  TAG_COLORS,
-  ACTIVITY_TAGS,
-} from "@/constants/types";
 import Column from "@/components/common/container/column";
 import { PreferenceSection } from "../../../../components/ui/preference-section";
 import { Slider } from "@/components/ui/slider";
-import { mapSliderToActivityIndex } from "./register.util";
+import { mapSliderToActivityIndex, TagSource } from "./register.util";
+import { TAG_COLORS } from "@/constants/types";
 
 export const generateRegisterStep2Items = (
   values: RegisterFormValues,
-  setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>
+  setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>,
+  tagSource: TagSource
 ): FormItemConfig<RegisterFormValues>[] => [
   {
     key: "tags",
@@ -29,15 +22,13 @@ export const generateRegisterStep2Items = (
           withDivider={false}
         >
           <TagSelector
-            tags={THEME_TAGS}
-            value={values.tags.themes ?? []}
-            onChange={(next) =>
+            tags={tagSource.THEME}
+            variant="option"
+            value={values.tags.themeIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  themes: next,
-                },
+                tags: { ...prev.tags, themeIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -50,15 +41,13 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={MOOD_TAGS}
-            value={values.tags.moods ?? []}
-            onChange={(next) =>
+            tags={tagSource.MOOD}
+            variant="option"
+            value={values.tags.moodIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  moods: next,
-                },
+                tags: { ...prev.tags, moodIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -76,13 +65,14 @@ export const generateRegisterStep2Items = (
             value={[values.tags.activityValue]}
             onValueChange={([val]) => {
               const idx = mapSliderToActivityIndex(val);
-              const tag = ACTIVITY_TAGS[idx];
+              const option = tagSource.ACTIVITY_LEVEL[idx];
+
               setValues((prev) => ({
                 ...prev,
                 tags: {
                   ...prev.tags,
                   activityValue: val,
-                  activity: tag,
+                  activityTagId: option?.id ?? null,
                 },
               }));
             }}
@@ -95,15 +85,13 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={FOOD_TAGS}
-            value={values.tags.foods ?? []}
-            onChange={(next) =>
+            tags={tagSource.FOOD}
+            variant="option"
+            value={values.tags.foodIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  foods: next,
-                },
+                tags: { ...prev.tags, foodIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -116,15 +104,13 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={CAFE_TAGS}
-            value={values.tags.cafes ?? []}
-            onChange={(next) =>
+            tags={tagSource.CAFE}
+            variant="option"
+            value={values.tags.cafeIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  cafes: next,
-                },
+                tags: { ...prev.tags, cafeIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -137,15 +123,13 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={DISLIKE_TAGS}
-            value={values.tags.dislikes ?? []}
-            onChange={(next) =>
+            tags={tagSource.DISLIKE}
+            variant="option"
+            value={values.tags.dislikeIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  dislikes: next,
-                },
+                tags: { ...prev.tags, dislikeIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}

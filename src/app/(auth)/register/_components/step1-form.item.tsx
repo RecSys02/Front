@@ -9,22 +9,35 @@ import { Check } from "lucide-react";
 export type GenerateRegisterStep1ItemsProps = {
   values: RegisterFormValues;
   setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>;
+
   onCheckEmail: () => void;
   isCheckingEmail: boolean;
   resetEmailAvailable: () => void;
   isEmailAvailable: boolean | null;
+
+  onCheckUserName: () => void;
+  isCheckingUserName: boolean;
+  resetUserNameAvailable: () => void;
+  isUserNameAvailable: boolean | null;
 };
 
 export const generateRegisterStep1Items = ({
   values,
   setValues,
+
   onCheckEmail,
   isCheckingEmail,
   resetEmailAvailable,
   isEmailAvailable,
+
+  onCheckUserName,
+  isCheckingUserName,
+  resetUserNameAvailable,
+  isUserNameAvailable,
 }: GenerateRegisterStep1ItemsProps): FormItemConfig<RegisterFormValues>[] => [
   {
     key: "email",
+    type: "text",
     label: "이메일",
     rules: [{ required: true, message: "이메일를 입력해주세요." }],
     children: (
@@ -50,6 +63,7 @@ export const generateRegisterStep1Items = ({
               />
             )}
           </Row>
+
           <Button
             type="button"
             className="h-15 px-4 text-body3 w-20 text-white bg-emphasis"
@@ -62,16 +76,14 @@ export const generateRegisterStep1Items = ({
       </Column>
     ),
   },
+
   {
     key: "password",
     type: "password",
     label: "비밀번호",
     placeholder: "8자리 이상 입력",
     rules: [
-      {
-        required: true,
-        message: "비밀번호를 입력해주세요.",
-      },
+      { required: true, message: "비밀번호를 입력해주세요." },
       {
         live: true,
         message: "소문자, 숫자, 특수문자를 모두 포함해야 합니다.",
@@ -81,6 +93,7 @@ export const generateRegisterStep1Items = ({
       },
     ],
   },
+
   {
     key: "passwordConfirm",
     type: "password",
@@ -98,19 +111,49 @@ export const generateRegisterStep1Items = ({
       },
     ],
   },
+
   {
     key: "userName",
     type: "text",
     label: "닉네임",
-    placeholder: "닉네임 입력",
-    clearable: true,
     rules: [{ required: true, message: "닉네임을 입력해주세요." }],
-  },
-  {
-    key: "email",
-    type: "text",
-    label: "이메일",
-    placeholder: "example@email.com",
-    clearable: true,
+    children: (
+      <Column className="w-full gap-2">
+        <Row className="w-full items-center gap-2">
+          <Row className="relative flex-1">
+            <Input
+              id="userName"
+              type="text"
+              placeholder="닉네임 입력"
+              className="h-15 text-body2 w-full pr-10"
+              value={values.userName}
+              onChange={(e) => {
+                resetUserNameAvailable();
+                setValues((prev) => ({
+                  ...prev,
+                  userName: e.target.value,
+                }));
+              }}
+            />
+
+            {isUserNameAvailable === true && !isCheckingUserName && (
+              <Check
+                size={18}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-green-500"
+              />
+            )}
+          </Row>
+
+          <Button
+            type="button"
+            className="h-15 px-4 text-body3 w-20 text-white bg-emphasis"
+            onClick={onCheckUserName}
+            isLoading={isCheckingUserName}
+          >
+            중복 확인
+          </Button>
+        </Row>
+      </Column>
+    ),
   },
 ];

@@ -2,69 +2,127 @@ import Row from "@/components/common/container/row";
 import { cn } from "@/libs/utils";
 import { Badge } from "./badge/badge";
 
-type BaseProps = {
-  tags: readonly string[];
+export type TagOption = {
+  id: number;
+  label: string;
+};
+
+type CommonProps = {
   className?: string;
   selectedColors?: readonly string[];
 };
 
-type MultipleProps = BaseProps & {
+type BaseStringProps = CommonProps & {
+  variant?: "string";
+  tags: readonly string[];
+};
+
+type MultipleStringProps = BaseStringProps & {
   mode?: "multiple";
   value: string[];
   onChange: (next: string[]) => void;
 };
 
-type SingleProps = BaseProps & {
+type SingleStringProps = BaseStringProps & {
   mode: "single";
   value: string | null;
   onChange: (next: string | null) => void;
 };
 
-type TagSelectorProps = MultipleProps | SingleProps;
+type BaseOptionProps = CommonProps & {
+  variant: "option";
+  tags: readonly TagOption[];
+};
+
+type MultipleOptionProps = BaseOptionProps & {
+  mode?: "multiple";
+  value: number[];
+  onChange: (next: number[]) => void;
+};
+
+type SingleOptionProps = BaseOptionProps & {
+  mode: "single";
+  value: number | null;
+  onChange: (next: number | null) => void;
+};
+
+type TagSelectorProps =
+  | MultipleStringProps
+  | SingleStringProps
+  | MultipleOptionProps
+  | SingleOptionProps;
 
 export const TagSelector = (props: TagSelectorProps) => {
-  const { tags, className, selectedColors } = props;
-  const isMultiple = props.mode !== "single";
+  const { className, selectedColors } = props;
 
-  const toggleTag = (tag: string) => {
-    if (isMultiple) {
-      const selected = props.value.includes(tag);
-      if (selected) {
-        props.onChange(props.value.filter((t) => t !== tag));
-      } else {
-        props.onChange([...props.value, tag]);
-      }
-    } else {
-      const selected = props.value === tag;
-      props.onChange(selected ? null : tag);
-    }
-  };
+  const isOption = props.variant === "option";
+  const isMultiple = props.mode !== "single";
 
   const getSelectedClass = (index: number) => {
     if (!selectedColors || selectedColors.length === 0) {
       return "bg-emphasis text-white border-transparent";
     }
-
-    if (!isMultiple) {
-      return selectedColors[0];
-    }
-
+    if (!isMultiple) return selectedColors[0];
     return selectedColors[index % selectedColors.length];
+  };
+
+  const items = isOption
+    ? props.tags.map((t) => ({ key: t.id, label: t.label }))
+    : props.tags.map((t) => ({ key: t, label: t }));
+
+  const toggle = (key: number | string) => {
+    if (isMultiple) {
+      if (isOption) {
+        const value = (props as MultipleOptionProps).value;
+        const selected = value.includes(key as number);
+        (props as MultipleOptionProps).onChange(
+          selected
+            ? value.filter((v) => v !== (key as number))
+            : [...value, key as number]
+        );
+      } else {
+        const value = (props as MultipleStringProps).value;
+        const selected = value.includes(key as string);
+        (props as MultipleStringProps).onChange(
+          selected
+            ? value.filter((v) => v !== (key as string))
+            : [...value, key as string]
+        );
+      }
+    } else {
+      if (isOption) {
+        const value = (props as SingleOptionProps).value;
+        const selected = value === (key as number);
+        (props as SingleOptionProps).onChange(
+          selected ? null : (key as number)
+        );
+      } else {
+        const value = (props as SingleStringProps).value;
+        const selected = value === (key as string);
+        (props as SingleStringProps).onChange(
+          selected ? null : (key as string)
+        );
+      }
+    }
   };
 
   return (
     <Row className={cn("flex-wrap gap-2", className)}>
-      {tags.map((tag, index) => {
-        const isSelected = isMultiple
-          ? props.value.includes(tag)
-          : props.value === tag;
-
+      {items.map(({ key, label }, index) => {
         const selectedClass = getSelectedClass(index);
+
+        const isSelected = isMultiple
+          ? isOption
+            ? (props as MultipleOptionProps).value.includes(key as number)
+            : (props as MultipleStringProps).value.includes(key as string)
+          : isOption
+          ? (props as SingleOptionProps).value === (key as number)
+          : (props as SingleStringProps).value === (key as string);
 
         return (
           <Badge
-            key={tag}
-            onClick={() => toggleTag(tag)}
+            key={String(key)}
+            onClick={() => toggle(key)}
             className={cn(
               "cursor-pointer select-none text-[14px] px-4 py-2 rounded-full border transition-colors",
               isSelected
@@ -72,7 +130,7 @@ export const TagSelector = (props: TagSelectorProps) => {
                 : "bg-white border-gray-300 text-gray-600 hover:bg-gray-50"
             )}
           >
-            {tag}
+            {label}
           </Badge>
         );
       })}

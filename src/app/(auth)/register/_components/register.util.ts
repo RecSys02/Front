@@ -1,8 +1,49 @@
 import { RegisterFormValues } from "./register.type";
+import type { Tag } from "@/types/tag/tag.type";
+
+export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export type TagOption = { id: number; label: string };
+
+export type TagSource = {
+  THEME: readonly TagOption[];
+  MOOD: readonly TagOption[];
+  FOOD: readonly TagOption[];
+  CAFE: readonly TagOption[];
+  DISLIKE: readonly TagOption[];
+  ACTIVITY_LEVEL: readonly TagOption[];
+};
+
+type TagSourceMutable = {
+  [K in keyof TagSource]: TagOption[];
+};
+
+export const mapTagsToSource = (tags: Tag[]): TagSource => {
+  const source: TagSourceMutable = {
+    THEME: [],
+    MOOD: [],
+    FOOD: [],
+    CAFE: [],
+    DISLIKE: [],
+    ACTIVITY_LEVEL: [],
+  };
+
+  for (const t of tags) {
+    if (t.tagType in source) {
+      source[t.tagType as keyof TagSourceMutable].push({
+        id: t.id,
+        label: t.name,
+      });
+    }
+  }
+
+  return source;
+};
 
 export const validateStep1 = (
   values: RegisterFormValues,
-  isEmailAvailable: boolean | null
+  isEmailAvailable: boolean | null,
+  isUserNameAvailable: boolean | null
 ) => {
   const password = values.password.trim();
   const passwordConfirm = values.passwordConfirm.trim();
@@ -12,6 +53,7 @@ export const validateStep1 = (
 
   return (
     isEmailAvailable === true &&
+    isUserNameAvailable === true &&
     values.email.trim() !== "" &&
     isPasswordValid &&
     passwordConfirm !== "" &&
@@ -22,9 +64,14 @@ export const validateStep1 = (
 
 export const generateRegisterUtil = (
   values: RegisterFormValues,
-  isEmailAvailable: boolean | null
+  isEmailAvailable: boolean | null,
+  isUserNameAvailable: boolean | null
 ) => {
-  const isStep1Valid = validateStep1(values, isEmailAvailable);
+  const isStep1Valid = validateStep1(
+    values,
+    isEmailAvailable,
+    isUserNameAvailable
+  );
   const isValid = isStep1Valid;
   return { isStep1Valid, isValid };
 };
