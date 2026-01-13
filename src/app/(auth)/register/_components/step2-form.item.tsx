@@ -23,11 +23,12 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={tagSource.THEME}
-            value={values.tags.themes ?? []}
-            onChange={(next) =>
+            variant="option"
+            value={values.tags.themeIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, themes: next },
+                tags: { ...prev.tags, themeIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -41,11 +42,12 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={tagSource.MOOD}
-            value={values.tags.moods ?? []}
-            onChange={(next) =>
+            variant="option"
+            value={values.tags.moodIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, moods: next },
+                tags: { ...prev.tags, moodIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -63,14 +65,14 @@ export const generateRegisterStep2Items = (
             value={[values.tags.activityValue]}
             onValueChange={([val]) => {
               const idx = mapSliderToActivityIndex(val);
-              const tag = tagSource.ACTIVITY[idx] ?? null;
+              const option = tagSource.ACTIVITY[idx];
 
               setValues((prev) => ({
                 ...prev,
                 tags: {
                   ...prev.tags,
                   activityValue: val,
-                  activity: tag,
+                  activityTagId: option?.id ?? null,
                 },
               }));
             }}
@@ -84,11 +86,12 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={tagSource.FOOD}
-            value={values.tags.foods ?? []}
-            onChange={(next) =>
+            variant="option"
+            value={values.tags.foodIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, foods: next },
+                tags: { ...prev.tags, foodIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -102,11 +105,12 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={tagSource.CAFE}
-            value={values.tags.cafes ?? []}
-            onChange={(next) =>
+            variant="option"
+            value={values.tags.cafeIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, cafes: next },
+                tags: { ...prev.tags, cafeIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -120,11 +124,12 @@ export const generateRegisterStep2Items = (
         >
           <TagSelector
             tags={tagSource.DISLIKE}
-            value={values.tags.dislikes ?? []}
-            onChange={(next) =>
+            variant="option"
+            value={values.tags.dislikeIds ?? []}
+            onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, dislikes: next },
+                tags: { ...prev.tags, dislikeIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}

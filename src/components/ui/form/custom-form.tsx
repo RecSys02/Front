@@ -68,26 +68,24 @@ export function CustomForm<TValues>({
 
   const handleChange = (item: FormItemConfig<TValues>, value: unknown) => {
     const name = String(item.key);
+    const nextValues = { ...values, [item.key]: value } as TValues;
 
-    setValues((prev) => {
-      const next = { ...prev, [item.key]: value };
+    setValues(nextValues);
 
-      const hasLiveRule = item.rules?.some((r) => r.live);
+    const hasLiveRule = item.rules?.some((r) => r.live);
 
-      if (hasLiveRule) {
-        const error = validateField(item, next, { onlyLive: true });
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: error,
-        }));
-      } else if (errors[name]) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: null,
-        }));
-      }
+    if (hasLiveRule) {
+      const error = validateField(item, nextValues, { onlyLive: true });
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: error,
+      }));
+      return;
+    }
 
-      return next;
+    setErrors((prevErrors) => {
+      if (!prevErrors[name]) return prevErrors;
+      return { ...prevErrors, [name]: null };
     });
   };
 

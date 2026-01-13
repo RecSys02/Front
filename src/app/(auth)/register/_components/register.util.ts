@@ -3,28 +3,37 @@ import type { Tag } from "@/types/tag/tag.type";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+export type TagOption = { id: number; label: string };
+
 export type TagSource = {
-  THEME: readonly string[];
-  MOOD: readonly string[];
-  FOOD: readonly string[];
-  CAFE: readonly string[];
-  DISLIKE: readonly string[];
-  ACTIVITY: readonly string[];
+  THEME: readonly TagOption[];
+  MOOD: readonly TagOption[];
+  FOOD: readonly TagOption[];
+  CAFE: readonly TagOption[];
+  DISLIKE: readonly TagOption[];
+  ACTIVITY: readonly TagOption[];
+};
+
+type TagSourceMutable = {
+  [K in keyof TagSource]: TagOption[];
 };
 
 export const mapTagsToSource = (tags: Tag[]): TagSource => {
-  const source = {
-    THEME: [] as string[],
-    MOOD: [] as string[],
-    FOOD: [] as string[],
-    CAFE: [] as string[],
-    DISLIKE: [] as string[],
-    ACTIVITY: [] as string[],
+  const source: TagSourceMutable = {
+    THEME: [],
+    MOOD: [],
+    FOOD: [],
+    CAFE: [],
+    DISLIKE: [],
+    ACTIVITY: [],
   };
 
   for (const t of tags) {
     if (t.category in source) {
-      source[t.category as keyof typeof source].push(t.name);
+      source[t.category as keyof TagSourceMutable].push({
+        id: t.id,
+        label: t.name,
+      });
     }
   }
 

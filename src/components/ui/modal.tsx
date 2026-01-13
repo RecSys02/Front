@@ -50,16 +50,22 @@ const Modal = ({
         onEscapeKeyDown={(e) => e.preventDefault()}
         className={noPadding ? "p-0" : undefined}
       >
-        <DialogHeader className="space-y-0 ">
+        <DialogHeader className="space-y-0">
           <DialogTitle className="mb-5 text-center font-semibold text-subtitle2">
             {title}
           </DialogTitle>
-          <DialogDescription className="mt-0 whitespace-pre-wrap text-center font-medium text-body2">
-            {description}
-          </DialogDescription>
+
+          {description && (
+            <DialogDescription asChild>
+              <div className="mt-0 whitespace-pre-wrap text-center font-medium text-body2">
+                {description}
+              </div>
+            </DialogDescription>
+          )}
         </DialogHeader>
 
         {content}
+
         {noFooter || (
           <DialogFooter>
             {cancelText && (

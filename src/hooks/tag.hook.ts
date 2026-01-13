@@ -18,13 +18,20 @@ import { ApiOk } from "@/types/util.type";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
+const toOptions = (tags: readonly string[], startId: number) => {
+  return tags.map((label, i) => ({
+    id: startId + i,
+    label,
+  }));
+};
+
 const MOCK_TAG_SOURCE: TagSource = {
-  THEME: THEME_TAGS,
-  MOOD: MOOD_TAGS,
-  FOOD: FOOD_TAGS,
-  CAFE: CAFE_TAGS,
-  DISLIKE: DISLIKE_TAGS,
-  ACTIVITY: ACTIVITY_TAGS,
+  THEME: toOptions(THEME_TAGS, 100),
+  MOOD: toOptions(MOOD_TAGS, 200),
+  FOOD: toOptions(FOOD_TAGS, 300),
+  CAFE: toOptions(CAFE_TAGS, 400),
+  DISLIKE: toOptions(DISLIKE_TAGS, 500),
+  ACTIVITY: toOptions(ACTIVITY_TAGS, 600),
 };
 
 export const useTags = () => {
