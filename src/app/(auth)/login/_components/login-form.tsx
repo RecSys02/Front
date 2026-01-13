@@ -10,7 +10,6 @@ const LoginForm = () => {
   const [values, setValues] = useState<LoginFormValues>({
     email: "",
     password: "",
-    remember: false,
   });
 
   const isValid = values.password.trim() !== "";
@@ -22,7 +21,6 @@ const LoginForm = () => {
     const payload = {
       email: values.email,
       password: values.password,
-      //remember: values.remember,
     };
     signin.mutate(
       { body: payload },
@@ -34,7 +32,7 @@ const LoginForm = () => {
     );
   };
 
-  const items = generateLoginFormItems(values, setValues);
+  const items = generateLoginFormItems();
 
   return (
     <Surface className="max-w-md w-full">

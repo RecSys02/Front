@@ -17,7 +17,6 @@ export type AvailabilityResponse = z.infer<typeof AvailabilityResponseSchema>;
 export const LoginRequestSchema = z.object({
   email: z.string(),
   password: z.string(),
-  remember: z.boolean().optional(),
 });
 export type LoginRequestDto = z.infer<typeof LoginRequestSchema>;
 

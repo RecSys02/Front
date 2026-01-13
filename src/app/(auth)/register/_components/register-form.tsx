@@ -71,7 +71,6 @@ const RegisterForm = () => {
         signin.mutate({
           email: values.email,
           password: values.password,
-          remember: false,
         });
       },
     });
