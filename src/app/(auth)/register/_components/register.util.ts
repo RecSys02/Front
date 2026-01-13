@@ -11,7 +11,7 @@ export type TagSource = {
   FOOD: readonly TagOption[];
   CAFE: readonly TagOption[];
   DISLIKE: readonly TagOption[];
-  ACTIVITY: readonly TagOption[];
+  ACTIVITY_LEVEL: readonly TagOption[];
 };
 
 type TagSourceMutable = {
@@ -25,7 +25,7 @@ export const mapTagsToSource = (tags: Tag[]): TagSource => {
     FOOD: [],
     CAFE: [],
     DISLIKE: [],
-    ACTIVITY: [],
+    ACTIVITY_LEVEL: [],
   };
 
   for (const t of tags) {

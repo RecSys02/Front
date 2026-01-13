@@ -65,7 +65,7 @@ export const generateRegisterStep2Items = (
             value={[values.tags.activityValue]}
             onValueChange={([val]) => {
               const idx = mapSliderToActivityIndex(val);
-              const option = tagSource.ACTIVITY[idx];
+              const option = tagSource.ACTIVITY_LEVEL[idx];
 
               setValues((prev) => ({
                 ...prev,

@@ -31,7 +31,7 @@ const MOCK_TAG_SOURCE: TagSource = {
   FOOD: toOptions(FOOD_TAGS, 300),
   CAFE: toOptions(CAFE_TAGS, 400),
   DISLIKE: toOptions(DISLIKE_TAGS, 500),
-  ACTIVITY: toOptions(ACTIVITY_TAGS, 600),
+  ACTIVITY_LEVEL: toOptions(ACTIVITY_TAGS, 600),
 };
 
 export const useTags = () => {

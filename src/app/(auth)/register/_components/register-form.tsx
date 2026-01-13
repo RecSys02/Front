@@ -191,7 +191,7 @@ const RegisterForm = () => {
         onOpenChange={setOpenWelcomeModal}
         onClose={() => {
           setOpenWelcomeModal(false);
-          navigate({ to: ROUTES.Home });
+          navigate({ to: ROUTES.Home, replace: true });
         }}
       />
     </Column>

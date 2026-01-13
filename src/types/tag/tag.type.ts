@@ -6,7 +6,7 @@ export const TagCategorySchema = z.enum([
   "FOOD",
   "CAFE",
   "DISLIKE",
-  "ACTIVITY",
+  "ACTIVITY_LEVEL",
 ]);
 
 export type TagCategory = z.infer<typeof TagCategorySchema>;
@@ -18,7 +18,6 @@ export const TagSchema = z.object({
 });
 
 export type Tag = z.infer<typeof TagSchema>;
-
 
 export const TagListSchema = z.array(TagSchema);
 export type TagList = z.infer<typeof TagListSchema>;

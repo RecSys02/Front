@@ -14,7 +14,11 @@ const LoginList = () => {
         비밀번호 찾기
       </Link>
       <Border direction="vertical" className="mx-4" />
-      <Link to={ROUTES.Register} className="fc-emphasis font-bold">
+      <Link
+        to={ROUTES.Register}
+        replace={true}
+        className="fc-emphasis font-bold"
+      >
         회원가입
       </Link>
     </Row>
