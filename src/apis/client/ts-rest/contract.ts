@@ -1,6 +1,7 @@
 import { authApi } from "@/apis/auth.api";
 import { modelApi } from "@/apis/model.api";
 import { planApi } from "@/apis/plan.api";
+import { tagApi } from "@/apis/tag.api";
 import { userApi } from "@/apis/user.api";
 import { initContract } from "@ts-rest/core";
 
@@ -11,4 +12,5 @@ export const contract = c.router({
   user: userApi,
   plan: planApi,
   model: modelApi,
+  tag: tagApi,
 });

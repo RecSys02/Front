@@ -71,7 +71,7 @@ const Modal = ({
               type="submit"
               isLoading={isLoading}
               onClick={onCtaClick}
-              className="bg-emphasis"
+              className="bg-emphasis text-white!"
             >
               {ctaText}
             </Button>

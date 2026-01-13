@@ -1,6 +1,35 @@
 import { RegisterFormValues } from "./register.type";
+import type { Tag } from "@/types/tag/tag.type";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export type TagSource = {
+  THEME: readonly string[];
+  MOOD: readonly string[];
+  FOOD: readonly string[];
+  CAFE: readonly string[];
+  DISLIKE: readonly string[];
+  ACTIVITY: readonly string[];
+};
+
+export const mapTagsToSource = (tags: Tag[]): TagSource => {
+  const source = {
+    THEME: [] as string[],
+    MOOD: [] as string[],
+    FOOD: [] as string[],
+    CAFE: [] as string[],
+    DISLIKE: [] as string[],
+    ACTIVITY: [] as string[],
+  };
+
+  for (const t of tags) {
+    if (t.category in source) {
+      source[t.category as keyof typeof source].push(t.name);
+    }
+  }
+
+  return source;
+};
 
 export const validateStep1 = (
   values: RegisterFormValues,

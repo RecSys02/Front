@@ -1,23 +1,16 @@
 import { FormItemConfig } from "@/components/ui/form/form.type";
 import { RegisterFormValues } from "./register.type";
 import { TagSelector } from "@/components/ui/tag-selector";
-import {
-  THEME_TAGS,
-  MOOD_TAGS,
-  CAFE_TAGS,
-  FOOD_TAGS,
-  DISLIKE_TAGS,
-  TAG_COLORS,
-  ACTIVITY_TAGS,
-} from "@/constants/types";
 import Column from "@/components/common/container/column";
 import { PreferenceSection } from "../../../../components/ui/preference-section";
 import { Slider } from "@/components/ui/slider";
-import { mapSliderToActivityIndex } from "./register.util";
+import { mapSliderToActivityIndex, TagSource } from "./register.util";
+import { TAG_COLORS } from "@/constants/types";
 
 export const generateRegisterStep2Items = (
   values: RegisterFormValues,
-  setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>
+  setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>,
+  tagSource: TagSource
 ): FormItemConfig<RegisterFormValues>[] => [
   {
     key: "tags",
@@ -29,15 +22,12 @@ export const generateRegisterStep2Items = (
           withDivider={false}
         >
           <TagSelector
-            tags={THEME_TAGS}
+            tags={tagSource.THEME}
             value={values.tags.themes ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  themes: next,
-                },
+                tags: { ...prev.tags, themes: next },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -50,15 +40,12 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={MOOD_TAGS}
+            tags={tagSource.MOOD}
             value={values.tags.moods ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  moods: next,
-                },
+                tags: { ...prev.tags, moods: next },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -76,7 +63,8 @@ export const generateRegisterStep2Items = (
             value={[values.tags.activityValue]}
             onValueChange={([val]) => {
               const idx = mapSliderToActivityIndex(val);
-              const tag = ACTIVITY_TAGS[idx];
+              const tag = tagSource.ACTIVITY[idx] ?? null;
+
               setValues((prev) => ({
                 ...prev,
                 tags: {
@@ -95,15 +83,12 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={FOOD_TAGS}
+            tags={tagSource.FOOD}
             value={values.tags.foods ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  foods: next,
-                },
+                tags: { ...prev.tags, foods: next },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -116,15 +101,12 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={CAFE_TAGS}
+            tags={tagSource.CAFE}
             value={values.tags.cafes ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  cafes: next,
-                },
+                tags: { ...prev.tags, cafes: next },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -137,15 +119,12 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={DISLIKE_TAGS}
+            tags={tagSource.DISLIKE}
             value={values.tags.dislikes ?? []}
             onChange={(next) =>
               setValues((prev) => ({
                 ...prev,
-                tags: {
-                  ...prev.tags,
-                  dislikes: next,
-                },
+                tags: { ...prev.tags, dislikes: next },
               }))
             }
             selectedColors={TAG_COLORS}

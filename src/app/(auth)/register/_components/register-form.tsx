@@ -17,6 +17,7 @@ import { Border } from "@/components/ui/border";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
 import WelcomeModal from "./welcome-modal";
+import { useTags } from "@/hooks/tag.hook";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -52,6 +53,9 @@ const RegisterForm = () => {
   const registerUser = useRegister();
   const signin = useSignin();
 
+  const tagsQuery = useTags();
+  const tagSource = tagsQuery.data;
+
   const { isStep1Valid, isValid } = generateRegisterUtil(
     values,
     isEmailAvailable,
@@ -61,6 +65,7 @@ const RegisterForm = () => {
   const handleSubmit = () => {
     if (step === 1) {
       if (!isStep1Valid) return;
+
       setStep(2);
       return;
     }
@@ -78,15 +83,9 @@ const RegisterForm = () => {
 
   const handleCheckEmail = () => {
     const email = values.email.trim();
-    if (!email) {
-      toast.error("이메일를 입력해주세요.");
-      return;
-    }
-
-    if (!EMAIL_REGEX.test(email)) {
-      toast.error("이메일 형식이 올바르지 않습니다.");
-      return;
-    }
+    if (!email) return toast.error("이메일를 입력해주세요.");
+    if (!EMAIL_REGEX.test(email))
+      return toast.error("이메일 형식이 올바르지 않습니다.");
 
     setIsEmailAvailable(null);
 
@@ -105,10 +104,7 @@ const RegisterForm = () => {
 
   const handleCheckUserName = () => {
     const userName = values.userName.trim();
-    if (!userName) {
-      toast.error("닉네임을 입력해주세요.");
-      return;
-    }
+    if (!userName) return toast.error("닉네임을 입력해주세요.");
 
     setIsUserNameAvailable(null);
 
@@ -130,18 +126,18 @@ const RegisterForm = () => {
       ? generateRegisterStep1Items({
           values,
           setValues,
-
           onCheckEmail: handleCheckEmail,
           isCheckingEmail: checkEmail.isPending,
           resetEmailAvailable: () => setIsEmailAvailable(null),
           isEmailAvailable,
-
           onCheckUserName: handleCheckUserName,
           isCheckingUserName: checkUserName.isPending,
           resetUserNameAvailable: () => setIsUserNameAvailable(null),
           isUserNameAvailable,
         })
-      : generateRegisterStep2Items(values, setValues);
+      : tagSource
+      ? generateRegisterStep2Items(values, setValues, tagSource)
+      : [];
 
   return (
     <Column className="max-w-md">
