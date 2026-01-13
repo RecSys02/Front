@@ -13,7 +13,7 @@ export type TagCategory = z.infer<typeof TagCategorySchema>;
 
 export const TagSchema = z.object({
   id: z.number(),
-  category: TagCategorySchema,
+  tagType: TagCategorySchema,
   name: z.string(),
 });
 

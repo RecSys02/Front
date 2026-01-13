@@ -29,8 +29,8 @@ export const mapTagsToSource = (tags: Tag[]): TagSource => {
   };
 
   for (const t of tags) {
-    if (t.category in source) {
-      source[t.category as keyof TagSourceMutable].push({
+    if (t.tagType in source) {
+      source[t.tagType as keyof TagSourceMutable].push({
         id: t.id,
         label: t.name,
       });
