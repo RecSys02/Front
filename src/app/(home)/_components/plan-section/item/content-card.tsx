@@ -7,12 +7,21 @@ import Heading from "@/components/text/heading";
 import { HeartIcon } from "lucide-react";
 import { Pill } from "@/components/ui/pill";
 import { PopularPlanCardDto } from "@/types/plan/plan.wrapper.type";
+import { useTogglePlanLike } from "@/hooks/plan.hook";
 
 type Props = {
   content: PopularPlanCardDto;
 };
 
 const ContentCard = ({ content }: Props) => {
+  const toggleLike = useTogglePlanLike();
+  const handleLikeToggle = () => {
+    toggleLike.mutate({
+      planId: content.id,
+      like: !content.isActive,
+    });
+  };
+
   return (
     <Column className="w-full px-5.5 pt-20 ">
       <ImageBox
@@ -35,11 +44,10 @@ const ContentCard = ({ content }: Props) => {
         </Heading>
         <Row className="w-16 shrink-0 gap-3 justify-start items-center ">
           <HeartIcon
-            className={
-              content.isActive
-                ? "w-6 h-6 fill-red-500 text-red-500 hover:scale-110"
-                : "w-6 h-6 fill-transparent text-red-500 hover:scale-110"
-            }
+            onClick={handleLikeToggle}
+            className={`w-6 h-6 text-red-500 hover:scale-110 cursor-pointer transition-transform ${
+              content.isActive ? "fill-red-500" : "fill-transparent"
+            }`}
           />
           <Body variant="body2" className="w-fit fc-gray-800 font-semibold">
             {content.likeCount > 99 ? "99+" : content.likeCount}

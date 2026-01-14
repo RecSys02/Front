@@ -6,6 +6,7 @@ import Banner1 from "@/assets/banners/banner1.jpg";
 
 export const MOCK_POPULAR: PopularPlanCardDto[] = [
   {
+    id: 1,
     name: "제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 120,
@@ -13,6 +14,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     imgSrc: Banner1,
   },
   {
+    id: 2,
     name: "강릉으로 떠나는 2박 3일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 80,
@@ -20,6 +22,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     imgSrc: Banner1,
   },
   {
+    id: 3,
     name: "제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 75,
@@ -27,6 +30,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     imgSrc: Banner1,
   },
   {
+    id: 4,
     name: "강릉으로 떠나는 2박 3일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 50,
@@ -34,6 +38,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     imgSrc: Banner1,
   },
   {
+    id: 5,
     name: "제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 40,
@@ -41,6 +46,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     imgSrc: Banner1,
   },
   {
+    id: 6,
     name: "강릉으로 떠나는 2박 3일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 20,

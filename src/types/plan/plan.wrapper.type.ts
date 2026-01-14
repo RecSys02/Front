@@ -44,6 +44,7 @@ export type CreatePlanResponseDto = z.infer<typeof CreatePlanResponseSchema>;
 //--------------------------------------------------------------------//
 
 export const PopularPlanCardSchema = z.object({
+  id: z.number(),
   name: z.string(),
   tags: z.array(z.string()),
   likeCount: z.number(),

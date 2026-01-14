@@ -215,41 +215,40 @@ export const usePlanList = (
   return IS_MOCK ? mock : real;
 };
 
-
-export type ToggleLikeVars = {
+export type ToggleLikeProps = {
   planId: number;
-  like: boolean; 
+  like: boolean;
 };
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
 
-  const real = useMutation<ApiOk<void>, Error, ToggleLikeVars>({
-    mutationFn: async (vars: ToggleLikeVars): Promise<ApiOk<void>> => {
-      if (vars.like) {
+  const onSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["plan"] });
+  };
+
+  const real = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
+    mutationFn: async (props: ToggleLikeProps): Promise<ApiOk<void>> => {
+      if (props.like) {
         return tsr.plan.like.mutation({
-          params: { planId: vars.planId },
+          params: { planId: props.planId },
           body: undefined,
         });
       }
       return tsr.plan.unlike.mutation({
-        params: { planId: vars.planId },
+        params: { planId: props.planId },
         body: undefined,
       });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["plan"] });
-    },
+    onSuccess,
   });
 
-  const mock = useMutation<ApiOk<void>, Error, ToggleLikeVars>({
+  const mock = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
     mutationFn: async (): Promise<ApiOk<void>> => ({
       status: 200,
       body: undefined,
       headers: new Headers(),
     }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["plan"] });
-    },
+    onSuccess,
   });
 
   return IS_MOCK ? mock : real;
