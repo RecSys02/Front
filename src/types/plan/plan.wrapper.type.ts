@@ -18,7 +18,6 @@ export type MyPlanListResponseDto = z.infer<typeof MyPlanListResponseSchema>;
 
 export const CreatePlanRequestSchema = z.object({
   selectedPlaces: z.array(PlaceIdSchema),
-  tagIds: z.array(z.number()),
   name: z.string(),
   startDate: z.string(),
   endDate: z.string(),
@@ -28,7 +27,7 @@ export const CreatePlanRequestSchema = z.object({
 export type CreatePlanRequestDto = z.infer<typeof CreatePlanRequestSchema>;
 
 export const CreatePlanResponseSchema = PlanSchema.pick({
-  schedule: true,
+  id: true,
 });
 export type CreatePlanResponseDto = z.infer<typeof CreatePlanResponseSchema>;
 

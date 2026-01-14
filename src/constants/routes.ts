@@ -2,7 +2,7 @@ export const PATH = {
   MODEL_BASE: "model",
   MODEL_CONTEXT: "context",
   MODEL_SPOT: "spot",
-  MODEL_PLAN: "plan",
+  MODEL_PLAN: "plan/$planId",
 } as const;
 
 const ROUTES = {

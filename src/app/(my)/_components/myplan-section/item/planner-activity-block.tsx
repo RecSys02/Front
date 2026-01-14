@@ -2,9 +2,9 @@ import Body from "@/components/text/body";
 import { Activity } from "@/types/plan/plan.type";
 
 const CATEGORY_COLORS: Record<string, string> = {
-    관광지 : "bg-[#CBE1B9]", // 초록
-    식당 : "bg-[#FFDABE]", // 오렌지
-    카페 : "bg-[#FFECBC]", // 노랑 --> tailwind 확인필요
+    TOURSPOT : "bg-[#CBE1B9]", // 초록
+    RESTAURANT : "bg-[#FFDABE]", // 오렌지
+    CAFE : "bg-[#FFECBC]", // 노랑 --> tailwind 확인필요
 };
 
 const getRowStart = (time: string) => {
