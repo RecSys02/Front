@@ -17,6 +17,7 @@ import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
 import { useCreatePlan } from "@/hooks/plan.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import { PlaceDto } from "@/types/place/place.type";
+import { CreatePlanRequestDto } from "@/types/plan/plan.wrapper.type";
 
 const ModelSpotPage = () => {
   const {
@@ -89,10 +90,10 @@ const ModelSpotPage = () => {
 
     const input = ModelInputStore.actions.getModelInput();
 
-    const from = toYYYYMMDD(input?.dateRange?.from ?? null);
-    const to = toYYYYMMDD(input?.dateRange?.to ?? null);
-
-    if (!from || !to) {
+    const startDate = toYYYYMMDD(input?.dateRange?.from ?? null);
+    const endDate = toYYYYMMDD(input?.dateRange?.to ?? null);
+    const province = input?.region.province ?? null;
+    if (!startDate || !endDate || !province) {
       return;
     }
 
@@ -106,11 +107,15 @@ const ModelSpotPage = () => {
       province: p.province,
     }));
 
-    createPlan.mutate({
-      from,
-      to,
-      places: placesPayload,
-    });
+    const createPlanPayload: CreatePlanRequestDto = {
+      selectedPlaces: placesPayload,
+      name: `${startDate} ${province} 여행 계획`,
+      startDate: startDate,
+      endDate: endDate,
+      province: province,
+      isPrivate: false,
+    };
+    createPlan.mutate({ body: createPlanPayload });
   };
 
   return (

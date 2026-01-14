@@ -1,3 +1,4 @@
+import { PlanSchema } from "@/types/plan/plan.type";
 import {
   CreatePlanRequestSchema,
   CreatePlanResponseSchema,
@@ -17,6 +18,16 @@ export const planApi = c.router(
       body: CreatePlanRequestSchema,
       responses: {
         200: CreatePlanResponseSchema,
+      },
+    },
+    read: {
+      method: "GET",
+      path: "/:id",
+      pathParams: z.object({
+        id: z.coerce.number(),
+      }),
+      responses: {
+        200: PlanSchema,
       },
     },
     popular: {
