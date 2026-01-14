@@ -7,8 +7,7 @@ import Subtitle from "@/components/text/subtitle";
 
 const ModelPlanPage = () => {
   const { planId } = useParams({ strict: false });
-  const id = Number(planId);
-  const { data, isLoading } = useReadPlan(id);
+  const { data, isLoading } = useReadPlan(Number(planId));
 
   return (
     <Column className="min-h-dvh flex items-center justify-center">

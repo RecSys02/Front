@@ -17,7 +17,7 @@ export const useUser = () => {
     queryKey: ["me"],
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({
-      userName: "홍길동",
+      userName: "MOCKUSER",
       userImg: null,
     }),
   });
