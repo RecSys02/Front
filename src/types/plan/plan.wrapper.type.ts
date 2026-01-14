@@ -16,6 +16,16 @@ export type MyPlanListResponseDto = z.infer<typeof MyPlanListResponseSchema>;
 
 //--------------------------------------------------------------------//
 
+export const PlanListResponseSchema = z.array(
+  PlanSchema.extend({
+    tags: z.array(z.string()),
+    likeCount: z.number(),
+    userName: z.string(),
+  })
+);
+export type PlanListResponseDto = z.infer<typeof PlanListResponseSchema>;
+//--------------------------------------------------------------------//
+
 export const CreatePlanRequestSchema = z.object({
   selectedPlaces: z.array(PlaceIdSchema),
   name: z.string(),
@@ -34,6 +44,7 @@ export type CreatePlanResponseDto = z.infer<typeof CreatePlanResponseSchema>;
 //--------------------------------------------------------------------//
 
 export const PopularPlanCardSchema = z.object({
+  id: z.number(),
   name: z.string(),
   tags: z.array(z.string()),
   likeCount: z.number(),

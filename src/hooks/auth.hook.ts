@@ -40,7 +40,7 @@ export const useSignin = () => {
         status: 200,
         body: {
           accessToken: "mock-access-token",
-          userName: "홍길동",
+          userName: "MOCKUSER",
         },
         headers: new Headers(),
       };

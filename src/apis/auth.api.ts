@@ -25,7 +25,7 @@ export const authApi = c.router(
     signout: {
       method: "POST",
       path: "/logout",
-      body: z.object({}),
+      body: z.void(),
       responses: {
         200: z.void(),
       },
@@ -33,7 +33,7 @@ export const authApi = c.router(
     reissue: {
       method: "POST",
       path: "/reissue",
-      body: z.object({}),
+      body: z.void(),
       responses: {
         200: AuthTokenResponseSchema,
       },

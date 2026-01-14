@@ -1,11 +1,17 @@
 import { tsr } from "@/apis/client/ts-rest/client";
-import { useMutation, useQuery, UseQueryResult } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryResult,
+} from "@tanstack/react-query";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
 import {
   CreatePlanRequestDto,
   CreatePlanResponseDto,
   MyPlanListResponseDto,
+  PlanListResponseDto,
 } from "@/types/plan/plan.wrapper.type";
 import { ApiOk } from "@/types/util.type";
 import { MOCK_CREATE_PLAN, MOCK_PLAN, MOCK_POPULAR } from "./hook.mock";
@@ -69,7 +75,7 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
 
   const real = tsr.plan.read.useQuery({
     queryKey: key,
-    params: { id: planId as number },
+    params: { planId: planId as number },
     enabled: !IS_MOCK && typeof planId === "number",
   });
 
@@ -118,4 +124,132 @@ export const usePlanListByUser = (
   return (IS_MOCK
     ? mock
     : real) as unknown as UseQueryResult<MyPlanListResponseDto>;
+};
+
+export const useRemovePlan = () => {
+  const queryClient = useQueryClient();
+
+  const real = tsr.plan.remove.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["plan"] });
+    },
+  });
+
+  const mock = useMutation<ApiOk<void>, Error, { params: { planId: number } }>({
+    mutationFn: async (): Promise<ApiOk<void>> => ({
+      status: 200,
+      body: undefined,
+      headers: new Headers(),
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["plan"] });
+    },
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const usePlanVisibility = () => {
+  const queryClient = useQueryClient();
+
+  const real = tsr.plan.visibility.useMutation({
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["plan"] });
+    },
+  });
+
+  const mock = useMutation<
+    ApiOk<void>,
+    Error,
+    {
+      params: { planId: number };
+      query: { isPrivate: boolean };
+      body: undefined;
+    }
+  >({
+    mutationFn: async (): Promise<ApiOk<void>> => ({
+      status: 200,
+      body: undefined,
+      headers: new Headers(),
+    }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["plan"] });
+    },
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const usePlanList = (
+  params?: SearchFilterDTO
+): UseQueryResult<PlanListResponseDto> => {
+  const key = [
+    "plan",
+    "list",
+    params?.from ?? null,
+    params?.to ?? null,
+  ] as const;
+
+  const real = tsr.plan.list.useQuery({
+    queryKey: key,
+    query: params,
+    enabled: !IS_MOCK,
+  });
+
+  const mock = useQuery<PlanListResponseDto>({
+    queryKey: key,
+    enabled: IS_MOCK,
+    queryFn: async (): Promise<PlanListResponseDto> => {
+      return MOCK_POPULAR.map((p, idx) => ({
+        id: idx + 1,
+        name: p.name,
+        isPrivate: false,
+        imgSrc: p.imgSrc,
+        schedule: [],
+        tags: p.tags,
+        likeCount: p.likeCount,
+        userName: "MOCKUSER",
+      }));
+    },
+  });
+  return IS_MOCK ? mock : real;
+};
+
+export type ToggleLikeProps = {
+  planId: number;
+  like: boolean;
+};
+export const useTogglePlanLike = () => {
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["plan"] });
+  };
+
+  const real = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
+    mutationFn: async (props: ToggleLikeProps): Promise<ApiOk<void>> => {
+      if (props.like) {
+        return tsr.plan.like.mutation({
+          params: { planId: props.planId },
+          body: undefined,
+        });
+      }
+      return tsr.plan.unlike.mutation({
+        params: { planId: props.planId },
+        body: undefined,
+      });
+    },
+    onSuccess,
+  });
+
+  const mock = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
+    mutationFn: async (): Promise<ApiOk<void>> => ({
+      status: 200,
+      body: undefined,
+      headers: new Headers(),
+    }),
+    onSuccess,
+  });
+
+  return IS_MOCK ? mock : real;
 };

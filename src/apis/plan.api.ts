@@ -3,6 +3,7 @@ import {
   CreatePlanRequestSchema,
   CreatePlanResponseSchema,
   MyPlanListResponseSchema,
+  PlanListResponseSchema,
   PopularPlanCardSchema,
 } from "@/types/plan/plan.wrapper.type";
 import { initContract } from "@ts-rest/core";
@@ -22,12 +23,58 @@ export const planApi = c.router(
     },
     read: {
       method: "GET",
-      path: "/:id",
+      path: "/:planId",
       pathParams: z.object({
-        id: z.coerce.number(),
+        planId: z.coerce.number(),
       }),
       responses: {
         200: PlanSchema,
+      },
+    },
+    remove: {
+      method: "DELETE",
+      path: "/:planId",
+      pathParams: z.object({
+        planId: z.number(),
+      }),
+      responses: {
+        200: z.void(),
+      },
+    },
+    visibility: {
+      method: "PATCH",
+      path: "/:planId/privacy",
+      pathParams: z.object({
+        planId: z.number(),
+      }),
+      query: z.object({
+        isPrivate: z.boolean(),
+      }),
+      body: z.void(),
+      responses: {
+        200: z.void(),
+      },
+    },
+    like: {
+      method: "POST",
+      path: "/:planId/like",
+      pathParams: z.object({
+        planId: z.number(),
+      }),
+      body: z.void(),
+      responses: {
+        200: z.void(),
+      },
+    },
+    unlike: {
+      method: "DELETE",
+      path: "/:planId/like",
+      pathParams: z.object({
+        planId: z.number(),
+      }),
+      body: z.void(),
+      responses: {
+        200: z.void(),
       },
     },
     popular: {
@@ -37,9 +84,22 @@ export const planApi = c.router(
         200: z.array(PopularPlanCardSchema),
       },
     },
+    list: {
+      method: "GET",
+      path: "/",
+      query: z
+        .object({
+          from: z.string(),
+          to: z.string(),
+        })
+        .optional(),
+      responses: {
+        200: PlanListResponseSchema,
+      },
+    },
     listByUser: {
       method: "GET",
-      path: "/user/me",
+      path: "/my",
       query: z
         .object({
           from: z.string(),
