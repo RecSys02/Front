@@ -10,12 +10,12 @@ import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import { ModelHistoryStore } from "@/stores/model-history.store";
-import { TEMP_MODEL_RESULTS } from "./temp";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { PlaceDto } from "@/types/place/place.type";
 import { ApiOk } from "@/types/util.type";
 import { ModelResponseDto, ModelRequestDto } from "@/types/model/model.type";
+import { TEMP_MODEL_RESULTS } from "./model.mock";
 
 type Props = {
   tab: TabValue;
