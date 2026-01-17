@@ -8,6 +8,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "./dialog";
+import { cn } from "@/libs/utils";
 
 type Props = {
   open: boolean;
@@ -24,6 +25,7 @@ type Props = {
   cancelText?: string;
   onCtaClick?: () => void;
   onCancelClick?: () => void;
+  contentClassName?: string;
 };
 
 const Modal = ({
@@ -40,6 +42,7 @@ const Modal = ({
   cancelText,
   onCtaClick,
   onCancelClick,
+  contentClassName,
 }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -48,7 +51,7 @@ const Modal = ({
           !enableOutsideClick ? (e) => e.preventDefault() : undefined
         }
         onEscapeKeyDown={(e) => e.preventDefault()}
-        className={noPadding ? "p-0" : undefined}
+        className={cn(noPadding ? "p-0" : undefined, contentClassName)}
       >
         <DialogHeader className="space-y-0">
           <DialogTitle className="mb-5 text-center font-semibold text-subtitle2">
