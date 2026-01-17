@@ -24,7 +24,7 @@ const PreviewCard = ({ content }: Props) => {
   };
 
   return (
-    <Column className="w-full px-5.5 pt-20 ">
+    <Column className="w-fit">
       <div className="relative size-55">
         <ImageBox
           src={content.imgSrc}
@@ -65,7 +65,11 @@ const PreviewCard = ({ content }: Props) => {
           </Button>
         </Row>
       </Column>
-      <DetailModal open={openDetailModal} onOpenChange={setOpenDetailModal} content={content}/>
+      <DetailModal
+        open={openDetailModal}
+        onOpenChange={setOpenDetailModal}
+        content={content}
+      />
     </Column>
   );
 };

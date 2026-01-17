@@ -201,18 +201,21 @@ export const usePlanList = (
     queryKey: key,
     enabled: IS_MOCK,
     queryFn: async (): Promise<PlanListResponseDto> => {
-      return MOCK_POPULAR.map((p, idx) => ({
-        id: idx + 1,
-        name: p.name,
-        isPrivate: false,
-        isActive: false,
-        province: "서울시",
-        imgSrc: p.imgSrc,
-        schedule: MOCK_CREATE_PLAN.schedule,
-        tags: p.tags,
-        likeCount: p.likeCount,
-        userName: "MOCKUSER",
-      }));
+      return Array.from({ length: 18 }).map((_, idx) => {
+        const p = MOCK_POPULAR[idx % MOCK_POPULAR.length];
+        return {
+          id: idx + 1,
+          name: `${p.name} ${idx + 1}`,
+          isPrivate: false,
+          isActive: false,
+          province: "서울시",
+          imgSrc: p.imgSrc,
+          schedule: MOCK_CREATE_PLAN.schedule,
+          tags: p.tags,
+          likeCount: p.likeCount,
+          userName: "MOCKUSER",
+        };
+      });
     },
   });
   return IS_MOCK ? mock : real;
