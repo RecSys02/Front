@@ -21,6 +21,7 @@ export const PlanSchema = z.object({
   name: z.string(),
   isPrivate: z.boolean(),
   imgSrc: z.string(),
+  province: z.string(),
   schedule: z.array(Dailyschedulechema),
 });
 export type Plan = z.infer<typeof PlanSchema>;
