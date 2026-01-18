@@ -83,13 +83,23 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
     queryKey: key,
     enabled: IS_MOCK && typeof planId === "number",
     queryFn: async () => {
+      const popular =
+        MOCK_POPULAR.find((p) => p.id === planId) ?? MOCK_POPULAR[0];
+
+      const province =
+        MOCK_CREATE_PLAN.schedule[0]?.activities[0]?.province ?? "";
+
       return {
         id: planId as number,
-        name: "성수 여행 계획",
-        province: "성수",
+        name: popular.name,
+        province,
         isPrivate: false,
-        imgSrc: "",
+        imgSrc: popular.imgSrc,
         schedule: MOCK_CREATE_PLAN.schedule,
+        isActive: popular.isActive,
+        likeCount: popular.likeCount,
+        userName: "MOCK_USER",
+        tags: popular.tags,
       };
     },
   });
