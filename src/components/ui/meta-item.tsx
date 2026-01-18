@@ -12,12 +12,12 @@ const MetaItem = ({
   value: string;
 }) => {
   return (
-    <Row className="items-center gap-1.5 rounded-md bg-gray-50 border border-gray-100 px-2.5 py-1 w-fit">
-      <span className="text-gray-500">{icon}</span>
-      <Body variant="body3" className="fc-gray-500 font-medium">
+    <Row className="items-center gap-1.5 rounded-md bg-lime-50 border border-lime-100 px-2.5 py-1 w-fit">
+      <span className="text-lime-700">{icon}</span>
+      <Body variant="body3" className="font-medium text-lime-700!">
         {label}
       </Body>
-      <Body variant="body3" className="fc-gray-800 font-semibold">
+      <Body variant="body3" className="font-semibold text-lime-800!">
         {value}
       </Body>
     </Row>

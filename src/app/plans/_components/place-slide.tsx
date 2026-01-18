@@ -45,9 +45,9 @@ const PlaceSlide = ({
     : null;
 
   return (
-    <Column className="rounded-lg border overflow-hidden">
-      <Column className="relative w-full h-72 overflow-hidden">
-        <ImageBox src={imageSrc} className="w-full h-72!" fit="cover" />
+    <Column className="rounded-lg border overflow-hidden h-full flex flex-col">
+      <Column className="relative w-full h-fit shrink-0 overflow-hidden">
+        <ImageBox src={imageSrc} className="w-full h-156" fit="cover" />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/35 to-transparent" />
 
         {showIndex && (
@@ -65,7 +65,7 @@ const PlaceSlide = ({
         )}
       </Column>
 
-      <Column className="p-4 gap-3 flex-1 h-full">
+      <Column className="p-4 gap-3 flex-1 min-h-0 overflow-y-auto">
         <Row className="items-center gap-2">
           <Button
             type="button"
@@ -135,26 +135,29 @@ const PlaceSlide = ({
             </div>
           </div>
         )}
+
         {place?.keywords && place.keywords.length > 0 && (
           <Row className="flex-wrap gap-1">
             {place.keywords.slice(0, 6).map((k) => (
               <Badge
                 key={k}
-                className="px-3 py-0.5 text-[14px] font-normal fc-gray-700 bg-lime-50"
+                className="px-3 py-0.5 text-[14px] font-normal fc-gray-700 bg-gray-50"
               >
-                <span className="text-lime-700 border-lime-200">#{k}</span>
+                #{k}
               </Badge>
             ))}
           </Row>
         )}
 
         {place?.description && (
-          <Body
-            variant="body2"
-            className="fc-gray-600 whitespace-pre-line line-clamp-3"
-          >
-            {place.description}
-          </Body>
+          <div className="w-full h-full flex items-center">
+            <Body
+              variant="body2"
+              className="fc-gray-600 whitespace-pre-line line-clamp-3 text-center w-full"
+            >
+              {place.description}
+            </Body>
+          </div>
         )}
       </Column>
     </Column>

@@ -4,17 +4,16 @@ import { ImageBox } from "@/components/common/container/image-box";
 import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
 import { useTogglePlanLike } from "@/hooks/plan.hook";
-import { PlanListItem } from "@/types/plan/plan.wrapper.type";
 import { HeartIcon } from "lucide-react";
-import { useState } from "react";
-import DetailModal from "./detail-modal";
+import { Link } from "@tanstack/react-router";
+import { ROUTES } from "@/constants/routes";
+import { Plan } from "@/types/plan/plan.type";
 
 type Props = {
-  content: PlanListItem;
+  content: Plan;
 };
 
 const PreviewCard = ({ content }: Props) => {
-  const [openDetailModal, setOpenDetailModal] = useState(false);
   const toggleLike = useTogglePlanLike();
   const handleLikeToggle = () => {
     toggleLike.mutate({
@@ -57,19 +56,15 @@ const PreviewCard = ({ content }: Props) => {
           >
             {content.province}
           </Body>
-          <Button
-            onClick={() => setOpenDetailModal(true)}
+          <Link
+            to={ROUTES.PlanDetail}
+            params={{ planId: String(content.id) }}
             className="text-[12px]! font-regular fc-gray-600 underline size-3"
           >
             더보기
-          </Button>
+          </Link>
         </Row>
       </Column>
-      <DetailModal
-        open={openDetailModal}
-        onOpenChange={setOpenDetailModal}
-        content={content}
-      />
     </Column>
   );
 };

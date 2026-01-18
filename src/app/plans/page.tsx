@@ -38,7 +38,7 @@ const PlanPage = () => {
   return (
     <Column className="flex-1">
       <Column className="w-full max-w-274 mx-auto px-6 py-12 gap-8">
-        <Row className="justify-between items-center pl-3">
+        <Row className="justify-between items-center pl-4">
           <Tabs
             value={sort}
             onValueChange={(v) => handleChangeSort(v as SortKey)}
@@ -48,7 +48,7 @@ const PlanPage = () => {
                 value="default"
                 className="h-9 rounded-full px-6 text-base cursor-pointer data-[state=active]:bg-[#1A6E3D] data-[state=active]:text-white"
               >
-                기본순
+                최신순
               </TabsTrigger>
               <TabsTrigger
                 value="popular"
@@ -61,7 +61,7 @@ const PlanPage = () => {
           </Tabs>
         </Row>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 justify-items-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 justify-items-center">
           {visible.map((content, idx) => (
             <PreviewCard key={`${content.name}-${idx}`} content={content} />
           ))}
