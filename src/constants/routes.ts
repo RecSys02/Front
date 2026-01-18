@@ -13,6 +13,7 @@ const ROUTES = {
   ModelPlan: `/${PATH.MODEL_BASE}/${PATH.MODEL_PLAN}`,
   Hot: "/hot",
   Plans: "/plans",
+  PlanDetail: "/plans/$planId",
   Register: "/register",
   Login: "/login",
   My: "/my",

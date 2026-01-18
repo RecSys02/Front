@@ -3,6 +3,7 @@ import {
   PopularPlanCardDto,
 } from "@/types/plan/plan.wrapper.type";
 import Banner1 from "@/assets/banners/banner1.jpg";
+import { PlaceDto } from "@/types/place/place.type";
 
 export const MOCK_POPULAR: PopularPlanCardDto[] = [
   {
@@ -229,3 +230,18 @@ export const MOCK_PLAN: MyPlanListResponseDto = [
     ],
   },
 ];
+
+export const MOCK_PLACE: PlaceDto = {
+  id: 1,
+  placeId: 1,
+  name: "서울숲",
+  latitude: 37.5444,
+  longitude: 127.0374,
+  address: "서울특별시 성동구 뚝섬로 273",
+  description: "도심 속에서 자연을 즐길 수 있는 대형 시민공원",
+  duration: "2~3시간",
+  images: ["https://images.unsplash.com/photo-1549693578-d683be217e58"],
+  keywords: ["공원", "자연", "산책", "휴식"],
+  category: "TOURSPOT",
+  province: "서울",
+};

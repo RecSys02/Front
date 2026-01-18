@@ -8,6 +8,8 @@ import { HeartIcon } from "lucide-react";
 import { Pill } from "@/components/ui/pill";
 import { PopularPlanCardDto } from "@/types/plan/plan.wrapper.type";
 import { useTogglePlanLike } from "@/hooks/plan.hook";
+import { useNavigate } from "@tanstack/react-router";
+import { ROUTES } from "@/constants/routes";
 
 type Props = {
   content: PopularPlanCardDto;
@@ -15,6 +17,8 @@ type Props = {
 
 const ContentCard = ({ content }: Props) => {
   const toggleLike = useTogglePlanLike();
+  const navigate = useNavigate();
+
   const handleLikeToggle = () => {
     toggleLike.mutate({
       planId: content.id,
@@ -22,13 +26,26 @@ const ContentCard = ({ content }: Props) => {
     });
   };
 
+  const handleNavigate = () => {
+    navigate({
+      to: ROUTES.PlanDetail,
+      params: { planId: String(content.id) },
+    });
+  };
+
   return (
-    <Column className="w-full px-5.5 pt-20 ">
-      <ImageBox
-        src={content.imgSrc}
-        className="w-140 h-80 overflow-hidden"
-        fit="cover"
-      />
+    <Column className="w-full px-5.5 pt-20">
+      <div
+        onClick={handleNavigate}
+        className="cursor-pointer hover:opacity-95 transition-opacity"
+      >
+        <ImageBox
+          src={content.imgSrc}
+          className="w-140 h-80 overflow-hidden"
+          fit="cover"
+        />
+      </div>
+
       <Row className="w-full h-15 items-center pt-6 px-2.5">
         <Row className="w-37.5 shrink-0 h-full gap-3 items-center justify-between pr-3">
           <Body variant="body3" className="w-fit font-medium">
@@ -36,13 +53,15 @@ const ContentCard = ({ content }: Props) => {
           </Body>
           <Border className="w-full" />
         </Row>
+
         <Heading
           variant="heading2"
           className="w-full flex items-center font-bold fc-gray-800"
         >
           {content.name}
         </Heading>
-        <Row className="w-16 shrink-0 gap-3 justify-start items-center ">
+
+        <Row className="w-16 shrink-0 gap-3 justify-start items-center">
           <HeartIcon
             onClick={handleLikeToggle}
             className={`w-6 h-6 text-red-500 hover:scale-110 cursor-pointer transition-transform ${
@@ -54,6 +73,7 @@ const ContentCard = ({ content }: Props) => {
           </Body>
         </Row>
       </Row>
+
       <Row className="pl-40 py-2.5 gap-x-3 gap-y-1.5 w-full flex-wrap">
         {content.tags.map((tag, i) => (
           <Pill

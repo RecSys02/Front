@@ -16,13 +16,7 @@ export type MyPlanListResponseDto = z.infer<typeof MyPlanListResponseSchema>;
 
 //--------------------------------------------------------------------//
 
-export const PlanListResponseSchema = z.array(
-  PlanSchema.extend({
-    tags: z.array(z.string()),
-    likeCount: z.number(),
-    userName: z.string(),
-  })
-);
+export const PlanListResponseSchema = z.array(PlanSchema);
 export type PlanListResponseDto = z.infer<typeof PlanListResponseSchema>;
 //--------------------------------------------------------------------//
 

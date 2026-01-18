@@ -8,6 +8,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "./dialog";
+import { cn } from "@/libs/utils";
 
 type Props = {
   open: boolean;
@@ -24,6 +25,7 @@ type Props = {
   cancelText?: string;
   onCtaClick?: () => void;
   onCancelClick?: () => void;
+  contentClassName?: string;
 };
 
 const Modal = ({
@@ -40,6 +42,7 @@ const Modal = ({
   cancelText,
   onCtaClick,
   onCancelClick,
+  contentClassName,
 }: Props) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -48,33 +51,58 @@ const Modal = ({
           !enableOutsideClick ? (e) => e.preventDefault() : undefined
         }
         onEscapeKeyDown={(e) => e.preventDefault()}
-        className={noPadding ? "p-0" : undefined}
+        className={cn(
+          "flex flex-col overflow-hidden",
+          noPadding ? "p-0" : undefined,
+          contentClassName
+        )}
       >
-        <DialogHeader className="space-y-0">
+        <DialogHeader
+          className={cn(
+            "space-y-0 shrink-0",
+            noPadding ? "p-6 pb-0" : undefined
+          )}
+        >
           <DialogTitle className="mb-5 text-center font-semibold text-subtitle2">
             {title}
           </DialogTitle>
-
-          {description && (
-            <DialogDescription asChild>
-              <div className="mt-0 whitespace-pre-wrap text-center font-medium text-body2">
-                {description}
-              </div>
-            </DialogDescription>
-          )}
         </DialogHeader>
 
-        {content}
+        {description && (
+          <DialogDescription asChild>
+            <div
+              className={cn(
+                "flex-1 min-h-0 overflow-y-auto",
+                noPadding ? "px-6 pb-6" : undefined
+              )}
+            >
+              {description}
+            </div>
+          </DialogDescription>
+        )}
+
+        {content && (
+          <div
+            className={cn(
+              "flex-1 min-h-0 overflow-y-auto",
+              noPadding ? "px-6 pb-6" : undefined
+            )}
+          >
+            {content}
+          </div>
+        )}
 
         {noFooter || (
-          <DialogFooter>
+          <DialogFooter
+            className={cn("shrink-0", noPadding ? "px-6 pb-6" : undefined)}
+          >
             {cancelText && (
               <Button variant="outline" onClick={onCancelClick}>
                 {cancelText}
               </Button>
             )}
             <Button
-              type="submit"
+              type="button"
               isLoading={isLoading}
               onClick={onCtaClick}
               className="bg-emphasis text-white!"

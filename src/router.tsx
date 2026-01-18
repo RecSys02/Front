@@ -13,6 +13,8 @@ import ModelLayout from "./app/(model)/model.layout";
 import ModelContextPage from "./app/(model)/context/page";
 import ModelSpotPage from "./app/(model)/spot/page";
 import ModelPlanPage from "./app/(model)/plan/page";
+import PlanPage from "./app/plans/page";
+import PlanDetailPage from "./app/plans/[planId]/page";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -38,6 +40,18 @@ const myRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTES.My,
   component: Mypage,
+});
+
+const planRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTES.Plans,
+  component: PlanPage,
+});
+
+const planDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTES.PlanDetail,
+  component: PlanDetailPage,
 });
 
 const modelRoute = createRoute({
@@ -76,8 +90,9 @@ const routeTree = rootRoute.addChildren([
   registerRoute,
   myRoute,
   modelTree,
+  planRoute,
+  planDetailRoute,
 ]);
-
 
 export const router = createRouter({ routeTree });
 export type AppRouter = typeof router;

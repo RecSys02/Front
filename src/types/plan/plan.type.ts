@@ -21,6 +21,11 @@ export const PlanSchema = z.object({
   name: z.string(),
   isPrivate: z.boolean(),
   imgSrc: z.string(),
+  province: z.string(),
   schedule: z.array(Dailyschedulechema),
+  isActive: z.boolean(),
+  likeCount: z.number(),
+  tags: z.array(z.string()),
+  userName: z.string(),
 });
 export type Plan = z.infer<typeof PlanSchema>;

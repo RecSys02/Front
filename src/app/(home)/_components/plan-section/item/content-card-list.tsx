@@ -25,7 +25,7 @@ const ContentCardList = () => {
         <>
           <Column className="flex-1">
             {columns[0].map((content, idx) => (
-              <Fragment key={`${content.title}-${idx}`}>
+              <Fragment key={`${content.name}-${idx}`}>
                 {idx > 0 && <Border className="w-1/8 ml-auto" />}
                 <ContentCard content={content} />
               </Fragment>
@@ -36,7 +36,7 @@ const ContentCardList = () => {
 
           <Column className="flex-1">
             {columns[1].map((content, idx) => (
-              <Fragment key={`${content.title}-${idx}`}>
+              <Fragment key={`${content.name}-${idx}`}>
                 {idx > 0 && <Border className="w-1/8 ml-auto" />}
                 <ContentCard content={content} />
               </Fragment>
@@ -47,7 +47,7 @@ const ContentCardList = () => {
 
           <Column className="flex-1">
             {columns[2].map((content, idx) => (
-              <Fragment key={`${content.title}-${idx}`}>
+              <Fragment key={`${content.name}-${idx}`}>
                 {idx > 0 && <Border className="w-1/8 ml-auto" />}
                 <ContentCard content={content} />
               </Fragment>

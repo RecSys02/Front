@@ -83,12 +83,23 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
     queryKey: key,
     enabled: IS_MOCK && typeof planId === "number",
     queryFn: async () => {
+      const popular =
+        MOCK_POPULAR.find((p) => p.id === planId) ?? MOCK_POPULAR[0];
+
+      const province =
+        MOCK_CREATE_PLAN.schedule[0]?.activities[0]?.province ?? "";
+
       return {
         id: planId as number,
-        name: "성수 여행 계획",
+        name: popular.name,
+        province,
         isPrivate: false,
-        imgSrc: "",
+        imgSrc: popular.imgSrc,
         schedule: MOCK_CREATE_PLAN.schedule,
+        isActive: popular.isActive,
+        likeCount: popular.likeCount,
+        userName: "MOCK_USER",
+        tags: popular.tags,
       };
     },
   });
@@ -200,16 +211,21 @@ export const usePlanList = (
     queryKey: key,
     enabled: IS_MOCK,
     queryFn: async (): Promise<PlanListResponseDto> => {
-      return MOCK_POPULAR.map((p, idx) => ({
-        id: idx + 1,
-        name: p.name,
-        isPrivate: false,
-        imgSrc: p.imgSrc,
-        schedule: [],
-        tags: p.tags,
-        likeCount: p.likeCount,
-        userName: "MOCKUSER",
-      }));
+      return Array.from({ length: 18 }).map((_, idx) => {
+        const p = MOCK_POPULAR[idx % MOCK_POPULAR.length];
+        return {
+          id: idx + 1,
+          name: `${p.name} ${idx + 1}`,
+          isPrivate: false,
+          isActive: false,
+          province: "서울시",
+          imgSrc: p.imgSrc,
+          schedule: MOCK_CREATE_PLAN.schedule,
+          tags: p.tags,
+          likeCount: p.likeCount,
+          userName: "MOCKUSER",
+        };
+      });
     },
   });
   return IS_MOCK ? mock : real;

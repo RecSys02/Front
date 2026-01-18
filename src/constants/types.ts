@@ -1,5 +1,10 @@
 export type Locale = "KR" | "EN";
 export const LOCALES: Locale[] = ["KR", "EN"];
+export const CATEGORY_LABEL: Record<string, string> = {
+  TOURSPOT: "관광지",
+  CAFE: "카페",
+  RESTAURANT: "음식점",
+};
 
 export const THEME_TAGS = [
   "관광",
