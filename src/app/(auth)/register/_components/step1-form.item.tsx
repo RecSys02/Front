@@ -5,6 +5,8 @@ import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
 import { Input } from "@/components/ui/input";
 import { Check } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
+import Body from "@/components/text/body";
 
 export type GenerateRegisterStep1ItemsProps = {
   values: RegisterFormValues;
@@ -19,6 +21,8 @@ export type GenerateRegisterStep1ItemsProps = {
   isCheckingUserName: boolean;
   resetUserNameAvailable: () => void;
   isUserNameAvailable: boolean | null;
+
+  onOpenPolicyModal: () => void;
 };
 
 export const generateRegisterStep1Items = ({
@@ -34,6 +38,8 @@ export const generateRegisterStep1Items = ({
   isCheckingUserName,
   resetUserNameAvailable,
   isUserNameAvailable,
+
+  onOpenPolicyModal,
 }: GenerateRegisterStep1ItemsProps): FormItemConfig<RegisterFormValues>[] => [
   {
     key: "email",
@@ -154,6 +160,33 @@ export const generateRegisterStep1Items = ({
           </Button>
         </Row>
       </Column>
+    ),
+  },
+  {
+    key: "policy",
+    children: (
+      <Row className="items-center gap-2">
+        <Checkbox
+          checked={values.policy}
+          onCheckedChange={(next) =>
+            setValues((prev) => ({ ...prev, policy: Boolean(next) }))
+          }
+          className="mt-0.5"
+        />
+
+        <Row className="flex-1 justify-between items-center">
+          <Body variant="body3" className="fc-gray-700 leading-6">
+            (필수) 이용약관 및 개인정보 처리방침에 동의합니다
+          </Body>
+          <Button
+            type="button"
+            onClick={onOpenPolicyModal}
+            className="text-body3 underline fc-gray-600 hover:opacity-80 whitespace-nowrap"
+          >
+            보기
+          </Button>
+        </Row>
+      </Row>
     ),
   },
 ];
