@@ -20,10 +20,11 @@ import WelcomeModal from "./welcome-modal";
 import { useTags } from "@/hooks/tag.hook";
 import { AvailabilityResponse, CreateUserDto } from "@/types/auth/auth.type";
 import { ApiOk } from "@/types/util.type";
+import PolicyModal from "./policy-modal";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-
+  const [openPolicyModal, setOpenPolicyModal] = useState(false);
   const [openWelcomeModal, setOpenWelcomeModal] = useState(false);
   const [step, setStep] = useState<RegisterStep>(1);
 
@@ -41,10 +42,11 @@ const RegisterForm = () => {
       activityTagId: null,
       activityValue: 50,
     },
+    policy: false,
   });
 
   const [isEmailAvailable, setIsEmailAvailable] = useState<boolean | null>(
-    null
+    null,
   );
   const [isUserNameAvailable, setIsUserNameAvailable] = useState<
     boolean | null
@@ -61,7 +63,7 @@ const RegisterForm = () => {
   const { isStep1Valid, isValid } = generateRegisterUtil(
     values,
     isEmailAvailable,
-    isUserNameAvailable
+    isUserNameAvailable,
   );
 
   const handleSubmit = () => {
@@ -96,7 +98,7 @@ const RegisterForm = () => {
             password: values.password,
           });
         },
-      }
+      },
     );
   };
 
@@ -120,7 +122,7 @@ const RegisterForm = () => {
             toast.error("이미 사용 중인 이메일입니다.");
           }
         },
-      }
+      },
     );
   };
 
@@ -142,7 +144,7 @@ const RegisterForm = () => {
             toast.error("이미 사용 중인 닉네임입니다.");
           }
         },
-      }
+      },
     );
   };
 
@@ -159,10 +161,11 @@ const RegisterForm = () => {
           isCheckingUserName: checkUserName.isPending,
           resetUserNameAvailable: () => setIsUserNameAvailable(null),
           isUserNameAvailable,
+          onOpenPolicyModal: () => setOpenPolicyModal(true),
         })
       : tagSource
-      ? generateRegisterStep2Items(values, setValues, tagSource)
-      : [];
+        ? generateRegisterStep2Items(values, setValues, tagSource)
+        : [];
 
   return (
     <Column className="max-w-md">
@@ -192,6 +195,13 @@ const RegisterForm = () => {
         onClose={() => {
           setOpenWelcomeModal(false);
           navigate({ to: ROUTES.Home, replace: true });
+        }}
+      />
+      <PolicyModal
+        open={openPolicyModal}
+        onOpenChange={setOpenPolicyModal}
+        onConfirm={() => {
+          setValues((prev) => ({ ...prev, policy: true }));
         }}
       />
     </Column>

@@ -14,6 +14,7 @@ export type RegisterFormValues = {
   passwordConfirm: string;
   userName: string;
   tags: Tags;
+  policy: boolean;
 };
 
 export type RegisterStep = 1 | 2;

@@ -43,7 +43,7 @@ export const mapTagsToSource = (tags: Tag[]): TagSource => {
 export const validateStep1 = (
   values: RegisterFormValues,
   isEmailAvailable: boolean | null,
-  isUserNameAvailable: boolean | null
+  isUserNameAvailable: boolean | null,
 ) => {
   const password = values.password.trim();
   const passwordConfirm = values.passwordConfirm.trim();
@@ -52,6 +52,7 @@ export const validateStep1 = (
   const isPasswordValid = passwordRegex.test(password);
 
   return (
+    values.policy === true &&
     isEmailAvailable === true &&
     isUserNameAvailable === true &&
     values.email.trim() !== "" &&
@@ -65,12 +66,12 @@ export const validateStep1 = (
 export const generateRegisterUtil = (
   values: RegisterFormValues,
   isEmailAvailable: boolean | null,
-  isUserNameAvailable: boolean | null
+  isUserNameAvailable: boolean | null,
 ) => {
   const isStep1Valid = validateStep1(
     values,
     isEmailAvailable,
-    isUserNameAvailable
+    isUserNameAvailable,
   );
   const isValid = isStep1Valid;
   return { isStep1Valid, isValid };
