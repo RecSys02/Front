@@ -8,7 +8,12 @@ import {
 import { useState } from "react";
 import { toast } from "sonner";
 import { RegisterFormValues, RegisterStep } from "./register.type";
-import { EMAIL_REGEX, generateRegisterUtil } from "./register.util";
+import {
+  EMAIL_REGEX,
+  generateRegisterUtil,
+  pickLabels,
+  TagOption,
+} from "./register.util";
 import { generateRegisterStep1Items } from "./step1-form.item";
 import { generateRegisterStep2Items } from "./step2-form.item";
 import Column from "@/components/common/container/column";
@@ -73,21 +78,35 @@ const RegisterForm = () => {
       return;
     }
 
-    const tagIds: number[] = [
-      ...(values.tags.themeIds ?? []),
-      ...(values.tags.moodIds ?? []),
-      ...(values.tags.foodIds ?? []),
-      ...(values.tags.cafeIds ?? []),
-      ...(values.tags.dislikeIds ?? []),
-      ...(values.tags.activityTagId ? [values.tags.activityTagId] : []),
-    ];
+    const preferredThemes = pickLabels(values.tags.themeIds, tagSource.THEME);
+    const preferredMoods = pickLabels(values.tags.moodIds, tagSource.MOOD);
+    const preferredRestaurantTypes = pickLabels(
+      values.tags.foodIds,
+      tagSource.FOOD,
+    );
+    const preferredCafeTypes = pickLabels(values.tags.cafeIds, tagSource.CAFE);
+    const avoid = pickLabels(values.tags.dislikeIds, tagSource.DISLIKE);
+
+    const activityLevel =
+      values.tags.activityTagId != null
+        ? tagSource.ACTIVITY_LEVEL.find(
+            (o: TagOption) => o.id === values.tags.activityTagId,
+          )?.label
+        : undefined;
 
     const payload: CreateUserDto = {
       email: values.email.trim(),
       password: values.password,
       userName: values.userName.trim(),
-      tagIds,
+
+      preferredThemes,
+      preferredMoods,
+      preferredRestaurantTypes,
+      preferredCafeTypes,
+      avoid,
+      activityLevel,
     };
+    console.log(payload);
     registerUser.mutate(
       { body: payload },
       {
