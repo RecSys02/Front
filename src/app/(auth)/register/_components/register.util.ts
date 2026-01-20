@@ -18,6 +18,19 @@ type TagSourceMutable = {
   [K in keyof TagSource]: TagOption[];
 };
 
+export const pickLabels = (
+  selectedIds: number[] | null,
+  options: readonly { id: number; label: string }[],
+) => {
+  if (!selectedIds?.length) return undefined;
+
+  const map = new Map(options.map((o) => [o.id, o.label] as const));
+  const labels = selectedIds
+    .map((id) => map.get(id))
+    .filter(Boolean) as string[];
+  return labels.length ? labels : undefined;
+};
+
 export const mapTagsToSource = (tags: Tag[]): TagSource => {
   const source: TagSourceMutable = {
     THEME: [],
