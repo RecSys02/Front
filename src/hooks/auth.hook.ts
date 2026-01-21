@@ -148,3 +148,29 @@ export const useRegister = () => {
 
   return IS_MOCK ? mock : real;
 };
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    clear();
+    queryClient.removeQueries({ queryKey: ["me"] });
+  };
+
+  const onError = () => {
+    toast.error("탈퇴 처리에 실패했습니다. 1:1 문의하기를 남겨주시길 바랍니다.")
+  };
+
+  const real = tsr.auth.deleteUser.useMutation({
+    onSuccess,
+    onError,
+  });
+
+  const mock = useMutation<void>({
+    mutationFn: async () => undefined,
+    onSuccess,
+    onError,
+  });
+
+  return IS_MOCK ? mock : real;
+}
