@@ -5,8 +5,7 @@ import axios, {
 } from "axios";
 import { AuthStore } from "@/stores/auth.store";
 
-const BASE_URL =
-  import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
+const BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "/api";
 
 const { getAccessToken, setAccessToken, clear } = AuthStore.actions;
 
@@ -51,7 +50,7 @@ axiosInstance.interceptors.request.use(
 
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosInstance.interceptors.response.use(
@@ -114,7 +113,7 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosInstance;

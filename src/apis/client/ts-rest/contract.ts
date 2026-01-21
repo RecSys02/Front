@@ -1,4 +1,5 @@
 import { authApi } from "@/apis/auth.api";
+import { chatApi } from "@/apis/chat.api";
 import { modelApi } from "@/apis/model.api";
 import { placeApi } from "@/apis/place.api";
 import { planApi } from "@/apis/plan.api";
@@ -15,4 +16,5 @@ export const contract = c.router({
   model: modelApi,
   tag: tagApi,
   place: placeApi,
+  chat: chatApi,
 });
