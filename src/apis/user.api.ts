@@ -15,6 +15,16 @@ export const userApi = c.router(
         }),
       },
     },
+    rename: {
+      method: "PATCH",
+      path: "/profile",
+      body: z.object({
+        userName: z.string(),
+      }),
+      responses: {
+        200: z.object({}),
+      },
+    },
   },
   {
     pathPrefix: "/user",
