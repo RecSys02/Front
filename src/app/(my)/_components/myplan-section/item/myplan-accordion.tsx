@@ -16,7 +16,7 @@ const MyPlanAccordion = () => {
   const plans = data ?? [];
   return (
     <Column className="w-fit items-center border border-primary rounded-2xl">
-      <Accordion type="single" collapsible className="w-197" defaultValue="1">
+      <Accordion type="single" collapsible className="w-197" defaultValue="0">
         {plans.map((plan, i) => (
           <AccordionItem key={i} value={String(i)}>
             <AccordionTrigger className="cursor-pointer [&>svg]:size-10 items-center pr-12">
