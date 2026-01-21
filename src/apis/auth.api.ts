@@ -66,6 +66,14 @@ export const authApi = c.router(
         200: z.void(),
       },
     },
+    deleteUser: {
+      method: "DELETE",
+      path: "/withdraw",
+      body: z.object({}),
+      responses: {
+        200: z.void(),
+      },
+    },
   },
   {
     pathPrefix: "/auth",
