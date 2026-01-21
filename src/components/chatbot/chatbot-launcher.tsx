@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { XIcon } from "lucide-react";
-import { useUser } from "@/hooks/user.hook";
 import { Button } from "../common/button/button";
 import ChatbotDialog from "./chatbot-dialog";
 import ChatbotIcon from "@/assets/chatbot.svg?react";
@@ -10,12 +9,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
+import { useUser } from "@/hooks/user.hook";
+
 const ChatbotLauncher = () => {
   const [open, setOpen] = useState(false);
-
   const user = useUser();
   if (!user.isSuccess) return null;
-  const toggle = () => setOpen((prev) => !prev);
 
   return (
     <>
@@ -24,15 +23,14 @@ const ChatbotLauncher = () => {
           <TooltipTrigger asChild>
             <Button
               type="button"
-              size="icon"
-              aria-label={open ? "챗봇 닫기" : "챗봇 열기"}
-              className="fixed bottom-6 right-6 z-9999 size-14 rounded-full shadow-lg bg-accent"
-              onClick={toggle}
+              onClick={() => setOpen((v) => !v)}
+              className="fixed bottom-6 right-6 z-10000 h-14 w-14 rounded-full bg-white border border-[#9ECD87]/40 shadow-md hover:shadow-lg"
+              aria-label="챗봇 열기"
             >
               {open ? (
-                <XIcon className="size-6 text-white" strokeWidth={3} />
+                <XIcon className="size-6 text-[#245B3A]" />
               ) : (
-                <ChatbotIcon className="size-12" />
+                <ChatbotIcon className="size-10" />
               )}
             </Button>
           </TooltipTrigger>
@@ -49,7 +47,8 @@ const ChatbotLauncher = () => {
           )}
         </Tooltip>
       </TooltipProvider>
-      <ChatbotDialog onOpenChange={setOpen} open={open} />
+
+      <ChatbotDialog open={open} onOpenChange={setOpen} />
     </>
   );
 };
