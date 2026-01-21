@@ -1,3 +1,4 @@
+import ChatbotLauncher from "@/components/chatbot/chatbot-launcher";
 import Footer from "@/components/layout/footer/footer";
 import Header from "@/components/layout/header/header";
 import { ROUTES } from "@/constants/routes";
@@ -24,6 +25,7 @@ const App = () => {
         </div>
         {!isFullscreen && <Footer />}
       </div>
+      <ChatbotLauncher />
     </>
   );
 };

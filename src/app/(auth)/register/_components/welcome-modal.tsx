@@ -16,7 +16,7 @@ const WelcomeModal = ({ open, onOpenChange, onClose }: Props) => {
       onOpenChange={onOpenChange}
       title={<BrandLogo className="h-12 w-auto mx-auto mt-2" />}
       description={
-        <Column className="gap-2">
+        <Column className="gap-2 items-center text-center">
           <Body variant="body1" className="font-semibold">
             회원가입이 완료되었습니다.
           </Body>
