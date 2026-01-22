@@ -14,8 +14,7 @@ const Planner = ({ schedule }: Props) => {
         <Column className="w-fit overflow-hidden" key={i}>
           <Row className="h-11 border-b border-r items-center px-2">
             <Body variant="body1" className="font-semibold fc-gray-900">
-              {" "}
-              Day {i + 1}{" "}
+              Day {i + 1}
             </Body>
           </Row>
 

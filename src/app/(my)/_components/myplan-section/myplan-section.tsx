@@ -4,8 +4,11 @@ import MyPlanAccordion from "./item/myplan-accordion";
 
 const MyPlanSection = () => {
   return (
-    <Column>
-      <Heading variant="heading2" className="fc-gray-800 pl-2 pb-5">
+    <Column className="w-fit">
+      <Heading
+        variant="heading2"
+        className="fc-gray-800 pl-2 pb-5 text-[24px]!"
+      >
         예정된 플랜
       </Heading>
       <MyPlanAccordion />
