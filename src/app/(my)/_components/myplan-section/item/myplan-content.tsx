@@ -12,7 +12,7 @@ type Props = {
 
 const MyPlanContent = ({ schedule }: Props) => {
   return (
-    <Column className="w-fit flex items-center gap-6 pb-5">
+    <Column className="w-fit flex items-center gap-3 pb-5">
       <Border className="w-166" />
       <Planner schedule={schedule} />
       <Row className="justify-end pb-1 mr-2">
