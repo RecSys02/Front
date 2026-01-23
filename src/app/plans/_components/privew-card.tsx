@@ -42,24 +42,26 @@ const PreviewCard = ({ content }: Props) => {
         </Button>
       </div>
 
-      <Column className="w-55 h-fit justify-start pt-4 px-2.5">
+      <Column className="max-w-55 w-full h-fit justify-start pt-4 px-2.5">
         <Body
           variant="body2"
-          className="w-full flex items-center font-bold fc-gray-800"
+          className="w-full min-w-0 flex items-center font-bold fc-gray-800 truncate"
         >
           {content.name}
         </Body>
-        <Row className="justify-between items-center">
+
+        <Row className="w-full items-center justify-between gap-2">
           <Body
             variant="body3"
-            className="w-full flex items-center font-regular fc-gray-700"
+            className="min-w-0 flex-1 flex items-center font-regular fc-gray-700 truncate"
           >
             {content.province}
           </Body>
+
           <Link
             to={ROUTES.PlanDetail}
             params={{ planId: String(content.id) }}
-            className="text-[12px]! font-regular fc-gray-600 underline size-3"
+            className="shrink-0 text-[12px]! font-regular fc-gray-600 underline"
           >
             더보기
           </Link>
