@@ -10,7 +10,7 @@ export const modelApi = c.router(
   {
     generate: {
       method: "POST",
-      path: "/",
+      path: "",
       body: ModelRequestSchema,
       responses: {
         200: ModelResponseSchema,

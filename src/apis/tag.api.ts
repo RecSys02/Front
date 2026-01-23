@@ -7,7 +7,7 @@ export const tagApi = c.router(
   {
     list: {
       method: "GET",
-      path: "/",
+      path: "",
       responses: {
         200: TagListSchema,
       },

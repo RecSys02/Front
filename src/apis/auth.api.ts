@@ -38,9 +38,9 @@ export const authApi = c.router(
       },
     },
     checkEmail: {
-      method: "POST",
+      method: "GET",
       path: "/check/email",
-      body: z.object({
+      query: z.object({
         email: z.string(),
       }),
       responses: {
@@ -48,9 +48,9 @@ export const authApi = c.router(
       },
     },
     checkName: {
-      method: "POST",
+      method: "GET",
       path: "/check/name",
-      body: z.object({
+      query: z.object({
         userName: z.string(),
       }),
       responses: {
