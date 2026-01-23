@@ -2,7 +2,6 @@ import {
   CreateUserSchema,
   AuthTokenResponseSchema,
   AvailabilityResponseSchema,
-  LoginResponseSchema,
 } from "@/types/auth/auth.type";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
@@ -19,7 +18,7 @@ export const authApi = c.router(
         password: z.string(),
       }),
       responses: {
-        200: LoginResponseSchema,
+        200: AuthTokenResponseSchema,
       },
     },
     signout: {
@@ -77,5 +76,5 @@ export const authApi = c.router(
   },
   {
     pathPrefix: "/auth",
-  }
+  },
 );
