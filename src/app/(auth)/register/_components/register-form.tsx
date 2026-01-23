@@ -106,15 +106,16 @@ const RegisterForm = () => {
       avoid,
       activityLevel,
     };
-    console.log(payload);
     registerUser.mutate(
       { body: payload },
       {
         onSuccess: () => {
           setOpenWelcomeModal(true);
           signin.mutate({
-            email: values.email,
-            password: values.password,
+            body: {
+              email: values.email,
+              password: values.password,
+            },
           });
         },
       },
