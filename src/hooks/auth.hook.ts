@@ -19,9 +19,12 @@ export const useSignin = () => {
 
   const onSuccess = async (res: ApiOk<AuthTokenResponseDto>) => {
     setAccessToken(res.body.accessToken);
-    await queryClient.fetchQuery(meQueryOptions());
-    const user = queryClient.getQueryData<UserMeDto>(["me"]);
-    toast.success(`${user?.userName ?? "사용자"}님, 환영합니다!`);
+
+    const me = await queryClient.fetchQuery(meQueryOptions());
+    queryClient.setQueryData<UserMeDto>(["me"], me);
+
+    toast.success(`${me?.userName ?? "사용자"}님, 환영합니다!`);
+    queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
   const onError = () => {
@@ -45,7 +48,6 @@ export const useSignin = () => {
 
   return IS_MOCK ? mock : real;
 };
-
 export const useSignout = () => {
   const queryClient = useQueryClient();
 

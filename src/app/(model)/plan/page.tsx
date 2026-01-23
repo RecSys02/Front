@@ -10,7 +10,7 @@ const ModelPlanPage = () => {
   const { data, isLoading } = useReadPlan(Number(planId));
 
   return (
-    <Column className="min-h-dvh flex items-center justify-center">
+    <Column className="min-h-150 flex items-center mt-30">
       {isLoading ? (
         <Spinner className="size-12" />
       ) : (
@@ -18,7 +18,9 @@ const ModelPlanPage = () => {
           <Subtitle variant="subtitle2" className="pb-10 font-bold!">
             {data?.name}
           </Subtitle>
-          <Planner schedule={data?.schedule ?? []} />
+          <div className="w-180">
+            <Planner schedule={data?.schedule ?? []} />
+          </div>
         </>
       )}
     </Column>

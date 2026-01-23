@@ -73,21 +73,21 @@ export const useCreatePlan = () => {
 
 export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
   const key = ["plan", "read", planId] as const;
+  const enabled = !IS_MOCK && Number.isFinite(planId);
 
   const real = tsr.plan.read.useQuery({
     queryKey: key,
     params: { planId: planId as number },
-    enabled: !IS_MOCK && typeof planId === "number",
+    enabled,
     select: (res: ApiOk<Plan>) => res.body,
   });
 
   const mock = useQuery<Plan>({
     queryKey: key,
-    enabled: IS_MOCK && typeof planId === "number",
+    enabled: IS_MOCK && Number.isFinite(planId),
     queryFn: async () => {
       const popular =
         MOCK_POPULAR.find((p) => p.id === planId) ?? MOCK_POPULAR[0];
-
       const province =
         MOCK_CREATE_PLAN.schedule[0]?.activities[0]?.province ?? "";
 
