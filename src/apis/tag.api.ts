@@ -14,6 +14,6 @@ export const tagApi = c.router(
     },
   },
   {
-    pathPrefix: "/tags",
-  }
+    pathPrefix: "/api/tags",
+  },
 );

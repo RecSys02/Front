@@ -112,6 +112,6 @@ export const planApi = c.router(
     },
   },
   {
-    pathPrefix: "/plans",
-  }
+    pathPrefix: "/api/plans",
+  },
 );
