@@ -90,7 +90,7 @@ export const useCheckEmail = () => {
   const mock = useMutation<
     ApiOk<AvailabilityResponse>,
     Error,
-    { body: { email: string } }
+    { query: { email: string } }
   >({
     mutationFn: async () => ({
       status: 200,
@@ -115,7 +115,7 @@ export const useCheckName = () => {
   const mock = useMutation<
     ApiOk<AvailabilityResponse>,
     Error,
-    { body: { userName: string } }
+    { query: { userName: string } }
   >({
     mutationFn: async () => ({
       status: 200,
