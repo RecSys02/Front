@@ -9,21 +9,14 @@ export const tsr = initTsrReactQuery(contract, {
   api: async (args: ApiFetcherArgs) => {
     const method = (args.method || "GET").toUpperCase();
 
-    const qs =
-      args.rawQuery && typeof args.rawQuery === "object"
-        ? new URLSearchParams(
-            Object.entries(args.rawQuery as Record<string, any>)
-              .filter(([, v]) => v !== undefined && v !== null)
-              .map(([k, v]) => [k, String(v)]),
-          ).toString()
-        : "";
-
-    const url = qs ? `${args.path}?${qs}` : args.path;
+    const hasQueryInPath = args.path.includes("?");
+    const params = hasQueryInPath ? undefined : (args.rawQuery as any);
 
     const result = await axiosInstance({
-      url,
+      url: args.path,
       method: method as any,
       headers: args.headers,
+      params,
       data:
         method === "GET" || method === "HEAD" ? undefined : (args.body as any),
       signal: args.fetchOptions?.signal ?? undefined,

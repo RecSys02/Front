@@ -5,6 +5,7 @@ import Column from "@/components/common/container/column";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { useMemo, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 
 import { useRename, useUser } from "@/hooks/user.hook";
 import { useCheckName, useSignout } from "@/hooks/auth.hook";
@@ -20,11 +21,11 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
   const nicknameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const [userNameToCheck, setUserNameToCheck] = useState("");
-  const checkUserName = useCheckName(userNameToCheck);
+  const [nameToCheck, setNameToCheck] = useState("");
+  const checkName = useCheckName(nameToCheck);
   const rename = useRename();
 
-  const isLoading = checkUserName.isFetching || rename.isPending;
+  const isLoading = checkName.isFetching || rename.isPending;
 
   const nicknameKey = useMemo(
     () => `nickname-${open ? "open" : "closed"}-${data?.userName ?? ""}`,
@@ -54,10 +55,11 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
       return;
     }
 
-    setUserNameToCheck(userName);
-    await Promise.resolve();
+    flushSync(() => {
+      setNameToCheck(userName);
+    });
 
-    const res = await checkUserName.refetch();
+    const res = await checkName.refetch();
     const dataRes = res.data;
 
     if (!dataRes) {

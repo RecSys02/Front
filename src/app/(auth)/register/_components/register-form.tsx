@@ -25,6 +25,7 @@ import WelcomeModal from "./welcome-modal";
 import { useTags } from "@/hooks/tag.hook";
 import { CreateUserDto } from "@/types/auth/auth.type";
 import PolicyModal from "./policy-modal";
+import { flushSync } from "react-dom";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
@@ -57,13 +58,13 @@ const RegisterForm = () => {
   >(null);
 
   const [emailToCheck, setEmailToCheck] = useState("");
-  const [userNameToCheck, setUserNameToCheck] = useState("");
+  const [nameToCheck, setNameToCheck] = useState("");
 
   const email = values.email.trim();
   const userName = values.userName.trim();
 
   const checkEmail = useCheckEmail(emailToCheck);
-  const checkUserName = useCheckName(userNameToCheck);
+  const checkName = useCheckName(nameToCheck);
   const registerUser = useRegister();
   const signin = useSignin();
 
@@ -133,8 +134,10 @@ const RegisterForm = () => {
       return toast.error("이메일 형식이 올바르지 않습니다.");
 
     setIsEmailAvailable(null);
-    setEmailToCheck(email);
-    await Promise.resolve();
+
+    flushSync(() => {
+      setEmailToCheck(email);
+    });
 
     const res = await checkEmail.refetch();
     const data = res.data;
@@ -154,10 +157,12 @@ const RegisterForm = () => {
     if (!userName) return toast.error("닉네임을 입력해주세요.");
 
     setIsUserNameAvailable(null);
-    setUserNameToCheck(userName);
-    await Promise.resolve();
 
-    const res = await checkUserName.refetch();
+    flushSync(() => {
+      setNameToCheck(userName);
+    });
+
+    const res = await checkName.refetch();
     const data = res.data;
 
     if (!data) return toast.error("닉네임 중복 확인 중 오류가 발생했습니다.");
@@ -181,7 +186,7 @@ const RegisterForm = () => {
           resetEmailAvailable: () => setIsEmailAvailable(null),
           isEmailAvailable,
           onCheckUserName: handleCheckUserName,
-          isCheckingUserName: checkUserName.isFetching,
+          isCheckingUserName: checkName.isFetching,
           resetUserNameAvailable: () => setIsUserNameAvailable(null),
           isUserNameAvailable,
           onOpenPolicyModal: () => setOpenPolicyModal(true),

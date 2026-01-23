@@ -51,7 +51,7 @@ export const authApi = c.router(
       method: "GET",
       path: "/check/name",
       query: z.object({
-        userName: z.string(),
+        name: z.string(),
       }),
       responses: {
         200: AvailabilityResponseSchema,
