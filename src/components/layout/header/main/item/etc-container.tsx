@@ -16,7 +16,7 @@ const ETCContainer = ({ locale, onChange }: Props) => {
 
   return (
     <Row className="w-fit items-center h-9 justify-end">
-      <LoginContainer userName={userName} isLoggedIn={isSuccess} />
+      <LoginContainer userName={userName ?? null} isLoggedIn={isSuccess} />
       <Row className="gap-2 pl-4 items-center">
         <UserMenu isLoggedIn={isSuccess} />
         <LocaleMenu locale={locale} onChange={onChange} />
