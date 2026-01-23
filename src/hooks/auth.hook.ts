@@ -1,5 +1,5 @@
 import { tsr } from "@/apis/client/ts-rest/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
 import { ApiOk } from "@/types/util.type";
@@ -78,15 +78,19 @@ export const useSignout = () => {
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckEmail = () => {
-  const real = tsr.auth.checkEmail.useMutation();
+export const useCheckEmail = (email: string) => {
+  const key = ["checkEmail", email] as const;
 
-  const mock = useMutation<
-    ApiOk<AvailabilityResponse>,
-    Error,
-    { email: string }
-  >({
-    mutationFn: async () => ({
+  const real = tsr.auth.checkEmail.useQuery({
+    queryKey: key,
+    query: { email },
+    enabled: false,
+  });
+
+  const mock = useQuery<ApiOk<AvailabilityResponse>>({
+    queryKey: key,
+    enabled: false,
+    queryFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
@@ -96,15 +100,19 @@ export const useCheckEmail = () => {
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckName = () => {
-  const real = tsr.auth.checkName.useMutation();
+export const useCheckName = (userName: string) => {
+  const key = ["checkName", userName] as const;
 
-  const mock = useMutation<
-    ApiOk<AvailabilityResponse>,
-    Error,
-    { userName: string }
-  >({
-    mutationFn: async () => ({
+  const real = tsr.auth.checkName.useQuery({
+    queryKey: key,
+    query: { userName },
+    enabled: false,
+  });
+
+  const mock = useQuery<ApiOk<AvailabilityResponse>>({
+    queryKey: key,
+    enabled: false,
+    queryFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),

@@ -4,12 +4,10 @@ import Body from "@/components/text/body";
 import Column from "@/components/common/container/column";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { useRename, useUser } from "@/hooks/user.hook";
 import { useCheckName, useSignout } from "@/hooks/auth.hook";
-import type { ApiOk } from "@/types/util.type";
-import type { AvailabilityResponse } from "@/types/auth/auth.type";
 
 type ProfileModalProps = {
   open: boolean;
@@ -22,10 +20,11 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
   const nicknameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const checkUserName = useCheckName();
+  const [userNameToCheck, setUserNameToCheck] = useState("");
+  const checkUserName = useCheckName(userNameToCheck);
   const rename = useRename();
 
-  const isLoading = checkUserName.isPending || rename.isPending;
+  const isLoading = checkUserName.isFetching || rename.isPending;
 
   const nicknameKey = useMemo(
     () => `nickname-${open ? "open" : "closed"}-${data?.userName ?? ""}`,
@@ -55,15 +54,13 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
       return;
     }
 
-    let dataRes: ApiOk<AvailabilityResponse> | undefined;
-    try {
-      dataRes = await checkUserName.mutateAsync({ userName });
-    } catch {
-      toast.error("중복 확인 중 오류가 발생했습니다.");
-      return;
-    }
+    setUserNameToCheck(userName);
+    await Promise.resolve();
 
-    if (!dataRes?.body) {
+    const res = await checkUserName.refetch();
+    const dataRes = res.data;
+
+    if (!dataRes) {
       toast.error("중복 확인 중 오류가 발생했습니다.");
       return;
     }
