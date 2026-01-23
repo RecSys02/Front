@@ -4,7 +4,7 @@ import Body from "@/components/text/body";
 import Column from "@/components/common/container/column";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 
 import { useRename, useUser } from "@/hooks/user.hook";
 import { useCheckName, useSignout } from "@/hooks/auth.hook";
@@ -22,10 +22,11 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
   const nicknameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const checkUserName = useCheckName();
+  const [pendingName, setPendingName] = useState("");
+  const checkUserName = useCheckName(pendingName);
   const rename = useRename();
 
-  const isLoading = checkUserName.isPending || rename.isPending;
+  const isLoading = checkUserName.isFetching || rename.isPending;
 
   const nicknameKey = useMemo(
     () => `nickname-${open ? "open" : "closed"}-${data?.userName ?? ""}`,
@@ -36,7 +37,7 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
     [open],
   );
 
-  const handleSaveName = () => {
+  const handleSaveName = async () => {
     const userName = (nicknameRef.current?.value ?? "").trim();
     const pw = (passwordRef.current?.value ?? "").trim();
 
@@ -55,24 +56,27 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
       return;
     }
 
-    checkUserName.mutate(
-      { body: { userName } },
-      {
-        onSuccess: (res: ApiOk<AvailabilityResponse>) => {
-          if (!res.body.available) {
-            toast.error("이미 사용 중인 닉네임입니다.");
-            return;
-          }
+    setPendingName(userName);
 
-          rename.mutate(
-            { body: { userName, password: pw } },
-            {
-              onSuccess: () => {
-                toast.success("닉네임이 성공적으로 변경되었습니다.");
-                onClose();
-              },
-            },
-          );
+    const res = await checkUserName.refetch();
+    const dataRes = res.data as ApiOk<AvailabilityResponse> | undefined;
+
+    if (!dataRes) {
+      toast.error("중복 확인 중 오류가 발생했습니다.");
+      return;
+    }
+
+    if (!dataRes.body.available) {
+      toast.error("이미 사용 중인 닉네임입니다.");
+      return;
+    }
+
+    rename.mutate(
+      { body: { userName, password: pw } },
+      {
+        onSuccess: () => {
+          toast.success("닉네임이 성공적으로 변경되었습니다.");
+          onClose();
         },
       },
     );
