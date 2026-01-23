@@ -13,7 +13,6 @@ import { ModelHistoryStore } from "@/stores/model-history.store";
 import { useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { PlaceDto } from "@/types/place/place.type";
-import { ApiOk } from "@/types/util.type";
 import { ModelResponseDto, ModelRequestDto } from "@/types/model/model.type";
 import { TEMP_MODEL_RESULTS } from "./model.mock";
 
@@ -59,10 +58,8 @@ const SpotSidebar = ({
 
   const listPlaces = tab === "saved" ? savedPlaces : places;
 
-  const resolveModelResult = (
-    res: ApiOk<ModelResponseDto>
-  ): ModelResponseDto => {
-    return IS_MOCK ? pickTempResult() : res.body;
+  const resolveModelResult = (data: ModelResponseDto): ModelResponseDto => {
+    return IS_MOCK ? pickTempResult() : data;
   };
 
   const onGeneratePlaces = () => {
@@ -77,7 +74,7 @@ const SpotSidebar = ({
 
     const nextHistory = ModelHistoryStore.actions.appendHistoryPlaces(
       historyPlaces,
-      selectedPlaces
+      selectedPlaces,
     );
 
     setHistoryPlaces(nextHistory);
@@ -103,8 +100,8 @@ const SpotSidebar = ({
     model.mutate(
       { body: payload },
       {
-        onSuccess: (res: ApiOk<ModelResponseDto>) => {
-          const nextResult = resolveModelResult(res);
+        onSuccess: (data: ModelResponseDto) => {
+          const nextResult = resolveModelResult(data);
 
           setSelectedPlaces([]);
           setModelResult(nextResult);
@@ -112,7 +109,7 @@ const SpotSidebar = ({
           onCloseOverlay?.();
           onChangeTab("tourspot");
         },
-      }
+      },
     );
   };
 
