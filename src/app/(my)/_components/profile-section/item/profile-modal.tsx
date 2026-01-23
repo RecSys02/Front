@@ -4,7 +4,7 @@ import Body from "@/components/text/body";
 import Column from "@/components/common/container/column";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef } from "react";
 
 import { useRename, useUser } from "@/hooks/user.hook";
 import { useCheckName, useSignout } from "@/hooks/auth.hook";
@@ -22,11 +22,10 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
   const nicknameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
-  const [pendingName, setPendingName] = useState("");
-  const checkUserName = useCheckName(pendingName);
+  const checkUserName = useCheckName();
   const rename = useRename();
 
-  const isLoading = checkUserName.isFetching || rename.isPending;
+  const isLoading = checkUserName.isPending || rename.isPending;
 
   const nicknameKey = useMemo(
     () => `nickname-${open ? "open" : "closed"}-${data?.userName ?? ""}`,
@@ -56,12 +55,15 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
       return;
     }
 
-    setPendingName(userName);
+    let dataRes: ApiOk<AvailabilityResponse> | undefined;
+    try {
+      dataRes = await checkUserName.mutateAsync({ userName });
+    } catch {
+      toast.error("중복 확인 중 오류가 발생했습니다.");
+      return;
+    }
 
-    const res = await checkUserName.refetch();
-    const dataRes = res.data as ApiOk<AvailabilityResponse> | undefined;
-
-    if (!dataRes) {
+    if (!dataRes?.body) {
       toast.error("중복 확인 중 오류가 발생했습니다.");
       return;
     }

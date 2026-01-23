@@ -59,8 +59,8 @@ const RegisterForm = () => {
   const email = values.email.trim();
   const userName = values.userName.trim();
 
-  const checkEmail = useCheckEmail(email);
-  const checkUserName = useCheckName(userName);
+  const checkEmail = useCheckEmail();
+  const checkUserName = useCheckName();
   const registerUser = useRegister();
   const signin = useSignin();
 
@@ -131,17 +131,18 @@ const RegisterForm = () => {
 
     setIsEmailAvailable(null);
 
-    const res = await checkEmail.refetch();
-    const data = res.data;
+    try {
+      const data = await checkEmail.mutateAsync({ email });
 
-    if (!data) return;
-
-    if (data.body.available) {
-      setIsEmailAvailable(true);
-      toast.success("사용 가능한 이메일입니다.");
-    } else {
-      setIsEmailAvailable(false);
-      toast.error("이미 사용 중인 이메일입니다.");
+      if (data.body.available) {
+        setIsEmailAvailable(true);
+        toast.success("사용 가능한 이메일입니다.");
+      } else {
+        setIsEmailAvailable(false);
+        toast.error("이미 사용 중인 이메일입니다.");
+      }
+    } catch {
+      toast.error("이메일 중복 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -150,17 +151,18 @@ const RegisterForm = () => {
 
     setIsUserNameAvailable(null);
 
-    const res = await checkUserName.refetch();
-    const data = res.data;
+    try {
+      const data = await checkUserName.mutateAsync({ userName });
 
-    if (!data) return;
-
-    if (data.body.available) {
-      setIsUserNameAvailable(true);
-      toast.success("사용 가능한 닉네임입니다.");
-    } else {
-      setIsUserNameAvailable(false);
-      toast.error("이미 사용 중인 닉네임입니다.");
+      if (data.body.available) {
+        setIsUserNameAvailable(true);
+        toast.success("사용 가능한 닉네임입니다.");
+      } else {
+        setIsUserNameAvailable(false);
+        toast.error("이미 사용 중인 닉네임입니다.");
+      }
+    } catch {
+      toast.error("닉네임 중복 확인 중 오류가 발생했습니다.");
     }
   };
 
@@ -170,11 +172,11 @@ const RegisterForm = () => {
           values,
           setValues,
           onCheckEmail: handleCheckEmail,
-          isCheckingEmail: checkEmail.isFetching,
+          isCheckingEmail: checkEmail.isPending,
           resetEmailAvailable: () => setIsEmailAvailable(null),
           isEmailAvailable,
           onCheckUserName: handleCheckUserName,
-          isCheckingUserName: checkUserName.isFetching,
+          isCheckingUserName: checkUserName.isPending,
           resetUserNameAvailable: () => setIsUserNameAvailable(null),
           isUserNameAvailable,
           onOpenPolicyModal: () => setOpenPolicyModal(true),
