@@ -33,7 +33,7 @@ export const useUser = () => {
   const mock = useQuery<UserMeDto>({
     queryKey: ["me"],
     enabled: enabled && IS_MOCK,
-    queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
+    queryFn: async () => ({ userName: "MOCKUSER", image: null }),
   });
 
   return IS_MOCK ? mock : real;
@@ -42,18 +42,28 @@ export const useUser = () => {
 export const useRename = () => {
   const queryClient = useQueryClient();
 
-  const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ["me"] });
-  };
-
   const onError = () => {
     toast.error("닉네임 변경 중 오류가 발생했습니다.");
   };
 
-  const real = tsr.user.rename.useMutation({
-    onSuccess,
-    onError,
-  });
+  const onSuccess = (_: unknown, vars: { body: RenameUserDto }) => {
+    const ME_KEY = (isMock: boolean) =>
+      ["me", isMock ? "mock" : "real"] as const;
+
+    const key = ME_KEY(IS_MOCK);
+
+    queryClient.setQueryData<UserMeDto>(key, (prev) => ({
+      ...(prev ?? { userImg: null, userName: vars.body.userName }),
+      userName: vars.body.userName,
+    }));
+
+    if (!IS_MOCK) {
+      queryClient.invalidateQueries({ queryKey: ME_KEY(false) });
+      queryClient.refetchQueries({ queryKey: ME_KEY(false) });
+    }
+  };
+
+  const real = tsr.user.rename.useMutation({ onSuccess, onError });
 
   const mock = useMutation<void, Error, { body: RenameUserDto }>({
     mutationFn: async () => undefined,
