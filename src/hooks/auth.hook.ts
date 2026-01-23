@@ -1,5 +1,5 @@
 import { tsr } from "@/apis/client/ts-rest/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
 import { ApiOk } from "@/types/util.type";
@@ -78,19 +78,15 @@ export const useSignout = () => {
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckEmail = (email: string) => {
-  const key = ["checkEmail", email] as const;
+export const useCheckEmail = () => {
+  const real = tsr.auth.checkEmail.useMutation();
 
-  const real = tsr.auth.checkEmail.useQuery({
-    queryKey: key,
-    query: { email },
-    enabled: !IS_MOCK && !!email,
-  });
-
-  const mock = useQuery<ApiOk<AvailabilityResponse>>({
-    queryKey: key,
-    enabled: IS_MOCK && !!email,
-    queryFn: async () => ({
+  const mock = useMutation<
+    ApiOk<AvailabilityResponse>,
+    Error,
+    { email: string }
+  >({
+    mutationFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
@@ -100,19 +96,15 @@ export const useCheckEmail = (email: string) => {
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckName = (userName: string) => {
-  const key = ["checkName", userName] as const;
+export const useCheckName = () => {
+  const real = tsr.auth.checkName.useMutation();
 
-  const real = tsr.auth.checkName.useQuery({
-    queryKey: key,
-    query: { userName },
-    enabled: !IS_MOCK && !!userName,
-  });
-
-  const mock = useQuery<ApiOk<AvailabilityResponse>>({
-    queryKey: key,
-    enabled: IS_MOCK && !!userName,
-    queryFn: async () => ({
+  const mock = useMutation<
+    ApiOk<AvailabilityResponse>,
+    Error,
+    { userName: string }
+  >({
+    mutationFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
@@ -121,6 +113,7 @@ export const useCheckName = (userName: string) => {
 
   return IS_MOCK ? mock : real;
 };
+
 export const useRegister = () => {
   const onError = () => {
     toast.error("회원가입 중 오류가 발생했습니다.");
