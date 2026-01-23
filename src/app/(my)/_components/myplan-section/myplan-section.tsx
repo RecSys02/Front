@@ -4,7 +4,7 @@ import MyPlanAccordion from "./item/myplan-accordion";
 
 const MyPlanSection = () => {
   return (
-    <Column className="w-fit">
+    <Column className="min-w-180">
       <Heading
         variant="heading2"
         className="fc-gray-800 pl-2 pb-5 text-[24px]!"

@@ -2,38 +2,56 @@ import Modal from "@/components/ui/modal";
 import BrandLogo from "@/assets/logos/logo.svg?react";
 import Body from "@/components/text/body";
 import Column from "@/components/common/container/column";
-import { useEffect, useState } from "react";
-import { useRename, useUser } from "@/hooks/user.hook";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
-import { useCheckName, useDeleteUser } from "@/hooks/auth.hook";
-import { ApiOk } from "@/types/util.type";
-import { AvailabilityResponse } from "@/types/auth/auth.type";
+import { toast } from "sonner";
+import { useMemo, useRef } from "react";
 
-type Props = {
+import { useRename, useUser } from "@/hooks/user.hook";
+import { useCheckName, useSignout } from "@/hooks/auth.hook";
+import type { ApiOk } from "@/types/util.type";
+import type { AvailabilityResponse } from "@/types/auth/auth.type";
+
+type ProfileModalProps = {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
   onClose: () => void;
 };
 
-export const RenameModal = ({ open, onOpenChange, onClose }: Props) => {
+export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
   const { data } = useUser();
-  const [nickname, setNickname] = useState("");
+
+  const nicknameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
 
   const checkUserName = useCheckName();
   const rename = useRename();
 
-  useEffect(() => {
-    if (data?.userName) {
-      setNickname(data?.userName);
-    }
-  }, [open])
+  const isLoading = checkUserName.isPending || rename.isPending;
+
+  const nicknameKey = useMemo(
+    () => `nickname-${open ? "open" : "closed"}-${data?.userName ?? ""}`,
+    [open, data?.userName],
+  );
+  const passwordKey = useMemo(
+    () => `password-${open ? "open" : "closed"}`,
+    [open],
+  );
 
   const handleSaveName = () => {
-    const userName = nickname.trim();
+    const userName = (nicknameRef.current?.value ?? "").trim();
+    const pw = (passwordRef.current?.value ?? "").trim();
 
-    if (!userName || userName == data?.userName) {
-      toast.error(!userName ? "변경하실 닉네임을 입력해주세요." : "현재와 동일한 닉네임입니다.");
+    if (!userName) {
+      toast.error("변경하실 닉네임을 입력해주세요.");
+      return;
+    }
+
+    if (userName === data?.userName) {
+      toast.error("현재와 동일한 닉네임입니다.");
+      return;
+    }
+
+    if (!pw) {
+      toast.error("비밀번호를 입력해주세요.");
       return;
     }
 
@@ -41,16 +59,20 @@ export const RenameModal = ({ open, onOpenChange, onClose }: Props) => {
       { body: { userName } },
       {
         onSuccess: (res: ApiOk<AvailabilityResponse>) => {
-          if (res.body.available) {
-            rename.mutate({ body: { userName: userName } }, {
-              onSuccess: () => {
-                onClose();
-                toast.success("닉네임이 성공적으로 변경되었습니다.");
-              }
-            })
-          } else {
+          if (!res.body.available) {
             toast.error("이미 사용 중인 닉네임입니다.");
+            return;
           }
+
+          rename.mutate(
+            { body: { userName, password: pw } },
+            {
+              onSuccess: () => {
+                toast.success("닉네임이 성공적으로 변경되었습니다.");
+                onClose();
+              },
+            },
+          );
         },
       },
     );
@@ -59,57 +81,71 @@ export const RenameModal = ({ open, onOpenChange, onClose }: Props) => {
   return (
     <Modal
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={(o) => !o && onClose()}
       title={<BrandLogo className="h-12 w-auto mx-auto mt-2" />}
       description={
-        <Column className="gap-2">
+        <Column className="gap-3 items-center">
           <Body variant="body1" className="font-semibold">
             닉네임 변경
           </Body>
-          <Body variant="body2" className="font-medium text-gray-600">
-            사용하실 닉네임을 입력해주세요.
+          <Body variant="body2" className="text-gray-600">
+            닉네임 변경을 위해 비밀번호 확인이 필요합니다.
           </Body>
-          <Input type="text" className="rounded border border-gray-300 p-2" value={nickname} onChange={(e) => setNickname(e.target.value)} />
+          <Input
+            key={nicknameKey}
+            ref={nicknameRef}
+            autoFocus
+            defaultValue={data?.userName ?? ""}
+            placeholder="새 닉네임"
+            className="h-10 pl-4 pr-12 bg-gray-50 text-sm shadow-none transition-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#9ECD87]"
+          />
+          <Input
+            key={passwordKey}
+            ref={passwordRef}
+            type="password"
+            defaultValue=""
+            placeholder="현재 비밀번호"
+            className="h-10 pl-4 pr-12 bg-gray-50 text-sm shadow-none transition-none focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-[#9ECD87]"
+          />
         </Column>
       }
       cancelText="취소"
       onCancelClick={onClose}
-      ctaText="변경하기"
-      onCtaClick={handleSaveName} />
+      ctaText={isLoading ? "처리 중..." : "변경하기"}
+      isLoading={isLoading}
+      onCtaClick={handleSaveName}
+    />
   );
 };
 
-export const DeleteUserModal = ({ open, onOpenChange, onClose }: Props) => {
-  const delUser = useDeleteUser();
+export const LogoutModal = ({ open, onClose }: ProfileModalProps) => {
+  const signout = useSignout();
 
-  const handleDeletUser = () => {
-    delUser.mutate({ body: {} }, {
-      onSuccess: () => {
-        toast.success("회원 탈퇴가 완료되었습니다. 이용해 주셔서 감사합니다.")
-        window.location.href = "/";
-      }
-    });
+  const handleLogout = () => {
+    signout.mutate();
+    toast.success("로그아웃 되었습니다.");
+    onClose();
   };
 
   return (
     <Modal
       open={open}
-      onOpenChange={onOpenChange}
+      onOpenChange={(o) => !o && onClose()}
       title={<BrandLogo className="h-12 w-auto mx-auto mt-2" />}
       description={
-        <Column className="gap-2">
+        <Column className="gap-3 items-center">
           <Body variant="body1" className="font-semibold">
-            정말 탈퇴하시겠습니까?
+            로그아웃 하시겠어요?
           </Body>
-          <Body variant="body2" className="font-medium text-gray-600">
-            저장하신 여행 정보가 모두 사라지며,
-            {'\n'}삭제된 데이터는 다시 복구할 수 없습니다.
+          <Body variant="body2" className="text-gray-600">
+            확인을 누르면 로그아웃됩니다.
           </Body>
         </Column>
       }
       cancelText="취소"
       onCancelClick={onClose}
-      ctaText="탈퇴하기"
-      onCtaClick={handleDeletUser} />
+      ctaText="확인"
+      onCtaClick={handleLogout}
+    />
   );
 };

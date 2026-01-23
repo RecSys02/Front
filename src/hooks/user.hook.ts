@@ -2,6 +2,7 @@ import { tsr } from "@/apis/client/ts-rest/client";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
+import { RenameUserDto } from "@/types/user/user.type";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -30,7 +31,7 @@ export const useRename = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ["me"] })
+    queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
   const onError = () => {
@@ -42,12 +43,11 @@ export const useRename = () => {
     onError,
   });
 
-  const mock = useMutation<void, Error, { body: { userName: string } }>({
+  const mock = useMutation<void, Error, { body: RenameUserDto }>({
     mutationFn: async () => undefined,
     onSuccess,
     onError,
   });
 
   return IS_MOCK ? mock : real;
-
 };

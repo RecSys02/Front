@@ -13,7 +13,7 @@ const endHour = 22;
 const STEP = 1; // time table step
 const HOURS = Array.from(
   { length: Math.floor((endHour - startHour) / STEP) + 1 },
-  (_, i) => startHour + i * STEP
+  (_, i) => startHour + i * STEP,
 );
 
 const LEGEND = [
@@ -24,8 +24,7 @@ const LEGEND = [
 
 const Planner = ({ schedule }: Props) => {
   return (
-    <Column className="w-full my-3">
-
+    <Column className="min-w-180 w-full my-3">
       <Row className="w-fit gap-4 mb-6">
         {LEGEND.map((item) => (
           <Row key={item.key} className="items-center gap-2">
@@ -73,7 +72,6 @@ const Planner = ({ schedule }: Props) => {
               />
             ))}
           </div>
-
         </div>
       ))}
       <div className="relative h-7">

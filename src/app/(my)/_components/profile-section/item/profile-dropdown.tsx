@@ -5,92 +5,48 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import EllipsisVerticalFilled from "@/assets/ellipsis-vertical-filled.svg?react";
-import { ReactNode, useRef, useState } from "react";
-import { DeleteUserModal, RenameModal } from "./profile-modal";
-import {
-  ImagePlusIcon,
-  LockOpenIcon,
-  RefreshCcwIcon,
-  UserRoundMinusIcon,
-} from "lucide-react";
-
-type ProfileDropdownProps = {
-  name: string;
-  icon: ReactNode;
-  onSelect?: () => void;
-};
+import { useState } from "react";
+import { PROFILE_DROPDOWN_ITEMS } from "./profile-dropdown-item.";
 
 const ProfileDropdown = () => {
-  const [openRenameModal, setOpenRenameModal] = useState(false);
-  const [openDelUserModal, setOpenDelUserModal] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [newImage, setNewImage] = useState<File | null>(null);
-  const [openCropModal, setOpenCropModal] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
-  const PROFILE_DROPDOWN_ITEMS: ProfileDropdownProps[] = [
-    {
-      name: "닉네임 변경",
-      icon: <RefreshCcwIcon />,
-      onSelect: () => setOpenRenameModal(true),
-    },
-    {
-      name: "프로필 이미지 변경",
-      icon: <ImagePlusIcon />,
-      onSelect: () => fileInputRef.current?.click(),
-    },
-    {
-      name: "로그아웃",
-      icon: <LockOpenIcon />,
-    },
-    {
-      name: "회원탈퇴",
-      icon: <UserRoundMinusIcon />,
-      onSelect: () => setOpenDelUserModal(true),
-    },
-  ];
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setNewImage(e.target.files[0]);
-      setOpenCropModal(true);
-    }
-  };
+  const close = () => setActiveIndex(null);
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="self-end">
-        <EllipsisVerticalFilled
-          className="size-9 cursor-pointer text-white/85!"
-          strokeWidth={1.0}
-        />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="bg-white fc-gray-800 p-3">
-        {PROFILE_DROPDOWN_ITEMS.map((item, i) => (
-          <DropdownMenuItem
-            key={i}
-            className="h-9 cursor-pointer hover:bg-gray-100"
-            onSelect={item.onSelect}
-          >
-            {item.icon}
-            {item.name}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-      <RenameModal
-        open={openRenameModal}
-        onOpenChange={setOpenRenameModal}
-        onClose={() => {
-          setOpenRenameModal(false);
-        }}
-      />
-      <DeleteUserModal
-        open={openDelUserModal}
-        onOpenChange={setOpenDelUserModal}
-        onClose={() => {
-          setOpenDelUserModal(false);
-        }}
-      />
-    </DropdownMenu>
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger className="self-end">
+          <EllipsisVerticalFilled className="size-9 cursor-pointer text-white/85!" />
+        </DropdownMenuTrigger>
+
+        <DropdownMenuContent
+          align="end"
+          className="min-w-44 p-1.5 bg-white border border-black/10 rounded-xl shadow-lg"
+        >
+          {PROFILE_DROPDOWN_ITEMS.map((item: any, idx: number) => (
+            <DropdownMenuItem
+              key={idx}
+              onSelect={() => setActiveIndex(idx)}
+              className="
+                h-10 flex items-center gap-2 rounded-lg
+                cursor-pointer text-gray-800
+                hover:bg-black/5 focus:bg-black/5
+              "
+            >
+              {item.icon}
+              <span className="text-[14px]">{item.label}</span>
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {activeIndex !== null &&
+        PROFILE_DROPDOWN_ITEMS[activeIndex].modal({
+          open: true,
+          onClose: close,
+        })}
+    </>
   );
 };
 
