@@ -18,8 +18,8 @@ const ButtonGroup = ({ activeTab, onChangeTab }: Props) => {
       <DiscoverButton
         isActive={activeTab === "HOT"}
         onClick={() => onChangeTab("HOT")}
-        name="HOT PLACE 추천"
-        description={`지도 리뷰 기반으로\n여행지 추천`}
+        name="대화형 챗봇 추천"
+        description={`대화형 검색으로\n여행지 추천`}
       />
     </Row>
   );
