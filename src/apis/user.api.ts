@@ -1,3 +1,4 @@
+import { UserMeSchema, RenameUserSchema } from "@/types/user/user.type";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 
@@ -9,14 +10,17 @@ export const userApi = c.router(
       method: "GET",
       path: "/me",
       responses: {
-        200: z.object({
-          userName: z.string(),
-          userImg: z.string().nullish(),
-        }),
+        200: UserMeSchema,
+      },
+    },
+    rename: {
+      method: "PATCH",
+      path: "/profile",
+      body: RenameUserSchema,
+      responses: {
+        200: z.object({}),
       },
     },
   },
-  {
-    pathPrefix: "/user",
-  }
+  { pathPrefix: "/user" },
 );

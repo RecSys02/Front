@@ -1,6 +1,8 @@
 import { tsr } from "@/apis/client/ts-rest/client";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
+import { toast } from "sonner";
+import { RenameUserDto } from "@/types/user/user.type";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -20,6 +22,31 @@ export const useUser = () => {
       userName: "MOCKUSER",
       userImg: null,
     }),
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const useRename = () => {
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    queryClient.invalidateQueries({ queryKey: ["me"] });
+  };
+
+  const onError = () => {
+    toast.error("닉네임 변경 중 오류가 발생했습니다.");
+  };
+
+  const real = tsr.user.rename.useMutation({
+    onSuccess,
+    onError,
+  });
+
+  const mock = useMutation<void, Error, { body: RenameUserDto }>({
+    mutationFn: async () => undefined,
+    onSuccess,
+    onError,
   });
 
   return IS_MOCK ? mock : real;

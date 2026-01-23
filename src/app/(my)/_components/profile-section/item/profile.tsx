@@ -1,11 +1,9 @@
 import Column from "@/components/common/container/column";
-import Row from "@/components/common/container/row";
-import Subtitle from "@/components/text/subtitle";
-import Title from "@/components/text/title";
 import ProfileDropdown from "./profile-dropdown";
-import Placeholder from "@/assets/banners/placeholder.png";
 
 import { useUser } from "@/hooks/user.hook";
+import { ImageBox } from "@/components/common/container/image-box";
+import Body from "@/components/text/body";
 
 const Profile = () => {
   const { data } = useUser();
@@ -13,23 +11,19 @@ const Profile = () => {
   const userImg = data?.userImg;
 
   return (
-    <Column className="w-110 h-145 bg-base rounded-2xl">
-      <Row className="h-38 justify-end">
-        <ProfileDropdown />
-      </Row>
-      <Row className="justify-center">
-        <img
-          className="w-32 rounded-full"
-          src={!userImg ? Placeholder : userImg}
-        />
-      </Row>
-      <Column className="h-53 items-center justify-center gap-3">
-        <Subtitle variant="subtitle2" className="fc-gray-800 font-light">
-          준비되셨나요?
-        </Subtitle>
-        <Title variant="title2" className="fc-gray-800 font-bold">
+    <Column
+      className="w-85 h-100 rounded-xl px-4 py-5 items-center
+               bg-[#2E5A43] border border-[#2E5A43]"
+    >
+      <ProfileDropdown />
+      <div className="mt-15 rounded-full p-1 bg-white/10">
+        <ImageBox className="size-20 rounded-full" src={userImg} />
+      </div>
+      <Column className="items-center justify-center gap-2.5 pt-6.75">
+        <Body className="font-light text-white/85!">준비되셨나요?</Body>
+        <Body className="font-bold text-[30px]! text-white!">
           {userName} 님
-        </Title>
+        </Body>
       </Column>
     </Column>
   );
