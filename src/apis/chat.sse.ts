@@ -1,6 +1,6 @@
 import { AuthStore } from "@/stores/auth.store";
 
-const BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "/api";
+const BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
 type SSEParsed = { event: "token" | "final"; data: string };
 
@@ -97,7 +97,7 @@ const postChatSend = async (args: {
   accessToken: string;
   signal?: AbortSignal;
 }) => {
-  return fetch(`${BASE_URL}/chat/send`, {
+  return fetch(`/sse/api/chatbot/stream`, {
     method: "POST",
     credentials: "include",
     headers: {

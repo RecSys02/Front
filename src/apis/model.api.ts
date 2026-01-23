@@ -18,6 +18,6 @@ export const modelApi = c.router(
     },
   },
   {
-    pathPrefix: "/recommend",
-  }
+    pathPrefix: "/api/recommend",
+  },
 );

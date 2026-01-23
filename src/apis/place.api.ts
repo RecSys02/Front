@@ -18,6 +18,6 @@ export const placeApi = c.router(
     },
   },
   {
-    pathPrefix: "/places",
-  }
+    pathPrefix: "/api/places",
+  },
 );

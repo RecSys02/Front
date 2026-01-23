@@ -1,8 +1,12 @@
 {
   "rewrites": [
     {
-      "source": "/api/:path*",
+      "source": "/__proxy/:path*",
       "destination": "http://43.200.93.100:8000/:path*"
+    },
+    {
+      "source": "/sse/:path*",
+      "destination": "http://43.200.93.100:8082/:path*"
     },
     {
       "source": "/(.*)",

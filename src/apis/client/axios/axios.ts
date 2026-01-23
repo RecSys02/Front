@@ -5,7 +5,7 @@ import axios, {
 } from "axios";
 import { AuthStore } from "@/stores/auth.store";
 
-const BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL ?? "/api";
+const BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
 const { getAccessToken, setAccessToken, clear } = AuthStore.actions;
 
