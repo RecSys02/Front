@@ -79,54 +79,44 @@ export const useSignout = () => {
 };
 
 export const useCheckEmail = (email: string) => {
-  const real = tsr.auth.checkEmail.useQuery(
-    ["checkEmail", email],
-    { query: { email } },
-    {
-      enabled: false,
-      retry: false,
-      onError: () => {
-        toast.error("중복 확인 중 오류가 발생했습니다.");
-      },
-    },
-  );
+  const key = ["checkEmail", email] as const;
+
+  const real = tsr.auth.checkEmail.useQuery({
+    queryKey: key,
+    query: { email },
+    enabled: !IS_MOCK && !!email,
+  });
 
   const mock = useQuery<ApiOk<AvailabilityResponse>>({
-    queryKey: ["checkEmail", email],
+    queryKey: key,
+    enabled: IS_MOCK && !!email,
     queryFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
     }),
-    enabled: false,
-    retry: false,
   });
 
   return IS_MOCK ? mock : real;
 };
 
 export const useCheckName = (userName: string) => {
-  const real = tsr.auth.checkName.useQuery(
-    ["checkName", userName],
-    { query: { userName } },
-    {
-      enabled: false,
-      retry: false,
-      onError: () => {
-        toast.error("중복 확인 중 오류가 발생했습니다.");
-      },
-    },
-  );
+  const key = ["checkName", userName] as const;
+
+  const real = tsr.auth.checkName.useQuery({
+    queryKey: key,
+    query: { userName },
+    enabled: !IS_MOCK && !!userName,
+  });
 
   const mock = useQuery<ApiOk<AvailabilityResponse>>({
-    queryKey: ["checkName", userName],
+    queryKey: key,
+    enabled: IS_MOCK && !!userName,
     queryFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
     }),
-    enabled: false,
-    retry: false,
   });
 
   return IS_MOCK ? mock : real;
