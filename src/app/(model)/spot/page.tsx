@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useModelContext } from "../model.hook";
 import type { TabValue } from "../model.type";
 import {
@@ -29,6 +29,15 @@ const ModelSpotPage = () => {
     historyPlaces,
   } = useModelContext();
 
+  useEffect(() => {
+    if (!modelResult) return;
+    console.log("modelResult keys:", Object.keys(modelResult as any));
+    console.log(
+      "tourspots isArray:",
+      Array.isArray((modelResult as any).tourspots),
+    );
+  }, [modelResult]);
+  
   const [tab, setTab] = useState<TabValue>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const createPlan = useCreatePlan();
@@ -66,8 +75,8 @@ const ModelSpotPage = () => {
   const panelRight = detailOpen
     ? "right-200"
     : sidebarOpen
-    ? "right-100"
-    : "right-0";
+      ? "right-100"
+      : "right-0";
 
   const toggleSelectPlace = (p: PlaceDto) => {
     setSelectedPlaces((prev) => toggleSelectedPlaces(prev, p));
@@ -160,7 +169,7 @@ const ModelSpotPage = () => {
               "h-12 w-8 rounded-l-md rounded-r-none",
               "bg-white border border-r-0",
               "transition-opacity duration-150 ease-out",
-              panelRight
+              panelRight,
             )}
           >
             {!sidebarOpen ? (
