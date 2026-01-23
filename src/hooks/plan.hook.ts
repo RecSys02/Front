@@ -23,6 +23,7 @@ export const usePopular = () => {
   const real = tsr.plan.popular.useQuery({
     queryKey: ["plan", "popular"],
     enabled: !IS_MOCK,
+    select: (res: ApiOk<typeof MOCK_POPULAR>) => res.body,
   });
 
   const mock = useQuery({
@@ -77,6 +78,7 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
     queryKey: key,
     params: { planId: planId as number },
     enabled: !IS_MOCK && typeof planId === "number",
+    select: (res: ApiOk<Plan>) => res.body,
   });
 
   const mock = useQuery<Plan>({
@@ -111,6 +113,7 @@ export type SearchFilterDTO = {
   from: string;
   to: string;
 };
+
 export const usePlanListByUser = (
   params?: SearchFilterDTO,
 ): UseQueryResult<MyPlanListResponseDto> => {
@@ -124,7 +127,7 @@ export const usePlanListByUser = (
   const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
     query: params,
-    enabled: IS_MOCK,
+    enabled: !IS_MOCK,
     select: (res: ApiOk<MyPlanListResponseDto>) => res.body,
   });
 
@@ -133,9 +136,10 @@ export const usePlanListByUser = (
     queryFn: async () => MOCK_PLAN,
     enabled: IS_MOCK,
   });
-  return (!IS_MOCK
+
+  return (IS_MOCK
     ? mock
-    : real) as unknown as UseQueryResult<MyPlanListResponseDto>;
+    : real) as unknown as UseQueryResult<MyPlanListResponseDto>; 
 };
 
 export const useRemovePlan = () => {
@@ -206,6 +210,7 @@ export const usePlanList = (
     queryKey: key,
     query: params,
     enabled: !IS_MOCK,
+    select: (res: ApiOk<PlanListResponseDto>) => res.body,
   });
 
   const mock = useQuery<PlanListResponseDto>({
@@ -229,6 +234,7 @@ export const usePlanList = (
       });
     },
   });
+
   return IS_MOCK ? mock : real;
 };
 
@@ -236,6 +242,7 @@ export type ToggleLikeProps = {
   planId: number;
   like: boolean;
 };
+
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
 
