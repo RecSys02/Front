@@ -121,7 +121,7 @@ export const useCheckName = (name: string) => {
     }),
   });
 
-  return !IS_MOCK ? mock : real;
+  return IS_MOCK ? mock : real;
 };
 
 export const useRegister = () => {
