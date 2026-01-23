@@ -19,9 +19,7 @@ export const useSignin = () => {
 
   const onSuccess = async (res: ApiOk<AuthTokenResponseDto>) => {
     setAccessToken(res.body.accessToken);
-
     await queryClient.fetchQuery(meQueryOptions());
-
     const user = queryClient.getQueryData<UserMeDto>(["me"]);
     toast.success(`${user?.userName ?? "사용자"}님, 환영합니다!`);
   };
@@ -102,13 +100,13 @@ export const useCheckEmail = (email: string) => {
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckName = (userName: string) => {
-  const key = ["checkName", userName] as const;
+export const useCheckName = (name: string) => {
+  const key = ["checkName", name] as const;
 
   const real = tsr.auth.checkName.useQuery({
     queryKey: key,
     queryData: {
-      query: { userName },
+      query: { name },
     },
     enabled: false,
   });
@@ -125,6 +123,7 @@ export const useCheckName = (userName: string) => {
 
   return IS_MOCK ? mock : real;
 };
+
 export const useRegister = () => {
   const onError = () => {
     toast.error("회원가입 중 오류가 발생했습니다.");
