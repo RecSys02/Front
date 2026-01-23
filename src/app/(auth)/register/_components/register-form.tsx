@@ -56,11 +56,14 @@ const RegisterForm = () => {
     boolean | null
   >(null);
 
+  const [emailToCheck, setEmailToCheck] = useState("");
+  const [userNameToCheck, setUserNameToCheck] = useState("");
+
   const email = values.email.trim();
   const userName = values.userName.trim();
 
-  const checkEmail = useCheckEmail();
-  const checkUserName = useCheckName();
+  const checkEmail = useCheckEmail(emailToCheck);
+  const checkUserName = useCheckName(userNameToCheck);
   const registerUser = useRegister();
   const signin = useSignin();
 
@@ -130,19 +133,20 @@ const RegisterForm = () => {
       return toast.error("이메일 형식이 올바르지 않습니다.");
 
     setIsEmailAvailable(null);
+    setEmailToCheck(email);
+    await Promise.resolve();
 
-    try {
-      const data = await checkEmail.mutateAsync({ email });
+    const res = await checkEmail.refetch();
+    const data = res.data;
 
-      if (data.body.available) {
-        setIsEmailAvailable(true);
-        toast.success("사용 가능한 이메일입니다.");
-      } else {
-        setIsEmailAvailable(false);
-        toast.error("이미 사용 중인 이메일입니다.");
-      }
-    } catch {
-      toast.error("이메일 중복 확인 중 오류가 발생했습니다.");
+    if (!data) return toast.error("이메일 중복 확인 중 오류가 발생했습니다.");
+
+    if (data.body.available) {
+      setIsEmailAvailable(true);
+      toast.success("사용 가능한 이메일입니다.");
+    } else {
+      setIsEmailAvailable(false);
+      toast.error("이미 사용 중인 이메일입니다.");
     }
   };
 
@@ -150,19 +154,20 @@ const RegisterForm = () => {
     if (!userName) return toast.error("닉네임을 입력해주세요.");
 
     setIsUserNameAvailable(null);
+    setUserNameToCheck(userName);
+    await Promise.resolve();
 
-    try {
-      const data = await checkUserName.mutateAsync({ userName });
+    const res = await checkUserName.refetch();
+    const data = res.data;
 
-      if (data.body.available) {
-        setIsUserNameAvailable(true);
-        toast.success("사용 가능한 닉네임입니다.");
-      } else {
-        setIsUserNameAvailable(false);
-        toast.error("이미 사용 중인 닉네임입니다.");
-      }
-    } catch {
-      toast.error("닉네임 중복 확인 중 오류가 발생했습니다.");
+    if (!data) return toast.error("닉네임 중복 확인 중 오류가 발생했습니다.");
+
+    if (data.body.available) {
+      setIsUserNameAvailable(true);
+      toast.success("사용 가능한 닉네임입니다.");
+    } else {
+      setIsUserNameAvailable(false);
+      toast.error("이미 사용 중인 닉네임입니다.");
     }
   };
 
@@ -172,11 +177,11 @@ const RegisterForm = () => {
           values,
           setValues,
           onCheckEmail: handleCheckEmail,
-          isCheckingEmail: checkEmail.isPending,
+          isCheckingEmail: checkEmail.isFetching,
           resetEmailAvailable: () => setIsEmailAvailable(null),
           isEmailAvailable,
           onCheckUserName: handleCheckUserName,
-          isCheckingUserName: checkUserName.isPending,
+          isCheckingUserName: checkUserName.isFetching,
           resetUserNameAvailable: () => setIsUserNameAvailable(null),
           isUserNameAvailable,
           onOpenPolicyModal: () => setOpenPolicyModal(true),
