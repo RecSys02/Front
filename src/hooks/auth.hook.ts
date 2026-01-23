@@ -83,7 +83,9 @@ export const useCheckEmail = (email: string) => {
 
   const real = tsr.auth.checkEmail.useQuery({
     queryKey: key,
-    query: { email },
+    queryData: {
+      query: { email },
+    },
     enabled: false,
   });
 
@@ -105,7 +107,9 @@ export const useCheckName = (userName: string) => {
 
   const real = tsr.auth.checkName.useQuery({
     queryKey: key,
-    query: { userName },
+    queryData: {
+      query: { userName },
+    },
     enabled: false,
   });
 
@@ -121,7 +125,6 @@ export const useCheckName = (userName: string) => {
 
   return IS_MOCK ? mock : real;
 };
-
 export const useRegister = () => {
   const onError = () => {
     toast.error("회원가입 중 오류가 발생했습니다.");
