@@ -20,11 +20,6 @@ export const LoginRequestSchema = z.object({
 });
 export type LoginRequestDto = z.infer<typeof LoginRequestSchema>;
 
-export const LoginResponseSchema = AuthTokenResponseSchema.extend({
-  userName: z.string(),
-});
-export type LoginResponseDto = z.infer<typeof LoginResponseSchema>;
-
 //--------------------------------------------------------------------//
 
 export const CreateUserSchema = z.object({

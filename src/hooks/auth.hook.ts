@@ -4,10 +4,12 @@ import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
 import { ApiOk } from "@/types/util.type";
 import {
+  AuthTokenResponseDto,
   AvailabilityResponse,
   CreateUserDto,
-  LoginResponseDto,
 } from "@/types/auth/auth.type";
+import { UserMeDto } from "@/types/user/user.type";
+import { meQueryOptions } from "./user.hook";
 
 const { setAccessToken, clear } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -15,36 +17,30 @@ const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 export const useSignin = () => {
   const queryClient = useQueryClient();
 
-  const onSuccess = (res: ApiOk<LoginResponseDto>) => {
+  const onSuccess = async (res: ApiOk<AuthTokenResponseDto>) => {
     setAccessToken(res.body.accessToken);
-    queryClient.setQueryData(["me"], {
-      userName: res.body.userName,
-      userImg: null,
-    });
-    toast.success(`${res.body.userName}님, 환영합니다!`);
+
+    await queryClient.fetchQuery(meQueryOptions());
+
+    const user = queryClient.getQueryData<UserMeDto>(["me"]);
+    toast.success(`${user?.userName ?? "사용자"}님, 환영합니다!`);
   };
 
   const onError = () => {
     clear();
+    queryClient.removeQueries({ queryKey: ["me"] });
     toast.error("이메일과 비밀번호를 정확히 입력해 주세요.");
   };
 
-  const real = tsr.auth.signin.useMutation({
-    onSuccess,
-    onError,
-  });
+  const real = tsr.auth.signin.useMutation({ onSuccess, onError });
 
-  const mock = useMutation<ApiOk<LoginResponseDto>>({
-    mutationFn: async () => {
-      return {
+  const mock = useMutation<ApiOk<AuthTokenResponseDto>>({
+    mutationFn: async () =>
+      ({
         status: 200,
-        body: {
-          accessToken: "mock-access-token",
-          userName: "MOCKUSER",
-        },
+        body: { accessToken: "mock-access-token" },
         headers: new Headers(),
-      };
-    },
+      }) as any,
     onSuccess,
     onError,
   });
@@ -158,7 +154,9 @@ export const useDeleteUser = () => {
   };
 
   const onError = () => {
-    toast.error("탈퇴 처리에 실패했습니다. 1:1 문의하기를 남겨주시길 바랍니다.")
+    toast.error(
+      "탈퇴 처리에 실패했습니다. 1:1 문의하기를 남겨주시길 바랍니다.",
+    );
   };
 
   const real = tsr.auth.deleteUser.useMutation({
@@ -173,4 +171,4 @@ export const useDeleteUser = () => {
   });
 
   return IS_MOCK ? mock : real;
-}
+};

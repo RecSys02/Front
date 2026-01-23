@@ -1,27 +1,39 @@
 import { tsr } from "@/apis/client/ts-rest/client";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  queryOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
-import { RenameUserDto } from "@/types/user/user.type";
+import { RenameUserDto, UserMeDto } from "@/types/user/user.type";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
+export const meQueryOptions = () =>
+  queryOptions({
+    queryKey: ["me"],
+    queryFn: async () => {
+      const res = await tsr.user.me.query();
+      return res.body as UserMeDto;
+    },
+    staleTime: 60_000,
+  });
+
 export const useUser = () => {
   const enabled = !!getAccessToken();
 
-  const real = tsr.user.me.useQuery({
-    queryKey: ["me"],
+  const real = useQuery({
+    ...meQueryOptions(),
     enabled: enabled && !IS_MOCK,
   });
 
-  const mock = useQuery({
+  const mock = useQuery<UserMeDto>({
     queryKey: ["me"],
     enabled: enabled && IS_MOCK,
-    queryFn: async () => ({
-      userName: "MOCKUSER",
-      userImg: null,
-    }),
+    queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
   });
 
   return IS_MOCK ? mock : real;
