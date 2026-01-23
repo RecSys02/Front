@@ -100,8 +100,9 @@ const SpotSidebar = ({
     model.mutate(
       { body: payload },
       {
-        onSuccess: (data: ModelResponseDto) => {
-          const nextResult = resolveModelResult(data);
+        onSuccess: (res: any) => {
+          const dto = (res?.body ?? res) as ModelResponseDto;
+          const nextResult = resolveModelResult(dto);
 
           setSelectedPlaces([]);
           setModelResult(nextResult);
