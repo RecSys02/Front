@@ -17,11 +17,11 @@ export const HEADER_MENU_ITEMS: HeaderMenuConfig[] = [
     menuName: "AI",
     routeLink: ROUTES.ModelContext,
   },
-  {
-    key: "HOT",
-    menuName: "HOT",
-    routeLink: ROUTES.Hot,
-  },
+  // {
+  //   key: "HOT",
+  //   menuName: "HOT",
+  //   routeLink: ROUTES.Hot,
+  // },
   {
     key: "PLAN",
     menuName: "PLAN",
