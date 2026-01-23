@@ -7,11 +7,16 @@ export const tsr = initTsrReactQuery(contract, {
   baseUrl: "",
   baseHeaders: {},
   api: async (args: ApiFetcherArgs) => {
+    const method = (args.method || "GET").toUpperCase();
+
     const result = await axiosInstance({
       url: args.path,
-      method: args.method,
+      method: method as any,
       headers: args.headers,
-      data: args.body,
+      params: args.rawQuery as any,
+      data:
+        method === "GET" || method === "HEAD" ? undefined : (args.body as any),
+      signal: args.fetchOptions?.signal ?? undefined,
     });
 
     return {
