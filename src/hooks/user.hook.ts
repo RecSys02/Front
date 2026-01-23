@@ -33,7 +33,7 @@ export const useUser = () => {
   const mock = useQuery<UserMeDto>({
     queryKey: ["me"],
     enabled: enabled && IS_MOCK,
-    queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
+    queryFn: async () => ({ userName: "MOCKUSER", image: null }),
   });
 
   return IS_MOCK ? mock : real;

@@ -8,7 +8,7 @@ import Body from "@/components/text/body";
 const Profile = () => {
   const { data } = useUser();
   const userName = data?.userName;
-  const userImg = data?.userImg;
+  const userImg = data?.image;
 
   return (
     <Column

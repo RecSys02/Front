@@ -8,6 +8,6 @@ export type RenameUserDto = z.infer<typeof RenameUserSchema>;
 
 export const UserMeSchema = z.object({
   userName: z.string(),
-  userImg: z.string().nullish(),
+  image: z.string().nullish(),
 });
 export type UserMeDto = z.infer<typeof UserMeSchema>;
