@@ -67,7 +67,7 @@ export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
       return;
     }
 
-    if (!dataRes.body.available) {
+    if (!dataRes.available) {
       toast.error("이미 사용 중인 닉네임입니다.");
       return;
     }

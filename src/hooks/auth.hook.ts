@@ -85,16 +85,13 @@ export const useCheckEmail = (email: string) => {
       query: { email },
     },
     enabled: false,
+    select: (res: ApiOk<AvailabilityResponse>) => res.body,
   });
 
-  const mock = useQuery<ApiOk<AvailabilityResponse>>({
+  const mock = useQuery<AvailabilityResponse>({
     queryKey: key,
     enabled: false,
-    queryFn: async () => ({
-      status: 200,
-      body: { available: true },
-      headers: new Headers(),
-    }),
+    queryFn: async () => ({ available: true }),
   });
 
   return IS_MOCK ? mock : real;
@@ -109,16 +106,13 @@ export const useCheckName = (name: string) => {
       query: { name },
     },
     enabled: false,
+    select: (res: ApiOk<AvailabilityResponse>) => res.body,
   });
 
-  const mock = useQuery<ApiOk<AvailabilityResponse>>({
+  const mock = useQuery<AvailabilityResponse>({
     queryKey: key,
     enabled: false,
-    queryFn: async () => ({
-      status: 200,
-      body: { available: true },
-      headers: new Headers(),
-    }),
+    queryFn: async () => ({ available: true }),
   });
 
   return IS_MOCK ? mock : real;

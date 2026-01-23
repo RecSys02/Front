@@ -112,7 +112,7 @@ export type SearchFilterDTO = {
   to: string;
 };
 export const usePlanListByUser = (
-  params?: SearchFilterDTO
+  params?: SearchFilterDTO,
 ): UseQueryResult<MyPlanListResponseDto> => {
   const key = [
     "plan",
@@ -124,7 +124,8 @@ export const usePlanListByUser = (
   const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
     query: params,
-    enabled: !IS_MOCK,
+    enabled: IS_MOCK,
+    select: (res: ApiOk<MyPlanListResponseDto>) => res.body,
   });
 
   const mock = useQuery<MyPlanListResponseDto>({
@@ -132,7 +133,7 @@ export const usePlanListByUser = (
     queryFn: async () => MOCK_PLAN,
     enabled: IS_MOCK,
   });
-  return (IS_MOCK
+  return (!IS_MOCK
     ? mock
     : real) as unknown as UseQueryResult<MyPlanListResponseDto>;
 };
@@ -192,7 +193,7 @@ export const usePlanVisibility = () => {
 };
 
 export const usePlanList = (
-  params?: SearchFilterDTO
+  params?: SearchFilterDTO,
 ): UseQueryResult<PlanListResponseDto> => {
   const key = [
     "plan",
