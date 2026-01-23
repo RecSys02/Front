@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/__proxy/:path*",
-      "destination": "http://43.200.93.100:8000/:path*"
+      "destination": "http://43.200.93.100:8000/core/:path*"
     },
     {
       "source": "/sse/:path*",
