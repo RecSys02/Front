@@ -10,17 +10,26 @@ export const emptyModelResult: ModelResponseDto = {
 
 export const getPlacesByCategory = (
   result: ModelResponseDto | null,
-  category: PlaceCategory
+  category: PlaceCategory,
 ): PlaceDto[] => {
   const r = result ?? emptyModelResult;
-  if (category === "tourspot") return r.tourspots;
-  if (category === "restaurant") return r.restaurants;
-  return r.cafes;
+
+  const tourspots = Array.isArray((r as any).tourspots)
+    ? (r as any).tourspots
+    : [];
+  const restaurants = Array.isArray((r as any).restaurants)
+    ? (r as any).restaurants
+    : [];
+  const cafes = Array.isArray((r as any).cafes) ? (r as any).cafes : [];
+
+  if (category === "tourspot") return tourspots;
+  if (category === "restaurant") return restaurants;
+  return cafes;
 };
 
 export const toggleSelectedPlaces = (
   prev: PlaceDto[],
-  p: PlaceDto
+  p: PlaceDto,
 ): PlaceDto[] => {
   return prev.some((x) => x.id === p.id)
     ? prev.filter((x) => x.id !== p.id)
@@ -57,7 +66,7 @@ export const createLucideMapPinSvgUrl = (opts: {
 export const createKakaoMarkerImage = (
   maps: KakaoMaps,
   url: string,
-  sizePx = 32
+  sizePx = 32,
 ) => {
   const size = new maps.Size(sizePx, sizePx);
   const option = { offset: new maps.Point(sizePx / 2, sizePx) };
@@ -66,7 +75,7 @@ export const createKakaoMarkerImage = (
 
 export const getInitialCenter = (
   places: PlaceDto[],
-  historyPlaces: PlaceDto[]
+  historyPlaces: PlaceDto[],
 ): { lat: number; lng: number } | null => {
   const first = places[0] ?? historyPlaces[0] ?? null;
   if (!first) return null;
@@ -98,7 +107,7 @@ export const attachMarkerClick = (
   maps: KakaoMaps,
   marker: any,
   onMarkerClick: ((id: number) => void) | undefined,
-  id: number
+  id: number,
 ) => {
   if (!onMarkerClick) return;
   maps.event.addListener(marker, "click", () => onMarkerClick(id));
