@@ -20,9 +20,14 @@ type Props = {
   onChange: (next: Region) => void;
 };
 
+const ONLY_PROVINCE = "서울특별시";
+
 const RegionSelectField = ({ value, onChange }: Props) => {
-  const provinces = Object.keys(KOREA_REGIONS);
-  const districts = value.province ? KOREA_REGIONS[value.province] ?? [] : [];
+  const provinces = [ONLY_PROVINCE];
+  const districts =
+    value.province === ONLY_PROVINCE
+      ? (KOREA_REGIONS[ONLY_PROVINCE] ?? [])
+      : [];
 
   return (
     <Column className="gap-2">
@@ -55,7 +60,7 @@ const RegionSelectField = ({ value, onChange }: Props) => {
           <Select
             value={value.district || undefined}
             onValueChange={(district) => onChange({ ...value, district })}
-            disabled={!value.province}
+            disabled={value.province !== ONLY_PROVINCE}
           >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="시/군/구 선택" />

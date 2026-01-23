@@ -1,3 +1,4 @@
+import { PROVINCE_CODE_MAP } from "@/constants/region.type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -14,4 +15,9 @@ export const toYYYYMMDD = (v: Date | string | null | undefined) => {
   const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
+};
+
+export const resolveProvinceCode = (provinceLabel: string | null) => {
+  if (!provinceLabel) return null;
+  return PROVINCE_CODE_MAP[provinceLabel] ?? null;
 };
