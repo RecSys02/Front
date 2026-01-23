@@ -67,8 +67,9 @@ const ModelForm = () => {
     model.mutate(
       { body: payload },
       {
-        onSuccess: (data: ModelResponseDto) => {
-          setModelResult(data);
+        onSuccess: (res: any) => {
+          const dto = (res?.body ?? res) as ModelResponseDto;
+          setModelResult(dto);
           navigate({ to: ROUTES.ModelSpot });
         },
       },

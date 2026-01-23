@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
-import { RenameUserDto, UserMeDto } from "@/types/user/user.type";
+import type { RenameUserDto, UserMeDto } from "@/types/user/user.type";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -31,9 +31,9 @@ export const useUser = () => {
   });
 
   const mock = useQuery<UserMeDto>({
-    queryKey: ["me"],
+    queryKey: ["me", "mock"],
     enabled: enabled && IS_MOCK,
-    queryFn: async () => ({ userName: "MOCKUSER", image: null }),
+    queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
   });
 
   return IS_MOCK ? mock : real;
@@ -47,19 +47,15 @@ export const useRename = () => {
   };
 
   const onSuccess = (_: unknown, vars: { body: RenameUserDto }) => {
-    const ME_KEY = (isMock: boolean) =>
-      ["me", isMock ? "mock" : "real"] as const;
+    const nextName = vars.body.userName;
 
-    const key = ME_KEY(IS_MOCK);
-
-    queryClient.setQueryData<UserMeDto>(key, (prev) => ({
-      ...(prev ?? { userImg: null, userName: vars.body.userName }),
-      userName: vars.body.userName,
+    queryClient.setQueryData<UserMeDto>(["me"], (prev) => ({
+      ...(prev ?? { userImg: null, userName: nextName }),
+      userName: nextName,
     }));
 
     if (!IS_MOCK) {
-      queryClient.invalidateQueries({ queryKey: ME_KEY(false) });
-      queryClient.refetchQueries({ queryKey: ME_KEY(false) });
+      queryClient.refetchQueries({ queryKey: ["me"] });
     }
   };
 
