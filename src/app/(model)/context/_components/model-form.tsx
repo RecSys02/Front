@@ -11,7 +11,6 @@ import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import { ModelResponseDto } from "@/types/model/model.type";
-import { ApiOk } from "@/types/util.type";
 
 const DEFAULT_VALUES: ModelFormValues = {
   region: {
@@ -32,7 +31,7 @@ const ModelForm = () => {
   const persisted = ModelInputStore.actions.getModelInput();
 
   const [values, setValues] = useState<ModelFormValues>(
-    persisted ?? DEFAULT_VALUES
+    persisted ?? DEFAULT_VALUES,
   );
 
   const setPersistedValues = (next: React.SetStateAction<ModelFormValues>) => {
@@ -68,11 +67,11 @@ const ModelForm = () => {
     model.mutate(
       { body: payload },
       {
-        onSuccess: (res: ApiOk<ModelResponseDto>) => {
-          setModelResult(res.body);
+        onSuccess: (data: ModelResponseDto) => {
+          setModelResult(data);
           navigate({ to: ROUTES.ModelSpot });
         },
-      }
+      },
     );
   };
 

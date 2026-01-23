@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { MOCK_PLACE } from "./hook.mock";
 import { useEffect } from "react";
+import { ApiOk } from "@/types/util.type";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -17,14 +18,13 @@ export const useReadPlace = (id: number): UseQueryResult<PlaceDto> => {
     queryKey: key,
     params: { placeId: id as number },
     enabled: !IS_MOCK && typeof id === "number",
+    select: (res: ApiOk<PlaceDto>) => res.body,
   });
 
   const mock = useQuery<PlaceDto>({
     queryKey: key,
     enabled: IS_MOCK && typeof id === "number",
-    queryFn: async () => {
-      return MOCK_PLACE;
-    },
+    queryFn: async () => MOCK_PLACE,
   });
 
   return IS_MOCK ? mock : real;
@@ -53,9 +53,11 @@ export const usePrefetchPlaces = (placeIds: number[]) => {
 
       qc.prefetchQuery({
         queryKey: key,
-        queryFn: async () => {
-          const res = await tsr.place.read.query({ params: { placeId: id } });
-          return res.body as PlaceDto;
+        queryFn: async (): Promise<PlaceDto> => {
+          const res: ApiOk<PlaceDto> = await tsr.place.read.query({
+            params: { placeId: id },
+          });
+          return res.body;
         },
         staleTime: 1000 * 60 * 5,
       });
