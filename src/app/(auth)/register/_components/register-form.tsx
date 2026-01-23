@@ -23,8 +23,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
 import WelcomeModal from "./welcome-modal";
 import { useTags } from "@/hooks/tag.hook";
-import { AvailabilityResponse, CreateUserDto } from "@/types/auth/auth.type";
-import { ApiOk } from "@/types/util.type";
+import { CreateUserDto } from "@/types/auth/auth.type";
 import PolicyModal from "./policy-modal";
 
 const RegisterForm = () => {
@@ -57,8 +56,11 @@ const RegisterForm = () => {
     boolean | null
   >(null);
 
-  const checkEmail = useCheckEmail();
-  const checkUserName = useCheckName();
+  const email = values.email.trim();
+  const userName = values.userName.trim();
+
+  const checkEmail = useCheckEmail(email);
+  const checkUserName = useCheckName(userName);
   const registerUser = useRegister();
   const signin = useSignin();
 
@@ -95,9 +97,9 @@ const RegisterForm = () => {
         : undefined;
 
     const payload: CreateUserDto = {
-      email: values.email.trim(),
+      email,
       password: values.password,
-      userName: values.userName.trim(),
+      userName,
       preferredThemes,
       preferredMoods,
       preferredRestaurantTypes,
@@ -122,50 +124,44 @@ const RegisterForm = () => {
     );
   };
 
-  const handleCheckEmail = () => {
-    const email = values.email.trim();
+  const handleCheckEmail = async () => {
     if (!email) return toast.error("이메일를 입력해주세요.");
     if (!EMAIL_REGEX.test(email))
       return toast.error("이메일 형식이 올바르지 않습니다.");
 
     setIsEmailAvailable(null);
 
-    checkEmail.mutate(
-      { query: { email } },
-      {
-        onSuccess: (res: ApiOk<AvailabilityResponse>) => {
-          if (res.body.available) {
-            setIsEmailAvailable(true);
-            toast.success("사용 가능한 이메일입니다.");
-          } else {
-            setIsEmailAvailable(false);
-            toast.error("이미 사용 중인 이메일입니다.");
-          }
-        },
-      },
-    );
+    const res = await checkEmail.refetch();
+    const data = res.data;
+
+    if (!data) return;
+
+    if (data.body.available) {
+      setIsEmailAvailable(true);
+      toast.success("사용 가능한 이메일입니다.");
+    } else {
+      setIsEmailAvailable(false);
+      toast.error("이미 사용 중인 이메일입니다.");
+    }
   };
 
-  const handleCheckUserName = () => {
-    const userName = values.userName.trim();
+  const handleCheckUserName = async () => {
     if (!userName) return toast.error("닉네임을 입력해주세요.");
 
     setIsUserNameAvailable(null);
 
-    checkUserName.mutate(
-      { query: { userName } },
-      {
-        onSuccess: (res: ApiOk<AvailabilityResponse>) => {
-          if (res.body.available) {
-            setIsUserNameAvailable(true);
-            toast.success("사용 가능한 닉네임입니다.");
-          } else {
-            setIsUserNameAvailable(false);
-            toast.error("이미 사용 중인 닉네임입니다.");
-          }
-        },
-      },
-    );
+    const res = await checkUserName.refetch();
+    const data = res.data;
+
+    if (!data) return;
+
+    if (data.body.available) {
+      setIsUserNameAvailable(true);
+      toast.success("사용 가능한 닉네임입니다.");
+    } else {
+      setIsUserNameAvailable(false);
+      toast.error("이미 사용 중인 닉네임입니다.");
+    }
   };
 
   const items =
@@ -174,11 +170,11 @@ const RegisterForm = () => {
           values,
           setValues,
           onCheckEmail: handleCheckEmail,
-          isCheckingEmail: checkEmail.isPending,
+          isCheckingEmail: checkEmail.isFetching,
           resetEmailAvailable: () => setIsEmailAvailable(null),
           isEmailAvailable,
           onCheckUserName: handleCheckUserName,
-          isCheckingUserName: checkUserName.isPending,
+          isCheckingUserName: checkUserName.isFetching,
           resetUserNameAvailable: () => setIsUserNameAvailable(null),
           isUserNameAvailable,
           onOpenPolicyModal: () => setOpenPolicyModal(true),
@@ -217,6 +213,7 @@ const RegisterForm = () => {
           navigate({ to: ROUTES.Home, replace: true });
         }}
       />
+
       <PolicyModal
         open={openPolicyModal}
         onOpenChange={setOpenPolicyModal}
