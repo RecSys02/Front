@@ -23,7 +23,11 @@ const PlanDetailPage = () => {
   const { planId } = useParams({ strict: false }) as { planId: string };
   const id = Number(planId);
 
-  const { data: content, isLoading, isError } = useReadPlan(id);
+  const {
+    data: content,
+    isLoading,
+    isError,
+  } = useReadPlan(Number.isFinite(id) ? id : null);
 
   const placeIds = useMemo(() => {
     const schedule = content?.schedule ?? [];
@@ -129,7 +133,7 @@ const PlanDetailPage = () => {
             "bg-transparent p-0 h-10 rounded-none hover:bg-transparent text-body2 font-bold!",
             activeNav === "place"
               ? "fc-gray-900 font-semibold border-b-2 border-gray-900"
-              : "fc-gray-500 font-medium"
+              : "fc-gray-500 font-medium",
           )}
         >
           장소 정보
@@ -142,7 +146,7 @@ const PlanDetailPage = () => {
             "bg-transparent p-0 h-10 rounded-none hover:bg-transparent text-body2 font-bold!",
             activeNav === "schedule"
               ? "fc-gray-900 font-semibold border-b-2 border-gray-900"
-              : "fc-gray-500 font-medium"
+              : "fc-gray-500 font-medium",
           )}
         >
           여행 일정
