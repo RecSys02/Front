@@ -1,5 +1,5 @@
 import { tsr } from "@/apis/client/ts-rest/client";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AuthStore } from "@/stores/auth.store";
 import { ApiOk } from "@/types/util.type";
@@ -78,56 +78,59 @@ export const useSignout = () => {
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckEmail = () => {
-  const onError = () => {
-    toast.error("중복 확인 중 오류가 발생했습니다.");
-  };
+export const useCheckEmail = (email: string) => {
+  const real = tsr.auth.checkEmail.useQuery(
+    ["checkEmail", email],
+    { query: { email } },
+    {
+      enabled: false,
+      retry: false,
+      onError: () => {
+        toast.error("중복 확인 중 오류가 발생했습니다.");
+      },
+    },
+  );
 
-  const real = tsr.auth.checkEmail.useMutation({
-    onError,
-  });
-
-  const mock = useMutation<
-    ApiOk<AvailabilityResponse>,
-    Error,
-    { query: { email: string } }
-  >({
-    mutationFn: async () => ({
+  const mock = useQuery<ApiOk<AvailabilityResponse>>({
+    queryKey: ["checkEmail", email],
+    queryFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
     }),
-    onError,
+    enabled: false,
+    retry: false,
   });
 
   return IS_MOCK ? mock : real;
 };
 
-export const useCheckName = () => {
-  const onError = () => {
-    toast.error("중복 확인 중 오류가 발생했습니다.");
-  };
+export const useCheckName = (userName: string) => {
+  const real = tsr.auth.checkName.useQuery(
+    ["checkName", userName],
+    { query: { userName } },
+    {
+      enabled: false,
+      retry: false,
+      onError: () => {
+        toast.error("중복 확인 중 오류가 발생했습니다.");
+      },
+    },
+  );
 
-  const real = tsr.auth.checkName.useMutation({
-    onError,
-  });
-
-  const mock = useMutation<
-    ApiOk<AvailabilityResponse>,
-    Error,
-    { query: { userName: string } }
-  >({
-    mutationFn: async () => ({
+  const mock = useQuery<ApiOk<AvailabilityResponse>>({
+    queryKey: ["checkName", userName],
+    queryFn: async () => ({
       status: 200,
       body: { available: true },
       headers: new Headers(),
     }),
-    onError,
+    enabled: false,
+    retry: false,
   });
 
   return IS_MOCK ? mock : real;
 };
-
 export const useRegister = () => {
   const onError = () => {
     toast.error("회원가입 중 오류가 발생했습니다.");
