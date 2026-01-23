@@ -98,7 +98,6 @@ const RegisterForm = () => {
       email: values.email.trim(),
       password: values.password,
       userName: values.userName.trim(),
-
       preferredThemes,
       preferredMoods,
       preferredRestaurantTypes,
@@ -106,6 +105,7 @@ const RegisterForm = () => {
       avoid,
       activityLevel,
     };
+
     registerUser.mutate(
       { body: payload },
       {
@@ -131,7 +131,7 @@ const RegisterForm = () => {
     setIsEmailAvailable(null);
 
     checkEmail.mutate(
-      { body: { email } },
+      { query: { email } },
       {
         onSuccess: (res: ApiOk<AvailabilityResponse>) => {
           if (res.body.available) {
@@ -153,7 +153,7 @@ const RegisterForm = () => {
     setIsUserNameAvailable(null);
 
     checkUserName.mutate(
-      { body: { userName } },
+      { query: { userName } },
       {
         onSuccess: (res: ApiOk<AvailabilityResponse>) => {
           if (res.body.available) {

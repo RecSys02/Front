@@ -15,7 +15,7 @@ export const planApi = c.router(
   {
     create: {
       method: "POST",
-      path: "/",
+      path: "",
       body: CreatePlanRequestSchema,
       responses: {
         200: CreatePlanResponseSchema,
@@ -86,7 +86,7 @@ export const planApi = c.router(
     },
     list: {
       method: "GET",
-      path: "/",
+      path: "",
       query: z
         .object({
           from: z.string(),
