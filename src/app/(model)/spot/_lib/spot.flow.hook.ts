@@ -9,6 +9,8 @@ import type {
   ModelResponseDto,
   ModelRequestDto,
 } from "@/types/model/model.type";
+import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 
 export const useCreatePlanFromModel = (args: {
   historyPlaces: PlaceDto[];
@@ -61,6 +63,7 @@ export const useAutoModelResult = (args: {
 }) => {
   const { modelResult, setModelResult } = args;
   const { mutate, isPending } = useModel();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (modelResult) return;
@@ -86,9 +89,13 @@ export const useAutoModelResult = (args: {
           const dto = (res?.body ?? res) as ModelResponseDto;
           setModelResult(dto);
         },
+        onError: () => {
+          toast.error("여행지 추천을 불러오지 못했습니다. 다시 시도해 주세요.");
+          navigate({ to: "/", replace: true });
+        },
       },
     );
-  }, [modelResult, isPending, setModelResult, mutate]);
+  }, [modelResult, isPending, setModelResult, mutate, navigate]);
 
   return { isPending };
 };
