@@ -16,6 +16,7 @@ import {
 import { ApiOk } from "@/types/util.type";
 import { MOCK_CREATE_PLAN, MOCK_PLAN, MOCK_POPULAR } from "./hook.mock";
 import { Plan } from "@/types/plan/plan.type";
+import { toast } from "sonner";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
@@ -42,13 +43,20 @@ export const useCreatePlan = () => {
     navigate({
       to: ROUTES.ModelPlan,
       params: { planId: String(id) },
+      replace: true,
     });
+  };
+
+  const onError = () => {
+    toast.error("여행 계획 생성에 실패했습니다. 다시 시도해 주세요.");
+    navigate({ to: "/", replace: true });
   };
 
   const real = tsr.plan.create.useMutation({
     onSuccess: (res: ApiOk<CreatePlanResponseDto>) => {
       navigateToPlan(res.body.id);
     },
+    onError,
   });
 
   const mock = useMutation<
@@ -66,6 +74,7 @@ export const useCreatePlan = () => {
     onSuccess: (res) => {
       navigateToPlan(res.body.id);
     },
+    onError,
   });
 
   return IS_MOCK ? mock : real;
@@ -139,7 +148,7 @@ export const usePlanListByUser = (
 
   return (IS_MOCK
     ? mock
-    : real) as unknown as UseQueryResult<MyPlanListResponseDto>; 
+    : real) as unknown as UseQueryResult<MyPlanListResponseDto>;
 };
 
 export const useRemovePlan = () => {
