@@ -38,8 +38,8 @@ const ModelSpotSkeleton = () => {
 
           <div className="absolute inset-0 flex items-center justify-center">
             <Column className="items-center gap-4">
+              <Spinner className="size-20 text-[#1A6E3D] animate-spin animation-duration-[1.2s]" />
               <Row className="items-center justify-center gap-3">
-                <Spinner />
                 <div className="text-base font-medium text-gray-700">
                   AI가 여행지를 고르고 있어요
                 </div>

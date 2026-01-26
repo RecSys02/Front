@@ -18,6 +18,7 @@ import { useCreatePlan } from "@/hooks/plan.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import type { PlaceDto } from "@/types/place/place.type";
 import type { CreatePlanRequestDto } from "@/types/plan/plan.wrapper.type";
+import PlanCreatingOverlay from "./_components/plan-creating-overlay";
 import ModelSpotSkeleton from "./_components/model-spot-skeleton";
 
 const ModelSpotPage = () => {
@@ -97,9 +98,7 @@ const ModelSpotPage = () => {
     const provinceLabel = input?.region.province ?? null;
     const provinceCode = resolveProvinceCode(provinceLabel);
 
-    if (!startDate || !endDate || !provinceLabel || !provinceCode) {
-      return;
-    }
+    if (!startDate || !endDate || !provinceLabel || !provinceCode) return;
 
     const merged = new Map<number, PlaceDto>();
     historyPlaces.forEach((p) => merged.set(p.id, p));
@@ -122,8 +121,7 @@ const ModelSpotPage = () => {
 
     createPlan.mutate({ body: createPlanPayload });
   };
-
-  if (modelResult) return <ModelSpotSkeleton />;
+  if (!modelResult) return <ModelSpotSkeleton />;
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -158,10 +156,13 @@ const ModelSpotPage = () => {
         </Sidebar>
 
         <SidebarInset className="relative h-full w-full">
+          <PlanCreatingOverlay open={createPlan.isPending} />
+
           <Button
             type="button"
             size="icon"
             onClick={handleTogglePanel}
+            disabled={createPlan.isPending}
             className={cn(
               "absolute z-50 top-1/2 -translate-y-1/2",
               "h-12 w-8 rounded-l-md rounded-r-none",
@@ -185,6 +186,7 @@ const ModelSpotPage = () => {
             detailOpen={detailOpen}
             onMarkerClick={handleMarkerClick}
             onMapClick={() => {
+              if (createPlan.isPending) return;
               setOverlayOpen(false);
               setNavHistory([]);
               setActivePlaceId(null);
@@ -198,11 +200,21 @@ const ModelSpotPage = () => {
               !!activePlace &&
               selectedPlaces.some((x) => x.id === activePlace.id)
             }
-            onClose={closeOverlayOnly}
-            onToggleSelect={() => activePlace && toggleSelectPlace(activePlace)}
+            onClose={() => {
+              if (createPlan.isPending) return;
+              closeOverlayOnly();
+            }}
+            onToggleSelect={() => {
+              if (createPlan.isPending) return;
+              if (!activePlace) return;
+              toggleSelectPlace(activePlace);
+            }}
             hasPrev={hasPrev}
-            onPrev={goPrev}
-            hideSelectButton={tab == "saved"}
+            onPrev={() => {
+              if (createPlan.isPending) return;
+              goPrev();
+            }}
+            hideSelectButton={tab === "saved"}
           />
         </SidebarInset>
       </div>
