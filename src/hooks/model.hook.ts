@@ -4,11 +4,17 @@ import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { ModelResponseDto, ModelRequestDto } from "@/types/model/model.type";
 import { ApiOk } from "@/types/util.type";
+import { useNavigate } from "@tanstack/react-router";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 export const useModel = () => {
-  const onError = () => toast.error("추천 생성 중 오류가 발생했습니다.");
+  const navigate = useNavigate();
+
+  const onError = () => {
+    toast.error("추천 생성 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    navigate({ to: "/", replace: true });
+  };
 
   const real = tsr.model.generate.useMutation({
     onError,
