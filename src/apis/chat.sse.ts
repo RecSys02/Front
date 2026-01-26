@@ -1,4 +1,8 @@
 import { AuthStore } from "@/stores/auth.store";
+import {
+  ChatHistoryResponse,
+  ChatHistoryResponseSchema,
+} from "@/types/chatbot/chatbot.type";
 
 const BASE_URL = import.meta.env.VITE_PUBLIC_API_BASE_URL;
 
@@ -182,4 +186,24 @@ export const sendChatSse = async (args: {
     clear();
     window.location.href = "/login";
   }
+};
+
+export const fetchChatHistory = async (
+  signal?: AbortSignal,
+): Promise<ChatHistoryResponse> => {
+  const res = await fetch("/sse/api/chatbot/history", {
+    method: "GET",
+    credentials: "include",
+    headers: {
+      Accept: "application/json",
+    },
+    signal,
+  });
+
+  if (!res.ok) {
+    throw new Error(`chat history failed: ${res.status}`);
+  }
+
+  const json = await res.json();
+  return ChatHistoryResponseSchema.parse(json);
 };
