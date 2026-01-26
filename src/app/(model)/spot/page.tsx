@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useModelContext } from "../model.hook";
 import type { TabValue } from "../model.type";
 import {
@@ -10,20 +10,22 @@ import SpotMap from "./_components/spot-map";
 import SpotDetailOverlay from "./_components/spot-detail-overlay";
 import SpotSidebar from "./_components/spot-sidebar";
 import { ChevronRight, ChevronLeft } from "lucide-react";
-import { cn, resolveProvinceCode, toYYYYMMDD } from "@/libs/utils";
+import { cn } from "@/libs/utils";
 import { Button } from "@/components/common/button/button";
-import { useSpotOverlayNav } from "./_lib/spot.hook";
+import { useSpotOverlayNav, useSpotDerived } from "./_lib/spot.nav.hook";
 import { getPlacesByCategory, toggleSelectedPlaces } from "./_lib/spot.util";
-import { useCreatePlan } from "@/hooks/plan.hook";
-import { ModelInputStore } from "@/stores/model-input.store";
-import type { PlaceDto } from "@/types/place/place.type";
-import type { CreatePlanRequestDto } from "@/types/plan/plan.wrapper.type";
 import PlanCreatingOverlay from "./_components/plan-creating-overlay";
 import ModelSpotSkeleton from "./_components/model-spot-skeleton";
+import {
+  useAutoModelResult,
+  useCreatePlanFromModel,
+} from "./_lib/spot.flow.hook";
+import type { PlaceDto } from "@/types/place/place.type";
 
 const ModelSpotPage = () => {
   const {
     modelResult,
+    setModelResult,
     selectedPlaces,
     setSelectedPlaces,
     activePlaceId,
@@ -31,27 +33,18 @@ const ModelSpotPage = () => {
     historyPlaces,
   } = useModelContext();
 
+  useAutoModelResult({ modelResult, setModelResult });
+
   const [tab, setTab] = useState<TabValue>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const createPlan = useCreatePlan();
 
-  const places: PlaceDto[] = useMemo(() => {
-    if (tab === "saved") return [];
-    return getPlacesByCategory(modelResult, tab);
-  }, [modelResult, tab]);
-
-  const activePlacePool: PlaceDto[] = useMemo(() => {
-    const map = new Map<number, PlaceDto>();
-
-    places.forEach((p) => map.set(p.id, p));
-    historyPlaces.forEach((p) => map.set(p.id, p));
-    selectedPlaces.forEach((p) => map.set(p.id, p));
-
-    return Array.from(map.values());
-  }, [places, historyPlaces, selectedPlaces]);
-
-  const activePlace =
-    activePlacePool.find((p) => p.id === activePlaceId) ?? null;
+  const { places, activePlace } = useSpotDerived({
+    tab,
+    modelResult,
+    historyPlaces,
+    selectedPlaces,
+    activePlaceId,
+  });
 
   const {
     overlayOpen,
@@ -62,6 +55,11 @@ const ModelSpotPage = () => {
     goPrev,
     closeOverlayOnly,
   } = useSpotOverlayNav({ activePlaceId, setActivePlaceId });
+
+  const { createPlan, onCreatePlan } = useCreatePlanFromModel({
+    historyPlaces,
+    selectedPlaces,
+  });
 
   const detailOpen = sidebarOpen && overlayOpen && !!activePlace;
 
@@ -75,10 +73,6 @@ const ModelSpotPage = () => {
     setSelectedPlaces((prev) => toggleSelectedPlaces(prev, p));
   };
 
-  const handleMarkerClick = (id: number) => {
-    focusPlace(id, true);
-  };
-
   const handleTogglePanel = () => {
     if (detailOpen) {
       setSidebarOpen(false);
@@ -87,40 +81,6 @@ const ModelSpotPage = () => {
     setSidebarOpen((v) => !v);
   };
 
-  const onCreatePlan = () => {
-    if (createPlan.isPending) return;
-
-    const input = ModelInputStore.actions.getModelInput();
-
-    const startDate = toYYYYMMDD(input?.dateRange?.from ?? null);
-    const endDate = toYYYYMMDD(input?.dateRange?.to ?? null);
-
-    const provinceLabel = input?.region.province ?? null;
-    const provinceCode = resolveProvinceCode(provinceLabel);
-
-    if (!startDate || !endDate || !provinceLabel || !provinceCode) return;
-
-    const merged = new Map<number, PlaceDto>();
-    historyPlaces.forEach((p) => merged.set(p.id, p));
-    selectedPlaces.forEach((p) => merged.set(p.id, p));
-
-    const placesPayload = Array.from(merged.values()).map((p) => ({
-      placeId: p.placeId,
-      category: p.category,
-      province: provinceCode,
-    }));
-
-    const createPlanPayload: CreatePlanRequestDto = {
-      selectedPlaces: placesPayload,
-      name: `${startDate} ${provinceLabel} 여행 계획`,
-      startDate,
-      endDate,
-      province: provinceCode,
-      isPrivate: false,
-    };
-
-    createPlan.mutate({ body: createPlanPayload });
-  };
   if (!modelResult) return <ModelSpotSkeleton />;
 
   return (
@@ -184,7 +144,7 @@ const ModelSpotPage = () => {
             historyPlaces={historyPlaces}
             sidebarOpen={sidebarOpen}
             detailOpen={detailOpen}
-            onMarkerClick={handleMarkerClick}
+            onMarkerClick={(id) => focusPlace(id, true)}
             onMapClick={() => {
               if (createPlan.isPending) return;
               setOverlayOpen(false);

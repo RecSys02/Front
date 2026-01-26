@@ -1,5 +1,8 @@
-import { useRef, useState } from "react";
-import { appendHistory } from "./spot.util";
+import { useMemo, useRef, useState } from "react";
+import { appendHistory, getPlacesByCategory } from "./spot.util";
+import type { PlaceDto } from "@/types/place/place.type";
+import type { ModelResponseDto } from "@/types/model/model.type";
+import type { TabValue } from "../../model.type";
 
 type UseSpotOverlayNavParams = {
   activePlaceId: number | null;
@@ -66,4 +69,33 @@ export const useSpotOverlayNav = ({
     goPrev,
     closeOverlayOnly,
   };
+};
+
+export const useSpotDerived = (args: {
+  tab: TabValue;
+  modelResult: ModelResponseDto | null;
+  historyPlaces: PlaceDto[];
+  selectedPlaces: PlaceDto[];
+  activePlaceId: number | null;
+}) => {
+  const { tab, modelResult, historyPlaces, selectedPlaces, activePlaceId } =
+    args;
+
+  const places: PlaceDto[] = useMemo(() => {
+    if (tab === "saved") return [];
+    return getPlacesByCategory(modelResult, tab);
+  }, [modelResult, tab]);
+
+  const activePlacePool: PlaceDto[] = useMemo(() => {
+    const map = new Map<number, PlaceDto>();
+    places.forEach((p) => map.set(p.id, p));
+    historyPlaces.forEach((p) => map.set(p.id, p));
+    selectedPlaces.forEach((p) => map.set(p.id, p));
+    return Array.from(map.values());
+  }, [places, historyPlaces, selectedPlaces]);
+
+  const activePlace =
+    activePlacePool.find((p) => p.id === activePlaceId) ?? null;
+
+  return { places, activePlacePool, activePlace };
 };
