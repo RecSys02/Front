@@ -9,7 +9,6 @@ import type {
   ModelResponseDto,
   ModelRequestDto,
 } from "@/types/model/model.type";
-import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 
 export const useCreatePlanFromModel = (args: {
@@ -88,10 +87,6 @@ export const useAutoModelResult = (args: {
         onSuccess: (res: any) => {
           const dto = (res?.body ?? res) as ModelResponseDto;
           setModelResult(dto);
-        },
-        onError: () => {
-          toast.error("여행지 추천을 불러오지 못했습니다. 다시 시도해 주세요.");
-          navigate({ to: "/", replace: true });
         },
       },
     );
