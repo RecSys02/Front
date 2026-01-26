@@ -18,6 +18,7 @@ import { useCreatePlan } from "@/hooks/plan.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import type { PlaceDto } from "@/types/place/place.type";
 import type { CreatePlanRequestDto } from "@/types/plan/plan.wrapper.type";
+import ModelSpotSkeleton from "./_components/model-spot-skeleton";
 
 const ModelSpotPage = () => {
   const {
@@ -121,6 +122,8 @@ const ModelSpotPage = () => {
 
     createPlan.mutate({ body: createPlanPayload });
   };
+
+  if (modelResult) return <ModelSpotSkeleton />;
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
