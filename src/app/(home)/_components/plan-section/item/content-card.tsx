@@ -37,7 +37,7 @@ const ContentCard = ({ content }: Props) => {
     <Column className="w-full px-5.5 pt-20">
       <div
         onClick={handleNavigate}
-        className="cursor-pointer hover:opacity-95 transition-opacity"
+        className="cursor-pointer hover:opacity-95 transition-opacity w-fit"
       >
         <ImageBox
           src={content.imgSrc}
@@ -46,7 +46,7 @@ const ContentCard = ({ content }: Props) => {
         />
       </div>
 
-      <Row className="w-full h-15 items-center pt-6 px-2.5">
+      <Row className="w-140 h-15 items-center pt-6 px-2.5">
         <Row className="w-37.5 shrink-0 h-full gap-3 items-center justify-between pr-3">
           <Body variant="body3" className="w-fit font-medium">
             POPULAR
@@ -56,7 +56,7 @@ const ContentCard = ({ content }: Props) => {
 
         <Heading
           variant="heading2"
-          className="w-full flex items-center font-bold fc-gray-800"
+          className="w-full flex items-center font-bold fc-gray-800 line-clamp-1 mr-10"
         >
           {content.name}
         </Heading>
@@ -74,7 +74,7 @@ const ContentCard = ({ content }: Props) => {
         </Row>
       </Row>
 
-      <Row className="pl-40 py-2.5 gap-x-3 gap-y-1.5 w-full flex-wrap">
+      <Row className="pl-40 py-2.5 gap-x-3 gap-y-1.5 w-140 flex-wrap">
         {content.tags.map((tag, i) => (
           <Pill
             key={i}

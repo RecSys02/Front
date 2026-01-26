@@ -36,7 +36,7 @@ const AddressSearchField = ({ value, onChange }: Props) => {
       {open && (
         <>
           <div className="fixed inset-0 z-40 " onClick={() => setOpen(false)} />
-          <div className="fixed left-1/2 top-1/2 z-50 w-[520px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border bg-white shadow-lg">
+          <div className="fixed left-1/2 top-1/2 z-50 w-130 -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-lg border bg-white shadow-lg">
             <DaumPostcode
               onComplete={handleComplete}
               autoClose

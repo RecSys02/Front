@@ -185,7 +185,6 @@ const PlanDetailPage = () => {
         </Subtitle>
         <Border />
         <Row className="justify-center">
-          {/* TODO: Planner advancement or change components */}
           <Planner schedule={content.schedule} />
         </Row>
       </Column>
