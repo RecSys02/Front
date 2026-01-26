@@ -10,7 +10,6 @@ import { ROUTES } from "@/constants/routes";
 import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
-import { ModelResponseDto } from "@/types/model/model.type";
 
 const DEFAULT_VALUES: ModelFormValues = {
   region: {
@@ -26,7 +25,7 @@ const DEFAULT_VALUES: ModelFormValues = {
 const ModelForm = () => {
   const navigate = useNavigate();
   const model = useModel();
-  const { setModelResult, resetSession } = useModelContext();
+  const { resetSession } = useModelContext();
 
   const persisted = ModelInputStore.actions.getModelInput();
 
@@ -53,27 +52,7 @@ const ModelForm = () => {
     if (!isValid || model.isPending) return;
 
     resetSession({ clearInput: false });
-
-    const region = `${values.region.province} ${values.region.district}`.trim();
-
-    const payload = {
-      region,
-      companion: values.companion ?? undefined,
-      budget: values.budget,
-      selectedPlaces: [],
-      historyPlaces: [],
-    };
-
-    model.mutate(
-      { body: payload },
-      {
-        onSuccess: (res: any) => {
-          const dto = (res?.body ?? res) as ModelResponseDto;
-          setModelResult(dto);
-          navigate({ to: ROUTES.ModelSpot });
-        },
-      },
-    );
+    navigate({ to: ROUTES.ModelSpot });
   };
 
   const items = generateModelFormItems(values, setPersistedValues);
