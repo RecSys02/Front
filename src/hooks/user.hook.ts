@@ -160,8 +160,8 @@ export const useDeleteUser = () => {
 
   const real = useMutation<void, Error>({
     mutationFn: async () => {
-      await tsr.user.delete.mutation();
-      await tsr.auth.signout.mutation();
+      await tsr.user.delete.mutation({});
+      await tsr.auth.signout.mutation({});
 
       clear();
       queryClient.clear();
