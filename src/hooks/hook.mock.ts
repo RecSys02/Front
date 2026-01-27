@@ -107,6 +107,7 @@ export const MOCK_PLAN: MyPlanListResponseDto = [
   {
     id: 1,
     name: "서울역 여행",
+    isPrivate: false,
     schedule: [
       {
         date: "2025-12-24",
@@ -192,6 +193,7 @@ export const MOCK_PLAN: MyPlanListResponseDto = [
   {
     id: 2,
     name: "가을 여행",
+    isPrivate: false,
     schedule: [
       {
         date: "2025-09-12",
