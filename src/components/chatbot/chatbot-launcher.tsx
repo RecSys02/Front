@@ -9,11 +9,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "../ui/tooltip";
-import { useUser } from "@/hooks/user.hook";
+import { useUserMe } from "@/hooks/user.hook";
 
 const ChatbotLauncher = () => {
   const [open, setOpen] = useState(false);
-  const user = useUser();
+  const user = useUserMe();
   if (!user.isSuccess) return null;
 
   return (

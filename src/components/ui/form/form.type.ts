@@ -1,4 +1,4 @@
-import type { ReactNode, Dispatch, SetStateAction } from "react";
+import type { ReactNode, Dispatch, SetStateAction, RefObject } from "react";
 
 export type TextFieldType = "text" | "password";
 
@@ -34,4 +34,6 @@ export type CustomFormProps<TValues> = {
   submitLabel: string;
   cancelLabel?: string;
   onCancel?: () => void;
+  hideActions?: boolean;
+  submitRef?: RefObject<(() => void) | null>;
 };

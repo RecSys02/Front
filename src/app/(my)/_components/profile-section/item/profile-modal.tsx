@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
-import { useRename, useUser } from "@/hooks/user.hook";
+import { useDeleteUser, useRename, useUserMe } from "@/hooks/user.hook";
 import { useCheckName, useSignout } from "@/hooks/auth.hook";
 
 type ProfileModalProps = {
@@ -16,7 +16,7 @@ type ProfileModalProps = {
 };
 
 export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
-  const { data } = useUser();
+  const { data } = useUserMe();
 
   const nicknameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -151,6 +151,55 @@ export const LogoutModal = ({ open, onClose }: ProfileModalProps) => {
       onCancelClick={onClose}
       ctaText="확인"
       onCtaClick={handleLogout}
+    />
+  );
+};
+
+export const DeleteModal = ({ open, onClose }: ProfileModalProps) => {
+  const deleteUser = useDeleteUser();
+
+  const isLoading = deleteUser.isPending;
+
+  const handleDelete = () => {
+    deleteUser.mutate(undefined, {
+      onSuccess: () => {
+        onClose();
+      },
+    });
+  };
+
+  return (
+    <Modal
+      open={open}
+      onOpenChange={(o) => !o && onClose()}
+      title={<BrandLogo className="h-12 w-auto mx-auto mt-2" />}
+      description={
+        <Column className="gap-3 items-center text-center">
+          <Body variant="body1" className="font-semibold">
+            회원 탈퇴 하시겠어요?
+          </Body>
+
+          <Body variant="body2" className="text-gray-600">
+            탈퇴하면 계정 정보가{" "}
+            <span className="font-semibold text-red-500">삭제</span>
+            되며{" "}
+            <span className="font-semibold text-red-500">
+              되돌릴 수 없습니다.
+            </span>
+          </Body>
+
+          <Body variant="body3" className="text-gray-500">
+            저장한 여행 계획/기록이 있다면 함께{" "}
+            <span className="font-semibold text-red-500">삭제</span>될 수
+            있어요.
+          </Body>
+        </Column>
+      }
+      cancelText="취소"
+      onCancelClick={onClose}
+      ctaText={isLoading ? "처리 중..." : "탈퇴하기"}
+      isLoading={isLoading}
+      onCtaClick={handleDelete}
     />
   );
 };

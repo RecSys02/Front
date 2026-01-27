@@ -111,7 +111,7 @@ const RegisterForm = () => {
       avoid,
       activityLevel,
     };
-
+    console.log(payload);
     registerUser.mutate(
       { body: payload },
       {

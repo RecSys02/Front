@@ -1,4 +1,9 @@
-import { UserMeSchema, RenameUserSchema } from "@/types/user/user.type";
+import {
+  UserMeSchema,
+  RenameUserSchema,
+  UpdateUserTagSchema,
+  UserSchema,
+} from "@/types/user/user.type";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 
@@ -18,7 +23,29 @@ export const userApi = c.router(
       path: "/profile",
       body: RenameUserSchema,
       responses: {
-        200: z.object({}),
+        200: z.void(),
+      },
+    },
+    updateTag: {
+      method: "PUT",
+      path: "/tags",
+      body: UpdateUserTagSchema,
+      responses: {
+        200: z.void(),
+      },
+    },
+    read: {
+      method: "GET",
+      path: "",
+      responses: {
+        200: UserSchema,
+      },
+    },
+    delete: {
+      method: "DELETE",
+      path: "",
+      responses: {
+        200: z.void(),
       },
     },
   },

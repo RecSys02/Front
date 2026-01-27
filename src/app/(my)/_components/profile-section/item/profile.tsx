@@ -1,12 +1,12 @@
 import Column from "@/components/common/container/column";
 import ProfileDropdown from "./profile-dropdown";
 
-import { useUser } from "@/hooks/user.hook";
+import { useUserMe } from "@/hooks/user.hook";
 import { ImageBox } from "@/components/common/container/image-box";
 import Body from "@/components/text/body";
 
 const Profile = () => {
-  const { data } = useUser();
+  const { data } = useUserMe();
   const userName = data?.userName;
   const userImg = data?.image;
 

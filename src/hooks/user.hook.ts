@@ -7,7 +7,14 @@ import {
 } from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
-import type { RenameUserDto, UserMeDto } from "@/types/user/user.type";
+import type {
+  RenameUserDto,
+  UpdateUserTagDto,
+  UserDto,
+  UserMeDto,
+} from "@/types/user/user.type";
+import { useNavigate } from "@tanstack/react-router";
+import { ROUTES } from "@/constants/routes";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -22,7 +29,7 @@ export const meQueryOptions = () =>
     staleTime: 60_000,
   });
 
-export const useUser = () => {
+export const useUserMe = () => {
   const enabled = !!getAccessToken();
 
   const real = useQuery({
@@ -31,9 +38,36 @@ export const useUser = () => {
   });
 
   const mock = useQuery<UserMeDto>({
-    queryKey: ["me", "mock"],
+    queryKey: ["me"],
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const useUser = () => {
+  const enabled = !!getAccessToken();
+
+  const real = useQuery<UserDto>({
+    queryKey: ["user"],
+    enabled: enabled && !IS_MOCK,
+    queryFn: async () => {
+      const res = await tsr.user.read.query();
+      return res.body as UserDto;
+    },
+    staleTime: 60_000,
+  });
+
+  const mock = useQuery<UserDto>({
+    queryKey: ["user"],
+    enabled: enabled && IS_MOCK,
+    queryFn: async () => ({
+      email: "mock@test.com",
+      userName: "MOCKUSER",
+      image: null,
+      tagIds: [1, 2, 3],
+    }),
   });
 
   return IS_MOCK ? mock : real;
@@ -65,6 +99,74 @@ export const useRename = () => {
     mutationFn: async () => undefined,
     onSuccess,
     onError,
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const useUpdateUserTag = () => {
+  const queryClient = useQueryClient();
+  const enabled = !!getAccessToken();
+
+  const onError = () => {
+    toast.error("태그 변경 중 오류가 발생했습니다.");
+  };
+
+  const onSuccess = () => {
+    if (!IS_MOCK) {
+      queryClient.refetchQueries({ queryKey: ["user"] });
+    }
+    toast.success("태그가 저장되었습니다.");
+  };
+
+  const real = tsr.user.updateTag.useMutation({
+    onSuccess,
+    onError,
+  });
+
+  const mock = useMutation<void, Error, { body: UpdateUserTagDto }>({
+    mutationFn: async () => undefined,
+    onSuccess,
+    onError,
+  });
+
+  return !enabled ? mock : IS_MOCK ? mock : real;
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { clear } = AuthStore.actions;
+
+  const real = useMutation<void, Error>({
+    mutationFn: async () => {
+      await tsr.user.delete.mutation();
+      await tsr.auth.signout.mutation();
+
+      clear();
+      queryClient.clear();
+    },
+    onSuccess: () => {
+      toast.success("회원 탈퇴가 완료되었습니다.");
+      navigate({ to: ROUTES.Home, replace: true });
+    },
+    onError: () => {
+      toast.error("회원 탈퇴 중 오류가 발생했습니다.");
+    },
+  });
+
+  const mock = useMutation<void, Error>({
+    mutationFn: async () => {
+      clear();
+      queryClient.clear();
+    },
+    onSuccess: () => {
+      toast.success("회원 탈퇴가 완료되었습니다.");
+      navigate({ to: ROUTES.Home, replace: true });
+    },
+    onError: () => {
+      toast.error("회원 탈퇴 중 오류가 발생했습니다.");
+    },
   });
 
   return IS_MOCK ? mock : real;

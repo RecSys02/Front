@@ -5,9 +5,12 @@ import { Link } from "@tanstack/react-router";
 type Props = {
   userName: string | null;
   isLoggedIn: boolean;
+  isUserLoading?: boolean;
 };
 
-const LoginContainer = ({ userName, isLoggedIn }: Props) => {
+const LoginContainer = ({ userName, isLoggedIn, isUserLoading }: Props) => {
+  const safeName = (userName ?? "").trim();
+
   if (!isLoggedIn) {
     return (
       <Link
@@ -19,17 +22,22 @@ const LoginContainer = ({ userName, isLoggedIn }: Props) => {
     );
   }
 
-  if (isLoggedIn) {
+  if (isUserLoading || !safeName) {
     return (
-      <>
-        <Body variant="body2">{userName}</Body>
-        <Body variant="body2" className="fc-gray-500">
-          님, 새로운 여정이 기다리고 있습니다
-        </Body>
-      </>
+      <Body variant="body2" className="fc-gray-500">
+        불러오는 중…
+      </Body>
     );
   }
-  return <Body>···</Body>;
+
+  return (
+    <>
+      <Body variant="body2">{safeName}</Body>
+      <Body variant="body2" className="fc-gray-500">
+        님, 새로운 여정이 기다리고 있습니다
+      </Body>
+    </>
+  );
 };
 
 export default LoginContainer;
