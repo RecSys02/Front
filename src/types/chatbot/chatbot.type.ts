@@ -1,12 +1,13 @@
 import { z } from "zod";
 
-export const ChatRoleSchema = z.enum(["USER", "ASSISTANT"]);
+export const ChatRoleSchema = z.enum(["user", "assistant"]);
 export type ChatRole = z.infer<typeof ChatRoleSchema>;
 
 export const ChatMessageSchema = z.object({
   role: ChatRoleSchema,
   content: z.string(),
   createdAt: z.string().optional(),
+  isPending: z.boolean().optional(),
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 

@@ -5,8 +5,8 @@ export const appendUserAndEmptyAssistant = (
   userContent: string,
 ): ChatMessage[] => [
   ...prev,
-  { role: "USER", content: userContent },
-  { role: "ASSISTANT", content: "" },
+  { role: "user", content: userContent },
+  { role: "assistant", content: "", isPending: true },
 ];
 
 export const appendTokenToLastAssistant = (
@@ -15,10 +15,11 @@ export const appendTokenToLastAssistant = (
 ): ChatMessage[] => {
   const next = [...prev];
   const lastIdx = next.length - 1;
-  if (next[lastIdx]?.role !== "ASSISTANT") return prev;
+  if (next[lastIdx]?.role !== "assistant") return prev;
 
   next[lastIdx] = {
     ...next[lastIdx],
+    isPending: false,
     content: (next[lastIdx].content ?? "") + token,
   };
   return next;
@@ -30,9 +31,9 @@ export const setFinalToLastAssistant = (
 ): ChatMessage[] => {
   const next = [...prev];
   const lastIdx = next.length - 1;
-  if (next[lastIdx]?.role !== "ASSISTANT") return prev;
+  if (next[lastIdx]?.role !== "assistant") return prev;
 
-  next[lastIdx] = { ...next[lastIdx], content: finalText };
+  next[lastIdx] = { ...next[lastIdx], isPending: false, content: finalText };
   return next;
 };
 
@@ -42,8 +43,8 @@ export const setErrorToLastAssistant = (
 ): ChatMessage[] => {
   const next = [...prev];
   const lastIdx = next.length - 1;
-  if (next[lastIdx]?.role !== "ASSISTANT") return prev;
+  if (next[lastIdx]?.role !== "assistant") return prev;
 
-  next[lastIdx] = { role: "ASSISTANT", content: message };
+  next[lastIdx] = { role: "assistant", content: message, isPending: false };
   return next;
 };

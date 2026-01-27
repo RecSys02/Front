@@ -43,7 +43,7 @@ export const userApi = c.router(
     },
     delete: {
       method: "DELETE",
-      path: "",
+      path: "/me",
       responses: {
         200: z.void(),
       },

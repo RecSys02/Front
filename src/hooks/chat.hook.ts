@@ -6,7 +6,7 @@ const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 const MOCK_HISTORY: ChatHistoryResponse = {
   messages: [
-    { role: "ASSISTANT", content: "안녕하세요. 무엇을 도와드릴까요?" },
+    { role: "assistant", content: "안녕하세요. 무엇을 도와드릴까요?" },
   ],
 };
 
