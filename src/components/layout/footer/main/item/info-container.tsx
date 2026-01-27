@@ -1,6 +1,4 @@
 import Row from "@/components/common/container/row";
-import { ROUTES } from "@/constants/routes";
-import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import TermsViewModal from "./terms-view-modal";
 import PolicyViewModal from "./privacy-view-modal";
@@ -13,12 +11,12 @@ const InfoContainer = () => {
   return (
     <>
       <Row className="flex justify-end gap-16 h-6 items-center">
-        <Link to={ROUTES.Home} className="text-body2">
+        {/* <Link to={ROUTES.Home} className="text-body2">
           팀 소개
         </Link>
         <Link to={ROUTES.Home} className="text-body2">
           고객센터
-        </Link>
+        </Link> */}
 
         <Button
           type="button"
