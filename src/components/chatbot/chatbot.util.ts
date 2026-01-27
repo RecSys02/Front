@@ -6,7 +6,7 @@ export const appendUserAndEmptyAssistant = (
 ): ChatMessage[] => [
   ...prev,
   { role: "USER", content: userContent },
-  { role: "ASSISTANT", content: "" },
+  { role: "ASSISTANT", content: "", isPending: true },
 ];
 
 export const appendTokenToLastAssistant = (
@@ -19,6 +19,7 @@ export const appendTokenToLastAssistant = (
 
   next[lastIdx] = {
     ...next[lastIdx],
+    isPending: false,
     content: (next[lastIdx].content ?? "") + token,
   };
   return next;
@@ -32,7 +33,7 @@ export const setFinalToLastAssistant = (
   const lastIdx = next.length - 1;
   if (next[lastIdx]?.role !== "ASSISTANT") return prev;
 
-  next[lastIdx] = { ...next[lastIdx], content: finalText };
+  next[lastIdx] = { ...next[lastIdx], isPending: false, content: finalText };
   return next;
 };
 
@@ -44,6 +45,6 @@ export const setErrorToLastAssistant = (
   const lastIdx = next.length - 1;
   if (next[lastIdx]?.role !== "ASSISTANT") return prev;
 
-  next[lastIdx] = { role: "ASSISTANT", content: message };
+  next[lastIdx] = { role: "ASSISTANT", content: message, isPending: false };
   return next;
 };

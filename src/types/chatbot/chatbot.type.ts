@@ -7,6 +7,7 @@ export const ChatMessageSchema = z.object({
   role: ChatRoleSchema,
   content: z.string(),
   createdAt: z.string().optional(),
+  isPending: z.boolean().optional(),
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
