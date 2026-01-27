@@ -19,9 +19,16 @@ import { ROUTES } from "@/constants/routes";
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
+const QK = {
+  me: () => ["me"] as const,
+  meMock: () => ["me", "mock"] as const,
+  user: () => ["user"] as const,
+  userMock: () => ["user", "mock"] as const,
+};
+
 export const meQueryOptions = () =>
   queryOptions({
-    queryKey: ["me"],
+    queryKey: QK.me(),
     queryFn: async () => {
       const res = await tsr.user.me.query();
       return res.body as UserMeDto;
@@ -36,9 +43,10 @@ export const useUserMe = () => {
   });
 
   const mock = useQuery<UserMeDto>({
-    queryKey: ["me"],
+    queryKey: QK.meMock(),
     enabled: IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
+    staleTime: 60_000,
   });
 
   return IS_MOCK ? mock : real;
@@ -48,7 +56,7 @@ export const useUser = () => {
   const enabled = !!getAccessToken();
 
   const real = useQuery<UserDto>({
-    queryKey: ["user"],
+    queryKey: QK.user(),
     enabled: enabled && !IS_MOCK,
     queryFn: async () => {
       const res = await tsr.user.read.query();
@@ -58,7 +66,7 @@ export const useUser = () => {
   });
 
   const mock = useQuery<UserDto>({
-    queryKey: ["user"],
+    queryKey: QK.userMock(),
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({
       email: "mock@test.com",
@@ -66,6 +74,7 @@ export const useUser = () => {
       image: null,
       tagIds: [1, 2, 3],
     }),
+    staleTime: 60_000,
   });
 
   return IS_MOCK ? mock : real;
@@ -81,13 +90,13 @@ export const useRename = () => {
   const onSuccess = (_: unknown, vars: { body: RenameUserDto }) => {
     const nextName = vars.body.userName;
 
-    queryClient.setQueryData<UserMeDto>(["me"], (prev) => ({
+    queryClient.setQueryData<UserMeDto>(QK.me(), (prev) => ({
       ...(prev ?? { userImg: null, userName: nextName }),
       userName: nextName,
     }));
 
     if (!IS_MOCK) {
-      queryClient.refetchQueries({ queryKey: ["me"] });
+      queryClient.refetchQueries({ queryKey: QK.me() });
     }
   };
 
@@ -112,7 +121,7 @@ export const useUpdateUserTag = () => {
 
   const onSuccess = () => {
     if (!IS_MOCK) {
-      queryClient.refetchQueries({ queryKey: ["user"] });
+      queryClient.refetchQueries({ queryKey: QK.user() });
     }
     toast.success("태그가 저장되었습니다.");
   };
@@ -136,6 +145,15 @@ export const useDeleteUser = () => {
   const navigate = useNavigate();
   const { clear } = AuthStore.actions;
 
+  const onSuccess = () => {
+    toast.success("회원 탈퇴가 완료되었습니다.");
+    navigate({ to: ROUTES.Home, replace: true });
+  };
+
+  const onError = () => {
+    toast.error("회원 탈퇴 중 오류가 발생했습니다.");
+  };
+
   const real = useMutation<void, Error>({
     mutationFn: async () => {
       await tsr.user.delete.mutation();
@@ -144,13 +162,8 @@ export const useDeleteUser = () => {
       clear();
       queryClient.clear();
     },
-    onSuccess: () => {
-      toast.success("회원 탈퇴가 완료되었습니다.");
-      navigate({ to: ROUTES.Home, replace: true });
-    },
-    onError: () => {
-      toast.error("회원 탈퇴 중 오류가 발생했습니다.");
-    },
+    onSuccess,
+    onError,
   });
 
   const mock = useMutation<void, Error>({
@@ -158,13 +171,8 @@ export const useDeleteUser = () => {
       clear();
       queryClient.clear();
     },
-    onSuccess: () => {
-      toast.success("회원 탈퇴가 완료되었습니다.");
-      navigate({ to: ROUTES.Home, replace: true });
-    },
-    onError: () => {
-      toast.error("회원 탈퇴 중 오류가 발생했습니다.");
-    },
+    onSuccess,
+    onError,
   });
 
   return IS_MOCK ? mock : real;
