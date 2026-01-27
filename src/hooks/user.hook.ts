@@ -149,32 +149,34 @@ export const useDeleteUser = () => {
   const navigate = useNavigate();
   const { clear } = AuthStore.actions;
 
-  const onSuccess = () => {
+  const cleanup = async () => {
+    await queryClient.cancelQueries();
+    clear();
+    queryClient.clear();
+  };
+
+  const onSuccess = async () => {
+    await cleanup();
     toast.success("회원 탈퇴가 완료되었습니다.");
     navigate({ to: ROUTES.Home, replace: true });
   };
 
-  const onError = () => {
+  const onError = async () => {
+    await cleanup();
     toast.error("회원 탈퇴 중 오류가 발생했습니다.");
   };
 
-  const real = useMutation<void, Error>({
-    mutationFn: async () => {
-      await tsr.user.delete.mutation({});
-      await tsr.auth.signout.mutation({});
-
-      clear();
-      queryClient.clear();
+  const real = tsr.user.delete.useMutation({
+    onSuccess: async () => {
+      await onSuccess();
     },
-    onSuccess,
-    onError,
+    onError: async () => {
+      await onError();
+    },
   });
 
-  const mock = useMutation<void, Error>({
-    mutationFn: async () => {
-      clear();
-      queryClient.clear();
-    },
+  const mock = useMutation<void, Error, void>({
+    mutationFn: async () => undefined,
     onSuccess,
     onError,
   });
