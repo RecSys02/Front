@@ -9,7 +9,6 @@
       "destination": "http://43.200.93.100:8000/chat:path*"
     },
     { "source": "/(.*)", 
-      "has": [{ "type": "method", "value": "GET" }], 
       "destination": "/" 
     }
   ]
