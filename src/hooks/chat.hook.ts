@@ -9,27 +9,27 @@ const MOCK_HISTORY: ChatHistoryResponse = {
     { role: "assistant", content: "안녕하세요. 무엇을 도와드릴까요?" },
   ],
 };
+type HistoryApiResponse = ChatHistoryResponse | ChatMessage[];
 
 export const useChatHistory = (
   enabled: boolean,
 ): UseQueryResult<ChatMessage[]> => {
   const key = ["chat", "history"] as const;
 
-  const real = useQuery({
+  const real = useQuery<ChatMessage[]>({
     queryKey: key,
     enabled: enabled && !IS_MOCK,
     queryFn: async ({ signal }) => {
-      const data = await fetchChatHistory(signal);
-      return data.messages;
+      const data = (await fetchChatHistory(signal)) as HistoryApiResponse;
+      if (Array.isArray(data)) return data;
+      return data.messages ?? [];
     },
   });
-
   const mock = useQuery<ChatMessage[]>({
     queryKey: key,
     enabled: enabled && IS_MOCK,
-    queryFn: async () => MOCK_HISTORY.messages as unknown as ChatMessage[],
+    queryFn: async () => MOCK_HISTORY.messages as ChatMessage[],
   });
 
-  if (IS_MOCK) return mock;
-  return real;
+  return IS_MOCK ? mock : real;
 };
