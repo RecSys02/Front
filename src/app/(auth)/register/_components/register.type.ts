@@ -1,8 +1,8 @@
 export type Tags = {
   themeIds: number[] | null;
   moodIds: number[] | null;
-  dislikeIds: number[] | null;
-  foodIds: number[] | null;
+  avoidIds: number[] | null;
+  restaurantIds: number[] | null;
   cafeIds: number[] | null;
   activityTagId: number | null;
   activityValue: number;

@@ -3,9 +3,9 @@ import { z } from "zod";
 export const TagCategorySchema = z.enum([
   "THEME",
   "MOOD",
-  "FOOD",
+  "RESTAURANT",
   "CAFE",
-  "DISLIKE",
+  "AVOID",
   "ACTIVITY_LEVEL",
 ]);
 

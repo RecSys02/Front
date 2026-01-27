@@ -10,7 +10,7 @@ import { TAG_COLORS } from "@/constants/types";
 export const generateRegisterStep2Items = (
   values: RegisterFormValues,
   setValues: React.Dispatch<React.SetStateAction<RegisterFormValues>>,
-  tagSource: TagSource
+  tagSource: TagSource,
 ): FormItemConfig<RegisterFormValues>[] => [
   {
     key: "tags",
@@ -85,13 +85,13 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={tagSource.FOOD}
+            tags={tagSource.RESTAURANT}
             variant="option"
-            value={values.tags.foodIds ?? []}
+            value={values.tags.restaurantIds ?? []}
             onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, foodIds: nextIds },
+                tags: { ...prev.tags, restaurantIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
@@ -123,13 +123,13 @@ export const generateRegisterStep2Items = (
           withDivider
         >
           <TagSelector
-            tags={tagSource.DISLIKE}
+            tags={tagSource.AVOID}
             variant="option"
-            value={values.tags.dislikeIds ?? []}
+            value={values.tags.avoidIds ?? []}
             onChange={(nextIds) =>
               setValues((prev) => ({
                 ...prev,
-                tags: { ...prev.tags, dislikeIds: nextIds },
+                tags: { ...prev.tags, avoidIds: nextIds },
               }))
             }
             selectedColors={TAG_COLORS}
