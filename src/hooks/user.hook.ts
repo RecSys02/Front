@@ -30,16 +30,14 @@ export const meQueryOptions = () =>
   });
 
 export const useUserMe = () => {
-  const enabled = !!getAccessToken();
-
   const real = useQuery({
     ...meQueryOptions(),
-    enabled: enabled && !IS_MOCK,
+    enabled: !IS_MOCK,
   });
 
   const mock = useQuery<UserMeDto>({
     queryKey: ["me"],
-    enabled: enabled && IS_MOCK,
+    enabled: IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
   });
 
