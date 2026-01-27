@@ -161,11 +161,8 @@ export const DeleteModal = ({ open, onClose }: ProfileModalProps) => {
   const isLoading = deleteUser.isPending;
 
   const handleDelete = () => {
-    deleteUser.mutate(undefined, {
-      onSuccess: () => {
-        onClose();
-      },
-    });
+    deleteUser.mutate();
+    onClose();
   };
 
   return (
