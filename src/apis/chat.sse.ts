@@ -191,18 +191,26 @@ export const sendChatSse = async (args: {
 export const fetchChatHistory = async (
   signal?: AbortSignal,
 ): Promise<ChatHistoryResponse> => {
+  const { getAccessToken, clear } = AuthStore.actions;
+  const token = getAccessToken();
+
+  if (!token) {
+    clear();
+    window.location.href = "/login";
+    throw new Error("No access token");
+  }
+
   const res = await fetch("/sse/api/chatbot/history", {
     method: "GET",
     credentials: "include",
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${token}`,
     },
     signal,
   });
 
-  if (!res.ok) {
-    throw new Error(`chat history failed: ${res.status}`);
-  }
+  if (!res.ok) throw new Error(`chat history failed: ${res.status}`);
 
   const json = await res.json();
   return ChatHistoryResponseSchema.parse(json);

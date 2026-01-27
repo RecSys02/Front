@@ -6,7 +6,7 @@
     },
     {
       "source": "/sse/:path*",
-      "destination": "http://43.200.93.100:8080/:path*"
+      "destination": "http://43.200.93.100:8000/:path*"
     },
     {
       "source": "/(.*)",
