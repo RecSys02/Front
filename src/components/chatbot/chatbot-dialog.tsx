@@ -32,14 +32,21 @@ const ChatbotDialog = ({ open, onOpenChange }: Props) => {
 
   useEffect(() => {
     if (!open) return;
-    if (didInitRef.current) return;
     if (!history.data) return;
-    console.log("history.data.len", history.data?.length);
-    console.log("convo.messages.len", convo.messages.length);
+
+    console.log("[init] history.data.len =", history.data.length);
+    console.log("[init] first =", history.data[0]);
+    console.log("[init] last =", history.data[history.data.length - 1]);
+
     convo.setMessages(history.data);
-    didInitRef.current = true;
+
+    console.log("[init] setMessages called");
   }, [open, history.data, convo]);
 
+  useEffect(() => {
+    if (!open) return;
+    console.log("[render] convo.messages.len =", convo.messages.length);
+  }, [open, convo.messages.length]);
   const handleOpenChange = (next: boolean) => {
     if (!next) {
       didInitRef.current = false;
