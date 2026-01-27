@@ -9,10 +9,9 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { RegisterFormValues, RegisterStep } from "./register.type";
 import {
+  buildTagIds,
   EMAIL_REGEX,
   generateRegisterUtil,
-  pickLabels,
-  TagOption,
 } from "./register.util";
 import { generateRegisterStep1Items } from "./step1-form.item";
 import { generateRegisterStep2Items } from "./step2-form.item";
@@ -84,32 +83,11 @@ const RegisterForm = () => {
       return;
     }
 
-    const preferredThemes = pickLabels(values.tags.themeIds, tagSource.THEME);
-    const preferredMoods = pickLabels(values.tags.moodIds, tagSource.MOOD);
-    const preferredRestaurantTypes = pickLabels(
-      values.tags.foodIds,
-      tagSource.FOOD,
-    );
-    const preferredCafeTypes = pickLabels(values.tags.cafeIds, tagSource.CAFE);
-    const avoid = pickLabels(values.tags.dislikeIds, tagSource.DISLIKE);
-
-    const activityLevel =
-      values.tags.activityTagId != null
-        ? tagSource.ACTIVITY_LEVEL.find(
-            (o: TagOption) => o.id === values.tags.activityTagId,
-          )?.label
-        : undefined;
-
     const payload: CreateUserDto = {
       email,
       password: values.password,
       userName,
-      preferredThemes,
-      preferredMoods,
-      preferredRestaurantTypes,
-      preferredCafeTypes,
-      avoid,
-      activityLevel,
+      tagIds: buildTagIds(values.tags),
     };
     console.log(payload);
     registerUser.mutate(
@@ -118,10 +96,7 @@ const RegisterForm = () => {
         onSuccess: () => {
           setOpenWelcomeModal(true);
           signin.mutate({
-            body: {
-              email: values.email,
-              password: values.password,
-            },
+            body: { email: values.email, password: values.password },
           });
         },
       },

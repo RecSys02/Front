@@ -26,11 +26,6 @@ export const CreateUserSchema = z.object({
   email: z.string(),
   password: z.string(),
   userName: z.string(),
-  preferredThemes: z.array(z.string()).optional(),
-  preferredMoods: z.array(z.string()).optional(),
-  preferredRestaurantTypes: z.array(z.string()).optional(),
-  preferredCafeTypes: z.array(z.string()).optional(),
-  avoid: z.array(z.string()).optional(),
-  activityLevel: z.string().optional(),
+  tagIds: z.array(z.number()).nullable(),
 });
 export type CreateUserDto = z.infer<typeof CreateUserSchema>;

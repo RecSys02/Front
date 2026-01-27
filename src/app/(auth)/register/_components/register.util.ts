@@ -53,6 +53,22 @@ export const mapTagsToSource = (tags: Tag[]): TagSource => {
   return source;
 };
 
+export const buildTagIds = (
+  tags: RegisterFormValues["tags"],
+): number[] | null => {
+  const ids: number[] = [
+    ...(tags.themeIds ?? []),
+    ...(tags.moodIds ?? []),
+    ...(tags.dislikeIds ?? []),
+    ...(tags.foodIds ?? []),
+    ...(tags.cafeIds ?? []),
+    ...(tags.activityTagId != null ? [tags.activityTagId] : []),
+  ];
+
+  const unique = Array.from(new Set(ids));
+  return unique.length ? unique : null;
+};
+
 export const validateStep1 = (
   values: RegisterFormValues,
   isEmailAvailable: boolean | null,
