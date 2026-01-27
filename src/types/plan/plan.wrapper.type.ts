@@ -6,6 +6,7 @@ export const PlanSummarySchema = PlanSchema.pick({
   id: true,
   name: true,
   schedule: true,
+  isPrivate: true,
 });
 export type PlanSummaryDto = z.infer<typeof PlanSummarySchema>;
 

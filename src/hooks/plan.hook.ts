@@ -1,4 +1,3 @@
-// src/hooks/plan.hook.ts
 import { tsr } from "@/apis/client/ts-rest/client";
 import {
   useMutation,
@@ -195,13 +194,24 @@ export const usePlanList = (
   return IS_MOCK ? mock : real;
 };
 
-export const useRemovePlan = () => {
+export const useRemovePlan = (planId: number) => {
   const queryClient = useQueryClient();
-  const onSuccess = () => invalidateAllPlans(queryClient);
 
-  const real = tsr.plan.remove.useMutation({ onSuccess });
+  const onSuccess = () => {
+    invalidateAllPlans(queryClient);
+    toast.success("여행 계획이 삭제되었습니다.");
+  };
 
-  const mock = useMutation<ApiOk<void>, Error, { params: { planId: number } }>({
+  const real = useMutation<ApiOk<void>, Error, void>({
+    mutationFn: async () => {
+      return tsr.plan.remove.mutation({
+        params: { planId },
+      });
+    },
+    onSuccess,
+  });
+
+  const mock = useMutation<ApiOk<void>, Error, void>({
     mutationFn: async (): Promise<ApiOk<void>> => ({
       status: 200,
       body: undefined,
