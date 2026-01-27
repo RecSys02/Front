@@ -34,7 +34,8 @@ const ChatbotDialog = ({ open, onOpenChange }: Props) => {
     if (!open) return;
     if (didInitRef.current) return;
     if (!history.data) return;
-
+    console.log("history.data.len", history.data?.length);
+    console.log("convo.messages.len", convo.messages.length);
     convo.setMessages(history.data);
     didInitRef.current = true;
   }, [open, history.data, convo]);
