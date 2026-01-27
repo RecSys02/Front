@@ -8,7 +8,6 @@ import {
   AvailabilityResponse,
   CreateUserDto,
 } from "@/types/auth/auth.type";
-import { UserMeDto } from "@/types/user/user.type";
 import { meQueryOptions } from "./user.hook";
 
 const { setAccessToken, clear } = AuthStore.actions;
@@ -21,10 +20,7 @@ export const useSignin = () => {
     setAccessToken(res.body.accessToken);
 
     const me = await queryClient.fetchQuery(meQueryOptions());
-    queryClient.setQueryData<UserMeDto>(["me"], me);
-
     toast.success(`${me?.userName ?? "사용자"}님, 환영합니다!`);
-    queryClient.invalidateQueries({ queryKey: ["me"] });
   };
 
   const onError = () => {

@@ -10,7 +10,7 @@ import { useModel } from "@/hooks/model.hook";
 import { useModelContext } from "../../model.hook";
 import { ModelInputStore } from "@/stores/model-input.store";
 import { ModelHistoryStore } from "@/stores/model-history.store";
-import { useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { PlaceDto } from "@/types/place/place.type";
 import { ModelResponseDto, ModelRequestDto } from "@/types/model/model.type";
@@ -25,7 +25,10 @@ type Props = {
   onFocusPlace: (id: number | null) => void;
   onCreatePlan: () => void;
   onCloseOverlay?: () => void;
+  onGeneratingChange?: (open: boolean) => void;
+  disabled?: boolean;
 };
+
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
 const SpotSidebar = ({
@@ -37,9 +40,15 @@ const SpotSidebar = ({
   onFocusPlace,
   onCreatePlan,
   onCloseOverlay,
+  onGeneratingChange,
+  disabled = false,
 }: Props) => {
   const model = useModel();
   const tempIdxRef = useRef(0);
+
+  useEffect(() => {
+    onGeneratingChange?.(model.isPending);
+  }, [model.isPending, onGeneratingChange]);
 
   const pickTempResult = (): ModelResponseDto => {
     const idx = tempIdxRef.current % TEMP_MODEL_RESULTS.length;
@@ -63,7 +72,8 @@ const SpotSidebar = ({
   };
 
   const onGeneratePlaces = () => {
-    if (model.isPending) return;
+    if (disabled || model.isPending) return;
+
     if (selectedPlaces.length === 0) {
       toast.error("최소 1개 이상의 장소를 선택해야 합니다.");
       return;
@@ -115,6 +125,7 @@ const SpotSidebar = ({
   };
 
   const canCreatePlan = historyPlaces.length > 0 || selectedPlaces.length > 0;
+  const lock = disabled || model.isPending;
 
   return (
     <>
@@ -122,12 +133,26 @@ const SpotSidebar = ({
         <Column className="gap-3">
           <Body className="font-semibold text-center">AI 추천 장소</Body>
 
-          <Tabs value={tab} onValueChange={(v) => onChangeTab(v as TabValue)}>
+          <Tabs
+            value={tab}
+            onValueChange={(v) => {
+              if (lock) return;
+              onChangeTab(v as TabValue);
+            }}
+          >
             <TabsList className="w-full grid grid-cols-4">
-              <TabsTrigger value="tourspot">관광지</TabsTrigger>
-              <TabsTrigger value="restaurant">음식점</TabsTrigger>
-              <TabsTrigger value="cafe">카페</TabsTrigger>
-              <TabsTrigger value="saved">저장</TabsTrigger>
+              <TabsTrigger value="tourspot" disabled={lock}>
+                관광지
+              </TabsTrigger>
+              <TabsTrigger value="restaurant" disabled={lock}>
+                음식점
+              </TabsTrigger>
+              <TabsTrigger value="cafe" disabled={lock}>
+                카페
+              </TabsTrigger>
+              <TabsTrigger value="saved" disabled={lock}>
+                저장
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </Column>
@@ -141,7 +166,10 @@ const SpotSidebar = ({
                 place={p}
                 isActive={p.id === activePlaceId}
                 isSelected={selectedPlaces.some((x) => x.id === p.id)}
-                onFocus={(id) => onFocusPlace(id)}
+                onFocus={(id) => {
+                  if (lock) return;
+                  onFocusPlace(id);
+                }}
               />
               {idx < listPlaces.length - 1 && <Border />}
             </Column>
@@ -161,15 +189,19 @@ const SpotSidebar = ({
             <Button
               className="w-full bg-emphasis text-white hover:opacity-80 active:opacity-100"
               onClick={onGeneratePlaces}
+              disabled={lock}
             >
-              계속 추천
+              {model.isPending ? "추천 중..." : "계속 추천"}
             </Button>
 
             <Button
               className="w-full"
               variant="outline"
-              onClick={onCreatePlan}
-              disabled={!canCreatePlan}
+              onClick={() => {
+                if (lock) return;
+                onCreatePlan();
+              }}
+              disabled={lock || !canCreatePlan}
             >
               일정 생성
             </Button>

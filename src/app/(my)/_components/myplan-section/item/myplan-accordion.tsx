@@ -45,7 +45,11 @@ const MyPlanAccordion = () => {
                 </Row>
               </AccordionTrigger>
               <AccordionContent className="flex justify-center">
-                <MyPlanContent schedule={plan.schedule} />
+                <MyPlanContent
+                  schedule={plan.schedule}
+                  planId={plan.id}
+                  isPrivate={plan.isPrivate}
+                />
               </AccordionContent>
             </AccordionItem>
           ))}

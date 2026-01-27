@@ -17,18 +17,30 @@ import { ApiOk } from "@/types/util.type";
 import { MOCK_CREATE_PLAN, MOCK_PLAN, MOCK_POPULAR } from "./hook.mock";
 import { Plan } from "@/types/plan/plan.type";
 import { toast } from "sonner";
+import { planKeys } from "./hook.keys";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
+export type SearchFilterDTO = {
+  from: string;
+  to: string;
+};
+
+const invalidateAllPlans = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: planKeys.all });
+};
+
 export const usePopular = () => {
+  const key = planKeys.popular();
+
   const real = tsr.plan.popular.useQuery({
-    queryKey: ["plan", "popular"],
+    queryKey: key,
     enabled: !IS_MOCK,
     select: (res: ApiOk<typeof MOCK_POPULAR>) => res.body,
   });
 
   const mock = useQuery({
-    queryKey: ["plan", "popular"],
+    queryKey: key,
     queryFn: async () => MOCK_POPULAR,
     enabled: IS_MOCK,
   });
@@ -38,6 +50,7 @@ export const usePopular = () => {
 
 export const useCreatePlan = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const navigateToPlan = (id: number) => {
     navigate({
@@ -52,10 +65,13 @@ export const useCreatePlan = () => {
     navigate({ to: "/", replace: true });
   };
 
+  const onSuccess = (res: ApiOk<CreatePlanResponseDto>) => {
+    invalidateAllPlans(queryClient);
+    navigateToPlan(res.body.id);
+  };
+
   const real = tsr.plan.create.useMutation({
-    onSuccess: (res: ApiOk<CreatePlanResponseDto>) => {
-      navigateToPlan(res.body.id);
-    },
+    onSuccess,
     onError,
   });
 
@@ -71,9 +87,7 @@ export const useCreatePlan = () => {
         headers: new Headers(),
       };
     },
-    onSuccess: (res) => {
-      navigateToPlan(res.body.id);
-    },
+    onSuccess,
     onError,
   });
 
@@ -81,19 +95,21 @@ export const useCreatePlan = () => {
 };
 
 export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
-  const key = ["plan", "read", planId] as const;
-  const enabled = !IS_MOCK && Number.isFinite(planId);
+  const key = planKeys.detail(planId);
+  const enabled = planId != null && Number.isFinite(planId);
 
   const real = tsr.plan.read.useQuery({
     queryKey: key,
-    params: { planId: planId as number },
-    enabled,
+    enabled: enabled && !IS_MOCK,
+    queryData: {
+      params: { planId: planId as number },
+    },
     select: (res: ApiOk<Plan>) => res.body,
   });
 
   const mock = useQuery<Plan>({
     queryKey: key,
-    enabled: IS_MOCK && Number.isFinite(planId),
+    enabled: enabled && IS_MOCK,
     queryFn: async () => {
       const popular =
         MOCK_POPULAR.find((p) => p.id === planId) ?? MOCK_POPULAR[0];
@@ -118,20 +134,10 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
   return IS_MOCK ? mock : real;
 };
 
-export type SearchFilterDTO = {
-  from: string;
-  to: string;
-};
-
 export const usePlanListByUser = (
   params?: SearchFilterDTO,
 ): UseQueryResult<MyPlanListResponseDto> => {
-  const key = [
-    "plan",
-    "read",
-    params?.from ?? null,
-    params?.to ?? null,
-  ] as const;
+  const key = planKeys.byUser(params);
 
   const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
@@ -151,69 +157,10 @@ export const usePlanListByUser = (
     : real) as unknown as UseQueryResult<MyPlanListResponseDto>;
 };
 
-export const useRemovePlan = () => {
-  const queryClient = useQueryClient();
-
-  const real = tsr.plan.remove.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["plan"] });
-    },
-  });
-
-  const mock = useMutation<ApiOk<void>, Error, { params: { planId: number } }>({
-    mutationFn: async (): Promise<ApiOk<void>> => ({
-      status: 200,
-      body: undefined,
-      headers: new Headers(),
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["plan"] });
-    },
-  });
-
-  return IS_MOCK ? mock : real;
-};
-
-export const usePlanVisibility = () => {
-  const queryClient = useQueryClient();
-
-  const real = tsr.plan.visibility.useMutation({
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["plan"] });
-    },
-  });
-
-  const mock = useMutation<
-    ApiOk<void>,
-    Error,
-    {
-      params: { planId: number };
-      query: { isPrivate: boolean };
-      body: undefined;
-    }
-  >({
-    mutationFn: async (): Promise<ApiOk<void>> => ({
-      status: 200,
-      body: undefined,
-      headers: new Headers(),
-    }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["plan"] });
-    },
-  });
-
-  return IS_MOCK ? mock : real;
-};
-
 export const usePlanList = (
   params?: SearchFilterDTO,
 ): UseQueryResult<PlanListResponseDto> => {
-  const key = [
-    "plan",
-    "list",
-    params?.from ?? null,
-    params?.to ?? null,
-  ] as const;
+  const key = planKeys.list(params);
 
   const real = tsr.plan.list.useQuery({
     queryKey: key,
@@ -247,6 +194,61 @@ export const usePlanList = (
   return IS_MOCK ? mock : real;
 };
 
+export const useRemovePlan = (planId: number) => {
+  const queryClient = useQueryClient();
+
+  const onSuccess = () => {
+    invalidateAllPlans(queryClient);
+    toast.success("여행 계획이 삭제되었습니다.");
+  };
+
+  const real = useMutation<ApiOk<void>, Error, void>({
+    mutationFn: async () => {
+      return tsr.plan.remove.mutation({
+        params: { planId },
+      });
+    },
+    onSuccess,
+  });
+
+  const mock = useMutation<ApiOk<void>, Error, void>({
+    mutationFn: async (): Promise<ApiOk<void>> => ({
+      status: 200,
+      body: undefined,
+      headers: new Headers(),
+    }),
+    onSuccess,
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const usePlanVisibility = () => {
+  const queryClient = useQueryClient();
+  const onSuccess = () => invalidateAllPlans(queryClient);
+
+  const real = tsr.plan.visibility.useMutation({ onSuccess });
+
+  const mock = useMutation<
+    ApiOk<void>,
+    Error,
+    {
+      params: { planId: number };
+      query: { isPrivate: boolean };
+      body: undefined;
+    }
+  >({
+    mutationFn: async (): Promise<ApiOk<void>> => ({
+      status: 200,
+      body: undefined,
+      headers: new Headers(),
+    }),
+    onSuccess,
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
 export type ToggleLikeProps = {
   planId: number;
   like: boolean;
@@ -254,10 +256,7 @@ export type ToggleLikeProps = {
 
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
-
-  const onSuccess = () => {
-    queryClient.invalidateQueries({ queryKey: ["plan"] });
-  };
+  const onSuccess = () => invalidateAllPlans(queryClient);
 
   const real = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
     mutationFn: async (props: ToggleLikeProps): Promise<ApiOk<void>> => {

@@ -4,7 +4,6 @@ import LocaleMenu from "./locale-menu";
 import { useUserMe } from "@/hooks/user.hook";
 import LoginContainer from "./login-container";
 import UserMenu from "./user-menu";
-import { AuthStore } from "@/stores/auth.store";
 
 type Props = {
   locale: Locale;
@@ -12,17 +11,18 @@ type Props = {
 };
 
 const ETCContainer = ({ locale, onChange }: Props) => {
-  const isLoggedIn = !!AuthStore.actions.getAccessToken(); 
-
   const { data, isFetching } = useUserMe();
+
   const userName = data?.userName ?? null;
+  const isLoggedIn = !!data;
+  const isUserLoading = isFetching;
 
   return (
     <Row className="w-fit items-center h-9 justify-end">
       <LoginContainer
         userName={userName}
         isLoggedIn={isLoggedIn}
-        isUserLoading={isLoggedIn && isFetching} 
+        isUserLoading={isUserLoading}
       />
       <Row className="gap-2 pl-4 items-center">
         <UserMenu isLoggedIn={isLoggedIn} />

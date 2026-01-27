@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useModelContext } from "../model.hook";
 import type { TabValue } from "../model.type";
 import {
@@ -22,6 +22,8 @@ import {
 } from "./_lib/spot.flow.hook";
 import type { PlaceDto } from "@/types/place/place.type";
 
+type OverlayMode = "CREATE_PLAN" | "GENERATE_RECO";
+
 const ModelSpotPage = () => {
   const {
     modelResult,
@@ -38,6 +40,8 @@ const ModelSpotPage = () => {
   const [tab, setTab] = useState<TabValue>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
+  const [isGeneratingReco, setIsGeneratingReco] = useState(false);
+
   const { places, activePlace } = useSpotDerived({
     tab,
     modelResult,
@@ -47,8 +51,8 @@ const ModelSpotPage = () => {
   });
 
   const {
-    overlayOpen,
-    setOverlayOpen,
+    overlayOpen: spotOverlayOpen,
+    setOverlayOpen: setSpotOverlayOpen,
     setNavHistory,
     hasPrev,
     focusPlace,
@@ -61,7 +65,15 @@ const ModelSpotPage = () => {
     selectedPlaces,
   });
 
-  const detailOpen = sidebarOpen && overlayOpen && !!activePlace;
+  const pageOverlayOpen = createPlan.isPending || isGeneratingReco;
+
+  const pageOverlayMode: OverlayMode | undefined = useMemo(() => {
+    if (createPlan.isPending) return "CREATE_PLAN";
+    if (isGeneratingReco) return "GENERATE_RECO";
+    return undefined;
+  }, [createPlan.isPending, isGeneratingReco]);
+
+  const detailOpen = sidebarOpen && spotOverlayOpen && !!activePlace;
 
   const panelRight = detailOpen
     ? "right-200"
@@ -98,7 +110,7 @@ const ModelSpotPage = () => {
               if (next !== "saved") {
                 const nextPlaces = getPlacesByCategory(modelResult, next);
                 setActivePlaceId(nextPlaces[0]?.id ?? null);
-                setOverlayOpen(false);
+                setSpotOverlayOpen(false);
                 setNavHistory([]);
               }
             }}
@@ -107,22 +119,24 @@ const ModelSpotPage = () => {
             activePlaceId={activePlaceId}
             onFocusPlace={(id) => focusPlace(id, true)}
             onCloseOverlay={() => {
-              setOverlayOpen(false);
+              setSpotOverlayOpen(false);
               setNavHistory([]);
               setActivePlaceId(null);
             }}
             onCreatePlan={onCreatePlan}
+            onGeneratingChange={setIsGeneratingReco}
+            disabled={pageOverlayOpen}
           />
         </Sidebar>
 
         <SidebarInset className="relative h-full w-full">
-          <PlanCreatingOverlay open={createPlan.isPending} />
+          <PlanCreatingOverlay open={pageOverlayOpen} mode={pageOverlayMode} />
 
           <Button
             type="button"
             size="icon"
             onClick={handleTogglePanel}
-            disabled={createPlan.isPending}
+            disabled={pageOverlayOpen}
             className={cn(
               "absolute z-50 top-1/2 -translate-y-1/2",
               "h-12 w-8 rounded-l-md rounded-r-none",
@@ -146,8 +160,8 @@ const ModelSpotPage = () => {
             detailOpen={detailOpen}
             onMarkerClick={(id) => focusPlace(id, true)}
             onMapClick={() => {
-              if (createPlan.isPending) return;
-              setOverlayOpen(false);
+              if (pageOverlayOpen) return;
+              setSpotOverlayOpen(false);
               setNavHistory([]);
               setActivePlaceId(null);
             }}
@@ -161,17 +175,17 @@ const ModelSpotPage = () => {
               selectedPlaces.some((x) => x.id === activePlace.id)
             }
             onClose={() => {
-              if (createPlan.isPending) return;
+              if (pageOverlayOpen) return;
               closeOverlayOnly();
             }}
             onToggleSelect={() => {
-              if (createPlan.isPending) return;
+              if (pageOverlayOpen) return;
               if (!activePlace) return;
               toggleSelectPlace(activePlace);
             }}
             hasPrev={hasPrev}
             onPrev={() => {
-              if (createPlan.isPending) return;
+              if (pageOverlayOpen) return;
               goPrev();
             }}
             hideSelectButton={tab === "saved"}
