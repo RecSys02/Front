@@ -25,9 +25,9 @@ const ChatbotMessages = ({ bottomRef, messages, isLoading }: Props) => {
       ) : null}
 
       {messages.map((m, idx) => {
-        const isUser = m.role === "USER";
+        const isUser = m.role === "user";
         const isPendingAssistant =
-          m.role === "ASSISTANT" && m.isPending && (m.content ?? "") === "";
+          m.role === "assistant" && m.isPending && (m.content ?? "") === "";
 
         return (
           <div
