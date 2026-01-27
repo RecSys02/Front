@@ -13,10 +13,9 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 //--------------------------------------------------------------------//
 
-export const ChatHistoryResponseSchema = z.object({
-  messages: z.array(ChatMessageSchema),
-});
-export type ChatHistoryResponse = z.infer<typeof ChatHistoryResponseSchema>;
+export const ChatHistoryResponseSchema = z.array(ChatMessageSchema);
+export type ChatHistoryResponse = z.infer<typeof ChatHistoryResponseSchema>; 
+
 
 export const ChatSendRequestSchema = z.object({
   message: z.string().min(1),
