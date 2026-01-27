@@ -7,7 +7,12 @@ import {
 } from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
-import type { RenameUserDto, UserDto, UserMeDto } from "@/types/user/user.type";
+import type {
+  RenameUserDto,
+  UpdateUserTagDto,
+  UserDto,
+  UserMeDto,
+} from "@/types/user/user.type";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -95,4 +100,33 @@ export const useRename = () => {
   });
 
   return IS_MOCK ? mock : real;
+};
+
+export const useUpdateUserTag = () => {
+  const queryClient = useQueryClient();
+  const enabled = !!getAccessToken();
+
+  const onError = () => {
+    toast.error("태그 변경 중 오류가 발생했습니다.");
+  };
+
+  const onSuccess = () => {
+    if (!IS_MOCK) {
+      queryClient.refetchQueries({ queryKey: ["user"] });
+    }
+    toast.success("태그가 저장되었습니다.");
+  };
+
+  const real = tsr.user.updateTag.useMutation({
+    onSuccess,
+    onError,
+  });
+
+  const mock = useMutation<void, Error, { body: UpdateUserTagDto }>({
+    mutationFn: async () => undefined,
+    onSuccess,
+    onError,
+  });
+
+  return !enabled ? mock : IS_MOCK ? mock : real;
 };

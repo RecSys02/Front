@@ -2,7 +2,7 @@ import { Button } from "@/components/common/button/button";
 import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
 import { EyeOff, Eye, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Field, FieldLabel, FieldSet, FieldGroup } from "../field";
 import { Input } from "../input";
 import { CustomFormProps, FormItemConfig, TextFieldType } from "./form.type";
@@ -17,7 +17,23 @@ export function CustomForm<TValues>({
   submitLabel,
   onCancel,
   cancelLabel,
+  hideActions,
+  submitRef,
 }: CustomFormProps<TValues>) {
+  const formRef = useRef<HTMLFormElement | null>(null);
+
+  useEffect(() => {
+    if (!submitRef) return;
+
+    submitRef.current = () => {
+      formRef.current?.requestSubmit();
+    };
+
+    return () => {
+      submitRef.current = null;
+    };
+  }, [submitRef]);
+
   const [passwordVisible, setPasswordVisible] = useState<
     Record<string, boolean>
   >({});
@@ -34,7 +50,7 @@ export function CustomForm<TValues>({
   const validateField = (
     item: FormItemConfig<TValues>,
     currentValues: TValues,
-    options?: { onlyLive?: boolean }
+    options?: { onlyLive?: boolean },
   ): string | null => {
     const rules = item.rules;
     if (!rules || rules.length === 0) return null;
@@ -127,11 +143,7 @@ export function CustomForm<TValues>({
     const inputValue =
       (rawValue as string | number | readonly string[] | undefined) ?? "";
 
-    const paddingClass = isPassword
-      ? "pr-24"
-      : item.clearable
-      ? "pr-10"
-      : "pr-4";
+    const paddingClass = isPassword ? "pr-24" : item.clearable ? "pr-10" : "pr-4";
 
     const errorMessage = errors[name];
 
@@ -232,7 +244,7 @@ export function CustomForm<TValues>({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form ref={formRef} onSubmit={handleSubmit}>
       <Column className="w-full">
         <FieldSet>
           <FieldGroup>
@@ -241,27 +253,30 @@ export function CustomForm<TValues>({
               .map((item) => renderField(item))}
           </FieldGroup>
 
-          <Column>
-            <Button
-              type="submit"
-              className={`mt-4 h-15 w-full text-body1 rounded-xl transition-colors duration-200 ${
-                isValid
-                  ? "bg-emphasis fc-secondary hover:bg-emphasis"
-                  : "bg-gray-300 fc-gray-500 hover:bg-gray-300"
-              }`}
-            >
-              {submitLabel}
-            </Button>
-            {cancelLabel && onCancel && (
+          {!hideActions && (
+            <Column>
               <Button
-                type="button"
-                onClick={onCancel}
-                className="mt-2 h-15 w-full text-body1 bg-white fc-gray-700 rounded-xl border border-gray-200 hover:bg-gray-300"
+                type="submit"
+                className={`mt-4 h-15 w-full text-body1 rounded-xl transition-colors duration-200 ${
+                  isValid
+                    ? "bg-emphasis fc-secondary hover:bg-emphasis"
+                    : "bg-gray-300 fc-gray-500 hover:bg-gray-300"
+                }`}
               >
-                {cancelLabel}
+                {submitLabel}
               </Button>
-            )}
-          </Column>
+
+              {cancelLabel && onCancel && (
+                <Button
+                  type="button"
+                  onClick={onCancel}
+                  className="mt-2 h-15 w-full text-body1 bg-white fc-gray-700 rounded-xl border border-gray-200 hover:bg-gray-300"
+                >
+                  {cancelLabel}
+                </Button>
+              )}
+            </Column>
+          )}
         </FieldSet>
       </Column>
     </form>

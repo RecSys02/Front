@@ -1,4 +1,4 @@
-import { RegisterFormValues } from "./register.type";
+import { RegisterFormValues, Tags } from "./register.type";
 import type { Tag } from "@/types/tag/tag.type";
 
 export const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -95,4 +95,62 @@ export const mapSliderToActivityIndex = (value: number) => {
   if (value < 50) return 1;
   if (value < 75) return 2;
   return 3;
+};
+
+const ACTIVITY_VALUE_BY_IDX = [0, 25, 50, 75] as const;
+
+const DEFAULT_TAGS: Tags = {
+  themeIds: null,
+  moodIds: null,
+  dislikeIds: null,
+  foodIds: null,
+  cafeIds: null,
+  activityTagId: null,
+  activityValue: 50,
+};
+
+export const mapTagIdsToTagsBySource = (
+  tagIds: number[] | null | undefined,
+  source: TagSource | null | undefined,
+): Tags => {
+  if (!tagIds?.length || !source) return DEFAULT_TAGS;
+
+  const themeSet = new Set(source.THEME.map((o) => o.id));
+  const moodSet = new Set(source.MOOD.map((o) => o.id));
+  const foodSet = new Set(source.FOOD.map((o) => o.id));
+  const cafeSet = new Set(source.CAFE.map((o) => o.id));
+  const dislikeSet = new Set(source.DISLIKE.map((o) => o.id));
+  const activityIds = source.ACTIVITY_LEVEL.map((o) => o.id);
+
+  const themeIds: number[] = [];
+  const moodIds: number[] = [];
+  const foodIds: number[] = [];
+  const cafeIds: number[] = [];
+  const dislikeIds: number[] = [];
+  let activityTagId: number | null = null;
+
+  for (const id of tagIds) {
+    if (themeSet.has(id)) themeIds.push(id);
+    else if (moodSet.has(id)) moodIds.push(id);
+    else if (foodSet.has(id)) foodIds.push(id);
+    else if (cafeSet.has(id)) cafeIds.push(id);
+    else if (dislikeSet.has(id)) dislikeIds.push(id);
+    else if (activityIds.includes(id)) activityTagId = id;
+  }
+
+  const activityIdx =
+    activityTagId != null
+      ? activityIds.findIndex((x) => x === activityTagId)
+      : -1;
+
+  return {
+    themeIds: themeIds.length ? themeIds : null,
+    moodIds: moodIds.length ? moodIds : null,
+    foodIds: foodIds.length ? foodIds : null,
+    cafeIds: cafeIds.length ? cafeIds : null,
+    dislikeIds: dislikeIds.length ? dislikeIds : null,
+    activityTagId,
+    activityValue:
+      activityIdx >= 0 ? (ACTIVITY_VALUE_BY_IDX[activityIdx] ?? 50) : 50,
+  };
 };
