@@ -109,7 +109,7 @@ const postChatSend = async (args: {
       Accept: "text/event-stream",
       Authorization: `Bearer ${args.accessToken}`,
     },
-    body: JSON.stringify({ message: args.message }),
+    body: JSON.stringify({ query: args.message }),
     signal: args.signal,
   });
 };

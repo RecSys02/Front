@@ -4,9 +4,9 @@ import { toast } from "sonner";
 import {
   THEME_TAGS,
   MOOD_TAGS,
-  FOOD_TAGS,
+  RESTAURANT_TAGS,
   CAFE_TAGS,
-  DISLIKE_TAGS,
+  AVOID_TAGS,
   ACTIVITY_TAGS,
 } from "@/constants/types";
 import {
@@ -28,9 +28,9 @@ const toOptions = (tags: readonly string[], startId: number) => {
 const MOCK_TAG_SOURCE: TagSource = {
   THEME: toOptions(THEME_TAGS, 100),
   MOOD: toOptions(MOOD_TAGS, 200),
-  FOOD: toOptions(FOOD_TAGS, 300),
+  RESTAURANT: toOptions(RESTAURANT_TAGS, 300),
   CAFE: toOptions(CAFE_TAGS, 400),
-  DISLIKE: toOptions(DISLIKE_TAGS, 500),
+  AVOID: toOptions(AVOID_TAGS, 500),
   ACTIVITY_LEVEL: toOptions(ACTIVITY_TAGS, 600),
 };
 

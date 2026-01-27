@@ -30,13 +30,19 @@ export const MOOD_TAGS = [
   "핫플",
 ] as const;
 
-export const DISLIKE_TAGS = [
+export const AVOID_TAGS = [
   "너무 시끄러운",
   "오래 기다리는",
   "고령자에게 불편한",
 ] as const;
 
-export const FOOD_TAGS = ["한식", "중식", "일식", "양식", "세계음식"] as const;
+export const RESTAURANT_TAGS = [
+  "한식",
+  "중식",
+  "일식",
+  "양식",
+  "세계음식",
+] as const;
 
 export const CAFE_TAGS = [
   "디저트",

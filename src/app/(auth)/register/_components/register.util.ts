@@ -8,9 +8,9 @@ export type TagOption = { id: number; label: string };
 export type TagSource = {
   THEME: readonly TagOption[];
   MOOD: readonly TagOption[];
-  FOOD: readonly TagOption[];
+  RESTAURANT: readonly TagOption[];
   CAFE: readonly TagOption[];
-  DISLIKE: readonly TagOption[];
+  AVOID: readonly TagOption[];
   ACTIVITY_LEVEL: readonly TagOption[];
 };
 
@@ -28,6 +28,7 @@ export const pickLabels = (
   const labels = selectedIds
     .map((id) => map.get(id))
     .filter(Boolean) as string[];
+
   return labels.length ? labels : undefined;
 };
 
@@ -35,9 +36,9 @@ export const mapTagsToSource = (tags: Tag[]): TagSource => {
   const source: TagSourceMutable = {
     THEME: [],
     MOOD: [],
-    FOOD: [],
+    RESTAURANT: [],
     CAFE: [],
-    DISLIKE: [],
+    AVOID: [],
     ACTIVITY_LEVEL: [],
   };
 
@@ -59,8 +60,8 @@ export const buildTagIds = (
   const ids: number[] = [
     ...(tags.themeIds ?? []),
     ...(tags.moodIds ?? []),
-    ...(tags.dislikeIds ?? []),
-    ...(tags.foodIds ?? []),
+    ...(tags.avoidIds ?? []),
+    ...(tags.restaurantIds ?? []),
     ...(tags.cafeIds ?? []),
     ...(tags.activityTagId != null ? [tags.activityTagId] : []),
   ];
@@ -118,8 +119,8 @@ const ACTIVITY_VALUE_BY_IDX = [0, 25, 50, 75] as const;
 const DEFAULT_TAGS: Tags = {
   themeIds: null,
   moodIds: null,
-  dislikeIds: null,
-  foodIds: null,
+  avoidIds: null,
+  restaurantIds: null,
   cafeIds: null,
   activityTagId: null,
   activityValue: 50,
@@ -133,24 +134,24 @@ export const mapTagIdsToTagsBySource = (
 
   const themeSet = new Set(source.THEME.map((o) => o.id));
   const moodSet = new Set(source.MOOD.map((o) => o.id));
-  const foodSet = new Set(source.FOOD.map((o) => o.id));
+  const restaurantSet = new Set(source.RESTAURANT.map((o) => o.id));
   const cafeSet = new Set(source.CAFE.map((o) => o.id));
-  const dislikeSet = new Set(source.DISLIKE.map((o) => o.id));
+  const avoidSet = new Set(source.AVOID.map((o) => o.id));
   const activityIds = source.ACTIVITY_LEVEL.map((o) => o.id);
 
   const themeIds: number[] = [];
   const moodIds: number[] = [];
-  const foodIds: number[] = [];
+  const restaurantIds: number[] = [];
   const cafeIds: number[] = [];
-  const dislikeIds: number[] = [];
+  const avoidIds: number[] = [];
   let activityTagId: number | null = null;
 
   for (const id of tagIds) {
     if (themeSet.has(id)) themeIds.push(id);
     else if (moodSet.has(id)) moodIds.push(id);
-    else if (foodSet.has(id)) foodIds.push(id);
+    else if (restaurantSet.has(id)) restaurantIds.push(id);
     else if (cafeSet.has(id)) cafeIds.push(id);
-    else if (dislikeSet.has(id)) dislikeIds.push(id);
+    else if (avoidSet.has(id)) avoidIds.push(id);
     else if (activityIds.includes(id)) activityTagId = id;
   }
 
@@ -162,9 +163,9 @@ export const mapTagIdsToTagsBySource = (
   return {
     themeIds: themeIds.length ? themeIds : null,
     moodIds: moodIds.length ? moodIds : null,
-    foodIds: foodIds.length ? foodIds : null,
+    restaurantIds: restaurantIds.length ? restaurantIds : null,
     cafeIds: cafeIds.length ? cafeIds : null,
-    dislikeIds: dislikeIds.length ? dislikeIds : null,
+    avoidIds: avoidIds.length ? avoidIds : null,
     activityTagId,
     activityValue:
       activityIdx >= 0 ? (ACTIVITY_VALUE_BY_IDX[activityIdx] ?? 50) : 50,

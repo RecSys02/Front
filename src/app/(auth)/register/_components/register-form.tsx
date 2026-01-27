@@ -40,8 +40,8 @@ const RegisterForm = () => {
     tags: {
       themeIds: null,
       moodIds: null,
-      dislikeIds: null,
-      foodIds: null,
+      avoidIds: null,
+      restaurantIds: null,
       cafeIds: null,
       activityTagId: null,
       activityValue: 50,

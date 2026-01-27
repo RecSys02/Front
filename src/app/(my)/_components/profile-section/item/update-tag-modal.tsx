@@ -81,10 +81,10 @@ const UpdateTagModal = ({ open, onOpenChange }: Props) => {
     const preferredMoods =
       pickLabels(values.tags.moodIds, tagSource.MOOD) ?? null;
     const preferredRestaurantTypes =
-      pickLabels(values.tags.foodIds, tagSource.FOOD) ?? null;
+      pickLabels(values.tags.restaurantIds, tagSource.RESTAURANT) ?? null;
     const preferredCafeTypes =
       pickLabels(values.tags.cafeIds, tagSource.CAFE) ?? null;
-    const avoid = pickLabels(values.tags.dislikeIds, tagSource.DISLIKE) ?? null;
+    const avoid = pickLabels(values.tags.avoidIds, tagSource.AVOID) ?? null;
 
     const activityLevel =
       values.tags.activityTagId != null
