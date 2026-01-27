@@ -37,16 +37,20 @@ export const meQueryOptions = () =>
   });
 
 export const useUserMe = () => {
+  const enabled = !!getAccessToken();
+
   const real = useQuery({
     ...meQueryOptions(),
-    enabled: !IS_MOCK,
+    enabled: enabled && !IS_MOCK,
+    retry: false,
   });
 
   const mock = useQuery<UserMeDto>({
-    queryKey: QK.meMock(),
-    enabled: IS_MOCK,
+    queryKey: QK.me(),
+    enabled: enabled && IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
     staleTime: 60_000,
+    retry: false,
   });
 
   return IS_MOCK ? mock : real;
