@@ -2,18 +2,28 @@ import Column from "@/components/common/container/column";
 import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/libs/utils";
 
+type OverlayMode = "CREATE_PLAN" | "GENERATE_RECO";
+
 type Props = {
   open: boolean;
-  title?: string;
-  description?: string;
+  mode?: OverlayMode;
 };
 
-const PlanCreatingOverlay = ({
-  open,
-  title = "일정을 생성하고 있어요",
-  description = "잠시만 기다려 주세요",
-}: Props) => {
+const COPY: Record<OverlayMode, { title: string; description: string }> = {
+  CREATE_PLAN: {
+    title: "일정을 생성하고 있어요",
+    description: "잠시만 기다려 주세요",
+  },
+  GENERATE_RECO: {
+    title: "추천을 생성하고 있어요",
+    description: "잠시만 기다려 주세요",
+  },
+};
+
+const PlanCreatingOverlay = ({ open, mode = "CREATE_PLAN" }: Props) => {
   if (!open) return null;
+
+  const { title, description } = COPY[mode];
 
   return (
     <div
