@@ -16,6 +16,7 @@ const DeletePlanModal = ({ open, onOpenChange, planId }: Props) => {
 
   const handleDelete = () => {
     removePlan.mutate();
+    onOpenChange(false);
   };
 
   return (
