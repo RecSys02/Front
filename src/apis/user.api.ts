@@ -36,7 +36,7 @@ export const userApi = c.router(
     },
     read: {
       method: "GET",
-      path: "",
+      path: "/info",
       responses: {
         200: UserSchema,
       },
