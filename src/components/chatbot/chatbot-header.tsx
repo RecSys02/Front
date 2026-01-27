@@ -1,6 +1,6 @@
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/common/button/button";
-import { CircleHelp, Maximize2 } from "lucide-react";
+import { Maximize2 } from "lucide-react";
 
 type Props = {
   title: string;
@@ -8,11 +8,11 @@ type Props = {
   onToggleExpand?: () => void;
 };
 
-const ChatbotHeader = ({ title, onHelpClick, onToggleExpand }: Props) => {
+const ChatbotHeader = ({ title, onToggleExpand }: Props) => {
   return (
     <DialogHeader className="px-4 py-3 bg-linear-to-r from-[#2F6B4F] to-[#3A6F5A] border-b border-black/10">
       <div className="relative flex items-center justify-center">
-        <Button
+        {/* <Button
           type="button"
           variant="ghost"
           size="icon"
@@ -20,7 +20,7 @@ const ChatbotHeader = ({ title, onHelpClick, onToggleExpand }: Props) => {
           onClick={onHelpClick}
         >
           <CircleHelp className="size-5" />
-        </Button>
+        </Button> */}
 
         <DialogTitle className="text-[16px] font-extrabold text-white">
           {title}
