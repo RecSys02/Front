@@ -13,6 +13,8 @@ import type {
   UserDto,
   UserMeDto,
 } from "@/types/user/user.type";
+import { useNavigate } from "@tanstack/react-router";
+import { ROUTES } from "@/constants/routes";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -36,7 +38,7 @@ export const useUserMe = () => {
   });
 
   const mock = useQuery<UserMeDto>({
-    queryKey: ["me", "mock"],
+    queryKey: ["me"],
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
   });
@@ -58,7 +60,7 @@ export const useUser = () => {
   });
 
   const mock = useQuery<UserDto>({
-    queryKey: ["user", "mock"],
+    queryKey: ["user"],
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({
       email: "mock@test.com",
@@ -129,4 +131,43 @@ export const useUpdateUserTag = () => {
   });
 
   return !enabled ? mock : IS_MOCK ? mock : real;
+};
+
+export const useDeleteUser = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { clear } = AuthStore.actions;
+
+  const real = useMutation<void, Error>({
+    mutationFn: async () => {
+      await tsr.user.delete.mutation();
+      await tsr.auth.signout.mutation();
+
+      clear();
+      queryClient.clear();
+    },
+    onSuccess: () => {
+      toast.success("회원 탈퇴가 완료되었습니다.");
+      navigate({ to: ROUTES.Home, replace: true });
+    },
+    onError: () => {
+      toast.error("회원 탈퇴 중 오류가 발생했습니다.");
+    },
+  });
+
+  const mock = useMutation<void, Error>({
+    mutationFn: async () => {
+      clear();
+      queryClient.clear();
+    },
+    onSuccess: () => {
+      toast.success("회원 탈퇴가 완료되었습니다.");
+      navigate({ to: ROUTES.Home, replace: true });
+    },
+    onError: () => {
+      toast.error("회원 탈퇴 중 오류가 발생했습니다.");
+    },
+  });
+
+  return IS_MOCK ? mock : real;
 };

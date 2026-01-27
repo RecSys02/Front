@@ -41,6 +41,13 @@ export const userApi = c.router(
         200: UserSchema,
       },
     },
+    delete: {
+      method: "DELETE",
+      path: "",
+      responses: {
+        200: z.void(),
+      },
+    },
   },
   { pathPrefix: "/user" },
 );
