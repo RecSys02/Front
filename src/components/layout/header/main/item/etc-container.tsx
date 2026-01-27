@@ -1,7 +1,7 @@
 import Row from "@/components/common/container/row";
 import { Locale } from "@/constants/types";
 import LocaleMenu from "./locale-menu";
-import { useUser } from "@/hooks/user.hook";
+import { useUserMe } from "@/hooks/user.hook";
 import LoginContainer from "./login-container";
 import UserMenu from "./user-menu";
 
@@ -11,7 +11,7 @@ type Props = {
 };
 
 const ETCContainer = ({ locale, onChange }: Props) => {
-  const { data, isSuccess } = useUser();
+  const { data, isSuccess } = useUserMe();
   const userName = data?.userName;
 
   return (

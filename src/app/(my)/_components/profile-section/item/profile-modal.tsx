@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { useMemo, useRef, useState } from "react";
 import { flushSync } from "react-dom";
 
-import { useRename, useUser } from "@/hooks/user.hook";
+import { useRename, useUserMe } from "@/hooks/user.hook";
 import { useCheckName, useSignout } from "@/hooks/auth.hook";
 
 type ProfileModalProps = {
@@ -16,7 +16,7 @@ type ProfileModalProps = {
 };
 
 export const RenameModal = ({ open, onClose }: ProfileModalProps) => {
-  const { data } = useUser();
+  const { data } = useUserMe();
 
   const nicknameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);

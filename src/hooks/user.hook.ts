@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { AuthStore } from "@/stores/auth.store";
 import { toast } from "sonner";
-import type { RenameUserDto, UserMeDto } from "@/types/user/user.type";
+import type { RenameUserDto, UserDto, UserMeDto } from "@/types/user/user.type";
 
 const { getAccessToken } = AuthStore.actions;
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
@@ -22,7 +22,7 @@ export const meQueryOptions = () =>
     staleTime: 60_000,
   });
 
-export const useUser = () => {
+export const useUserMe = () => {
   const enabled = !!getAccessToken();
 
   const real = useQuery({
@@ -34,6 +34,33 @@ export const useUser = () => {
     queryKey: ["me", "mock"],
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
+  });
+
+  return IS_MOCK ? mock : real;
+};
+
+export const useUser = () => {
+  const enabled = !!getAccessToken();
+
+  const real = useQuery<UserDto>({
+    queryKey: ["user"],
+    enabled: enabled && !IS_MOCK,
+    queryFn: async () => {
+      const res = await tsr.user.read.query();
+      return res.body as UserDto;
+    },
+    staleTime: 60_000,
+  });
+
+  const mock = useQuery<UserDto>({
+    queryKey: ["user", "mock"],
+    enabled: enabled && IS_MOCK,
+    queryFn: async () => ({
+      email: "mock@test.com",
+      userName: "MOCKUSER",
+      image: null,
+      tagIds: [1, 2, 3],
+    }),
   });
 
   return IS_MOCK ? mock : real;

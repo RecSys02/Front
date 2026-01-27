@@ -3,8 +3,8 @@ import { z } from "zod";
 export const UserSchema = z.object({
   email: z.string(),
   userName: z.string(),
-  image: z.string(),
-  tagIds: z.array(z.string()).nullable(),
+  image: z.string().nullable(),
+  tagIds: z.array(z.number()).nullable(),
 });
 export type UserDto = z.infer<typeof UserSchema>;
 
