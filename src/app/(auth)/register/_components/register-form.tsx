@@ -89,7 +89,6 @@ const RegisterForm = () => {
       userName,
       tagIds: buildTagIds(values.tags),
     };
-    console.log(payload);
     registerUser.mutate(
       { body: payload },
       {
