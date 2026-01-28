@@ -225,8 +225,10 @@ export const usePlanVisibility = () => {
     queryClient.refetchQueries({ queryKey: ["plan"], type: "all" });
   };
 
-  const real = tsr.plan.visibility.useMutation({ onSuccess });
-
+  const real = tsr.plan.visibility.useMutation({
+    onSuccess: () => console.log("VIS SUCCESS"),
+    onError: (e: any) => console.log("VIS ERROR", e),
+  });
   const mock = useMutation<
     ApiOk<void>,
     Error,
