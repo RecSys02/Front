@@ -38,6 +38,22 @@ const invalidatePlanDetail = (
   qc.invalidateQueries({ queryKey: planKeys.detail(planId) });
 };
 
+const mapArray = <T>(data: T, fn: (x: any) => any): T => {
+  if (!Array.isArray(data)) return data;
+  return data.map(fn) as unknown as T;
+};
+
+const patchPlan = (p: any, planId: number, patch: (x: any) => any) => {
+  if (!p || typeof p !== "object") return p;
+  if (p.id !== planId) return p;
+  return patch(p);
+};
+
+const filterArray = (data: any, pred: (x: any) => boolean) => {
+  if (!Array.isArray(data)) return data;
+  return data.filter(pred);
+};
+
 export const usePopular = () => {
   const key = planKeys.popular();
 
@@ -223,9 +239,26 @@ export const useRemovePlan = () => {
     _res: ApiOk<void>,
     vars: { params: { planId: number } },
   ) => {
+    const planId = vars.params.planId;
+
+    queryClient.setQueriesData({ queryKey: planKeys.byUserRoot() }, (old) =>
+      filterArray(old, (p: any) => p?.id !== planId),
+    );
+
+    queryClient.setQueriesData({ queryKey: planKeys.listRoot() }, (old) =>
+      filterArray(old, (p: any) => p?.id !== planId),
+    );
+
+    queryClient.setQueriesData({ queryKey: planKeys.popularRoot() }, (old) =>
+      filterArray(old, (p: any) => p?.id !== planId),
+    );
+
+    queryClient.setQueryData(planKeys.detail(planId), undefined);
+
     invalidatePublicPlans(queryClient);
     invalidateMyPlans(queryClient);
-    invalidatePlanDetail(queryClient, vars.params.planId);
+    invalidatePlanDetail(queryClient, planId);
+
     toast.success("여행 계획이 삭제되었습니다.");
   };
 
@@ -256,9 +289,36 @@ export const usePlanVisibility = () => {
       body: undefined;
     },
   ) => {
+    const planId = vars.params.planId;
+    const isPrivate = vars.query.isPrivate;
+
+    queryClient.setQueriesData({ queryKey: planKeys.byUserRoot() }, (old) =>
+      mapArray(old, (p: any) =>
+        patchPlan(p, planId, (x) => ({ ...x, isPrivate })),
+      ),
+    );
+
+    queryClient.setQueriesData({ queryKey: planKeys.listRoot() }, (old) =>
+      mapArray(old, (p: any) =>
+        patchPlan(p, planId, (x) => ({ ...x, isPrivate })),
+      ),
+    );
+
+    queryClient.setQueriesData({ queryKey: planKeys.popularRoot() }, (old) =>
+      mapArray(old, (p: any) =>
+        patchPlan(p, planId, (x) => ({ ...x, isPrivate })),
+      ),
+    );
+
+    queryClient.setQueryData(planKeys.detail(planId), (old: any) => {
+      if (!old) return old;
+      if (old.id !== planId) return old;
+      return { ...old, isPrivate };
+    });
+
     invalidatePublicPlans(queryClient);
     invalidateMyPlans(queryClient);
-    invalidatePlanDetail(queryClient, vars.params.planId);
+    invalidatePlanDetail(queryClient, planId);
   };
 
   const real = tsr.plan.visibility.useMutation({ onSuccess });
@@ -291,27 +351,65 @@ export type ToggleLikeProps = {
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
 
-  const onSuccess = () => {
+  const applyLikePatch = (planId: number, nextLiked: boolean) => {
+    const patch = (x: any) => {
+      const prevLiked =
+        (typeof x.isLiked === "boolean" && x.isLiked) ||
+        (typeof x.liked === "boolean" && x.liked) ||
+        false;
+
+      const delta = prevLiked === nextLiked ? 0 : nextLiked ? 1 : -1;
+      const nextCount =
+        typeof x.likeCount === "number"
+          ? Math.max(0, x.likeCount + delta)
+          : x.likeCount;
+
+      const base = { ...x, likeCount: nextCount };
+      if ("isLiked" in base) base.isLiked = nextLiked;
+      if ("liked" in base) base.liked = nextLiked;
+      return base;
+    };
+
+    queryClient.setQueriesData({ queryKey: planKeys.byUserRoot() }, (old) =>
+      mapArray(old, (p: any) => patchPlan(p, planId, patch)),
+    );
+
+    queryClient.setQueriesData({ queryKey: planKeys.listRoot() }, (old) =>
+      mapArray(old, (p: any) => patchPlan(p, planId, patch)),
+    );
+
+    queryClient.setQueriesData({ queryKey: planKeys.popularRoot() }, (old) =>
+      mapArray(old, (p: any) => patchPlan(p, planId, patch)),
+    );
+
+    queryClient.setQueryData(planKeys.detail(planId), (old: any) => {
+      if (!old) return old;
+      if (old.id !== planId) return old;
+      return patch(old);
+    });
+  };
+
+  const after = (planId: number) => {
+    invalidatePlanDetail(queryClient, planId);
     invalidatePublicPlans(queryClient);
+    invalidateMyPlans(queryClient);
   };
 
   const like = tsr.plan.like.useMutation({
-    onSuccess: (
-      _res: ApiOk<void>,
-      vars: { params: { planId: number }; body: undefined },
-    ) => {
-      invalidatePlanDetail(queryClient, vars.params.planId);
-      onSuccess();
+    onMutate: async (vars: { params: { planId: number }; body: undefined }) => {
+      applyLikePatch(vars.params.planId, true);
+    },
+    onSuccess: (_res: ApiOk<void>, vars: { params: { planId: number } }) => {
+      after(vars.params.planId);
     },
   });
 
   const unlike = tsr.plan.unlike.useMutation({
-    onSuccess: (
-      _res: ApiOk<void>,
-      vars: { params: { planId: number }; body: undefined },
-    ) => {
-      invalidatePlanDetail(queryClient, vars.params.planId);
-      onSuccess();
+    onMutate: async (vars: { params: { planId: number }; body: undefined }) => {
+      applyLikePatch(vars.params.planId, false);
+    },
+    onSuccess: (_res: ApiOk<void>, vars: { params: { planId: number } }) => {
+      after(vars.params.planId);
     },
   });
 
