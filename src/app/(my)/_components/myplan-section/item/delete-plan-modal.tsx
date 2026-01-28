@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Modal from "@/components/ui/modal";
 import Column from "@/components/common/container/column";
 import Body from "@/components/text/body";
@@ -14,12 +15,15 @@ const DeletePlanModal = ({ open, onOpenChange, planId }: Props) => {
   const removePlan = useRemovePlan();
   const isLoading = removePlan.isPending;
 
-  const handleDelete = async () => {
-    try {
-      await removePlan.mutateAsync({ params: { planId } } as any);
-      onOpenChange(false);
-      // eslint-disable-next-line no-empty
-    } catch {}
+  useEffect(() => {
+    if (removePlan.isSuccess) onOpenChange(false);
+  }, [removePlan.isSuccess, onOpenChange]);
+
+  const handleDelete = () => {
+    removePlan.mutate({
+      params: { planId },
+      body: undefined,
+    } as any);
   };
 
   return (
