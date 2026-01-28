@@ -226,16 +226,17 @@ export const usePlanVisibility = () => {
   };
 
   const real = tsr.plan.visibility.useMutation({
-    onSuccess: () => {
-      console.log(
-        "PLAN KEYS",
-        queryClient
-          .getQueryCache()
-          .getAll()
-          .map((q) => q.queryKey),
-      );
+    onSuccess: async () => {
+      const before = queryClient.getQueryData(["plan", "byUser", null]);
+      console.log("BEFORE", before);
 
-      queryClient.refetchQueries({ queryKey: ["plan"], type: "all" });
+      await queryClient.refetchQueries({
+        queryKey: ["plan", "byUser"],
+        type: "active",
+      });
+
+      const after = queryClient.getQueryData(["plan", "byUser", null]);
+      console.log("AFTER", after);
     },
   });
   const mock = useMutation<
