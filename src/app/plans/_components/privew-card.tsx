@@ -26,7 +26,7 @@ const PreviewCard = ({ content }: Props) => {
     <Column className="w-fit">
       <div className="relative size-55">
         <ImageBox
-          src={content.imgSrc}
+          src={content.image}
           className="w-full h-full overflow-hidden rounded-lg"
           fit="cover"
         />

@@ -40,7 +40,7 @@ const ContentCard = ({ content }: Props) => {
         className="cursor-pointer hover:opacity-95 transition-opacity w-fit"
       >
         <ImageBox
-          src={content.imgSrc}
+          src={content.image}
           className="w-140 h-80 overflow-hidden"
           fit="cover"
         />

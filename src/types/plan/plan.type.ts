@@ -20,7 +20,7 @@ export const PlanSchema = z.object({
   id: z.number(),
   name: z.string(),
   isPrivate: z.boolean(),
-  imgSrc: z.string(),
+  image: z.string(),
   province: z.string(),
   schedule: z.array(Dailyschedulechema),
   isActive: z.boolean(),

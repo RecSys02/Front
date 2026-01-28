@@ -44,7 +44,7 @@ export const PopularPlanCardSchema = z.object({
   tags: z.array(z.string()),
   likeCount: z.number(),
   isActive: z.boolean(),
-  imgSrc: z.string(),
+  image: z.string(),
 });
 export type PopularPlanCardDto = z.infer<typeof PopularPlanCardSchema>;
 
