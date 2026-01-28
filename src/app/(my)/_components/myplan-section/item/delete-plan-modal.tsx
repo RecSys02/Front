@@ -14,12 +14,14 @@ const DeletePlanModal = ({ open, onOpenChange, planId }: Props) => {
   const removePlan = useRemovePlan();
   const isLoading = removePlan.isPending;
 
-  const handleDelete = () => {
-    removePlan.mutate(
-      { params: { planId } },
-      { onSuccess: () => onOpenChange(false) },
-    );
+  const handleDelete = async () => {
+    try {
+      await removePlan.mutateAsync({ params: { planId } } as any);
+      onOpenChange(false);
+      // eslint-disable-next-line no-empty
+    } catch {}
   };
+
   return (
     <Modal
       open={open}
