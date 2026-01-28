@@ -9,7 +9,7 @@ import Body from "@/components/text/body";
 import Heading from "@/components/text/heading";
 
 const ContentCardList = () => {
-  const { data, isLoading } = usePopular();
+  const { data, isPending } = usePopular();
   const contents = data ?? [];
 
   const columns = [
@@ -20,7 +20,7 @@ const ContentCardList = () => {
 
   return (
     <Row className="w-full px-11">
-      {isLoading ? (
+      {isPending ? (
         <Row className="w-full justify-center py-10">
           <Spinner />
         </Row>

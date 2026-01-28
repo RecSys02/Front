@@ -7,6 +7,7 @@ export const ModelRequestSchema = z.object({
   budget: z.string(),
   selectedPlaces: z.array(PlaceIdSchema).nullish(),
   historyPlaces: z.array(PlaceIdSchema).nullish(),
+  accomAddress: z.string().nullish(),
 });
 export type ModelRequestDto = z.infer<typeof ModelRequestSchema>;
 

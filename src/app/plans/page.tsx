@@ -17,7 +17,7 @@ type SortKey = "default" | "popular";
 const PAGE_SIZE = 12;
 
 const PlanPage = () => {
-  const { data: contents, isLoading } = usePlanList();
+  const { data: contents, isPending } = usePlanList();
   const navigate = useNavigate();
   const [sort, setSort] = useState<SortKey>("default");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
@@ -40,7 +40,7 @@ const PlanPage = () => {
     setVisibleCount(PAGE_SIZE);
   };
 
-  const isEmpty = !isLoading && (contents?.length ?? 0) === 0;
+  const isEmpty = !isPending && (contents?.length ?? 0) === 0;
 
   return (
     <Column className="flex-1">
@@ -68,7 +68,7 @@ const PlanPage = () => {
           </Tabs>
         </Row>
 
-        {isLoading ? (
+        {isPending ? (
           <Row className="w-full items-center justify-center py-20">
             <Spinner className="size-10" />
           </Row>

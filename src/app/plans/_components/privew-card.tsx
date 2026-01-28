@@ -49,7 +49,7 @@ const PreviewCard = ({ content }: Props) => {
       <Column className="max-w-55 w-full h-fit justify-start pt-4 px-2.5">
         <Body
           variant="body2"
-          className="w-full min-w-0 flex items-center font-bold fc-gray-800 truncate"
+          className="w-full min-w-0 flex items-center font-bold fc-gray-800 truncate line-clamp-1"
         >
           {content.name}
         </Body>

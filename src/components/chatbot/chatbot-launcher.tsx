@@ -24,7 +24,7 @@ const ChatbotLauncher = () => {
             <Button
               type="button"
               onClick={() => setOpen((v) => !v)}
-              className="fixed bottom-6 right-6 z-10000 h-14 w-14 rounded-full bg-white border border-[#9ECD87]/40 shadow-md hover:shadow-lg"
+              className="fixed bottom-6 right-6 z-9999 h-14 w-14 rounded-full bg-white border border-[#9ECD87]/40 shadow-md hover:shadow-lg"
               aria-label="챗봇 열기"
             >
               {open ? (
