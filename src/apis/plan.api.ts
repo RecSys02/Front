@@ -6,6 +6,7 @@ import {
   PlanListResponseSchema,
   PopularPlanCardSchema,
 } from "@/types/plan/plan.wrapper.type";
+import { EmptySchema } from "@/types/util.type";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 
@@ -38,7 +39,7 @@ export const planApi = c.router(
         planId: z.number(),
       }),
       responses: {
-        200: z.unknown(),
+        200: EmptySchema,
       },
     },
     visibility: {
@@ -50,9 +51,9 @@ export const planApi = c.router(
       query: z.object({
         isPrivate: z.boolean(),
       }),
-      body: z.void(),
+      body: z.undefined(),
       responses: {
-        200: z.unknown(),
+        200: EmptySchema,
       },
     },
     like: {
@@ -61,9 +62,9 @@ export const planApi = c.router(
       pathParams: z.object({
         planId: z.number(),
       }),
-      body: z.void(),
+      body: EmptySchema,
       responses: {
-        200: z.unknown(),
+        200: EmptySchema,
       },
     },
     unlike: {
@@ -72,9 +73,9 @@ export const planApi = c.router(
       pathParams: z.object({
         planId: z.number(),
       }),
-      body: z.void(),
+      body: EmptySchema,
       responses: {
-        200: z.unknown(),
+        200: EmptySchema,
       },
     },
     popular: {

@@ -4,8 +4,8 @@ import {
   UpdateUserTagSchema,
   UserSchema,
 } from "@/types/user/user.type";
+import { EmptySchema } from "@/types/util.type";
 import { initContract } from "@ts-rest/core";
-import { z } from "zod";
 
 const c = initContract();
 
@@ -23,7 +23,7 @@ export const userApi = c.router(
       path: "/profile",
       body: RenameUserSchema,
       responses: {
-        200: z.void(),
+        200: EmptySchema,
       },
     },
     updateTag: {
@@ -31,7 +31,7 @@ export const userApi = c.router(
       path: "/tags",
       body: UpdateUserTagSchema,
       responses: {
-        200: z.void(),
+        200: EmptySchema,
       },
     },
     read: {
@@ -45,7 +45,7 @@ export const userApi = c.router(
       method: "DELETE",
       path: "/me",
       responses: {
-        200: z.void(),
+        200: EmptySchema,
       },
     },
   },
