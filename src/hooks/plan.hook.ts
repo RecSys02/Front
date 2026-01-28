@@ -1,5 +1,6 @@
 import { tsr } from "@/apis/client/ts-rest/client";
 import {
+  keepPreviousData,
   useMutation,
   useQuery,
   useQueryClient,
@@ -17,14 +18,9 @@ import { ApiOk } from "@/types/util.type";
 import { MOCK_CREATE_PLAN, MOCK_PLAN, MOCK_POPULAR } from "./hook.mock";
 import { Plan } from "@/types/plan/plan.type";
 import { toast } from "sonner";
-import { planKeys } from "./hook.keys";
+import { planKeys, SearchFilterDTO } from "./hook.keys";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
-
-export type SearchFilterDTO = {
-  from: string;
-  to: string;
-};
 
 const invalidatePublicPlans = (qc: ReturnType<typeof useQueryClient>) => {
   qc.invalidateQueries({ queryKey: planKeys.listRoot() });
@@ -48,6 +44,7 @@ export const usePopular = () => {
   const real = tsr.plan.popular.useQuery({
     queryKey: key,
     enabled: !IS_MOCK,
+    placeholderData: keepPreviousData,
     select: (res: ApiOk<typeof MOCK_POPULAR>) => res.body,
   });
 
@@ -55,6 +52,7 @@ export const usePopular = () => {
     queryKey: key,
     queryFn: async () => MOCK_POPULAR,
     enabled: IS_MOCK,
+    placeholderData: keepPreviousData,
   });
 
   return IS_MOCK ? mock : real;
@@ -118,12 +116,14 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
     queryData: {
       params: { planId: planId as number },
     },
+    placeholderData: keepPreviousData,
     select: (res: ApiOk<Plan>) => res.body,
   });
 
   const mock = useQuery<Plan>({
     queryKey: key,
     enabled: enabled && IS_MOCK,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const popular =
         MOCK_POPULAR.find((p) => p.id === planId) ?? MOCK_POPULAR[0];
@@ -159,6 +159,7 @@ export const usePlanListByUser = (
       query: params,
     },
     enabled: !IS_MOCK,
+    placeholderData: keepPreviousData,
     select: (res: ApiOk<MyPlanListResponseDto>) => res.body,
   });
 
@@ -166,6 +167,7 @@ export const usePlanListByUser = (
     queryKey: key,
     queryFn: async () => MOCK_PLAN,
     enabled: IS_MOCK,
+    placeholderData: keepPreviousData,
   });
 
   return (IS_MOCK
@@ -184,12 +186,14 @@ export const usePlanList = (
       query: params,
     },
     enabled: !IS_MOCK,
+    placeholderData: keepPreviousData,
     select: (res: ApiOk<PlanListResponseDto>) => res.body,
   });
 
   const mock = useQuery<PlanListResponseDto>({
     queryKey: key,
     enabled: IS_MOCK,
+    placeholderData: keepPreviousData,
     queryFn: async (): Promise<PlanListResponseDto> => {
       return Array.from({ length: 18 }).map((_, idx) => {
         const p = MOCK_POPULAR[idx % MOCK_POPULAR.length];
@@ -253,6 +257,7 @@ export const usePlanVisibility = () => {
     },
   ) => {
     invalidatePublicPlans(queryClient);
+    invalidateMyPlans(queryClient);
     invalidatePlanDetail(queryClient, vars.params.planId);
   };
 
