@@ -26,8 +26,20 @@ export type SearchFilterDTO = {
   to: string;
 };
 
-const invalidateAllPlans = (queryClient: ReturnType<typeof useQueryClient>) => {
-  queryClient.invalidateQueries({ queryKey: planKeys.all });
+const invalidatePublicPlans = (qc: ReturnType<typeof useQueryClient>) => {
+  qc.invalidateQueries({ queryKey: planKeys.listRoot() });
+  qc.invalidateQueries({ queryKey: planKeys.popularRoot() });
+};
+
+const invalidateMyPlans = (qc: ReturnType<typeof useQueryClient>) => {
+  qc.invalidateQueries({ queryKey: planKeys.byUserRoot() });
+};
+
+const invalidatePlanDetail = (
+  qc: ReturnType<typeof useQueryClient>,
+  planId: number,
+) => {
+  qc.invalidateQueries({ queryKey: planKeys.detail(planId) });
 };
 
 export const usePopular = () => {
@@ -66,7 +78,9 @@ export const useCreatePlan = () => {
   };
 
   const onSuccess = (res: ApiOk<CreatePlanResponseDto>) => {
-    invalidateAllPlans(queryClient);
+    invalidatePublicPlans(queryClient);
+    invalidateMyPlans(queryClient);
+    invalidatePlanDetail(queryClient, res.body.id);
     navigateToPlan(res.body.id);
   };
 
@@ -201,21 +215,21 @@ export const usePlanList = (
 export const useRemovePlan = () => {
   const queryClient = useQueryClient();
 
-  const onSuccess = () => {
-    invalidateAllPlans(queryClient);
+  const onSuccess = (
+    _res: ApiOk<void>,
+    vars: { params: { planId: number } },
+  ) => {
+    invalidatePublicPlans(queryClient);
+    invalidateMyPlans(queryClient);
+    invalidatePlanDetail(queryClient, vars.params.planId);
     toast.success("여행 계획이 삭제되었습니다.");
   };
 
-  const real = useMutation<ApiOk<void>, Error, { planId: number }>({
-    mutationFn: async ({ planId }) => {
-      return tsr.plan.remove.mutation({
-        params: { planId },
-      });
-    },
+  const real = tsr.plan.remove.useMutation({
     onSuccess,
   });
 
-  const mock = useMutation<ApiOk<void>, Error, { planId: number }>({
+  const mock = useMutation<ApiOk<void>, Error, { params: { planId: number } }>({
     mutationFn: async (): Promise<ApiOk<void>> => ({
       status: 200,
       body: undefined,
@@ -229,7 +243,18 @@ export const useRemovePlan = () => {
 
 export const usePlanVisibility = () => {
   const queryClient = useQueryClient();
-  const onSuccess = () => invalidateAllPlans(queryClient);
+
+  const onSuccess = (
+    _res: ApiOk<void>,
+    vars: {
+      params: { planId: number };
+      query: { isPrivate: boolean };
+      body: undefined;
+    },
+  ) => {
+    invalidatePublicPlans(queryClient);
+    invalidatePlanDetail(queryClient, vars.params.planId);
+  };
 
   const real = tsr.plan.visibility.useMutation({ onSuccess });
 
@@ -260,37 +285,48 @@ export type ToggleLikeProps = {
 
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
-  const onSuccess = () => invalidateAllPlans(queryClient);
 
-  const real = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
-    mutationFn: async (props) => {
-      console.log("MUTATION FN RUN", props);
+  const onSuccess = () => {
+    invalidatePublicPlans(queryClient);
+  };
 
-      if (props.like) {
-        console.log("CALL like.mutation");
-        return tsr.plan.like.mutation({
-          params: { planId: props.planId },
-          body: undefined,
-        });
-      }
+  const like = tsr.plan.like.useMutation({
+    onSuccess: (
+      _res: ApiOk<void>,
+      vars: { params: { planId: number }; body: undefined },
+    ) => {
+      invalidatePlanDetail(queryClient, vars.params.planId);
+      onSuccess();
+    },
+  });
 
-      console.log("CALL unlike.mutation");
-      return tsr.plan.unlike.mutation({
-        params: { planId: props.planId },
+  const unlike = tsr.plan.unlike.useMutation({
+    onSuccess: (
+      _res: ApiOk<void>,
+      vars: { params: { planId: number }; body: undefined },
+    ) => {
+      invalidatePlanDetail(queryClient, vars.params.planId);
+      onSuccess();
+    },
+  });
+
+  const mutate = (vars: ToggleLikeProps) => {
+    if (vars.like) {
+      like.mutate({
+        params: { planId: vars.planId },
         body: undefined,
       });
-    },
-    onSuccess,
-  });
+      return;
+    }
 
-  const mock = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
-    mutationFn: async (): Promise<ApiOk<void>> => ({
-      status: 200,
+    unlike.mutate({
+      params: { planId: vars.planId },
       body: undefined,
-      headers: new Headers(),
-    }),
-    onSuccess,
-  });
+    });
+  };
 
-  return IS_MOCK ? mock : real;
+  return {
+    mutate,
+    isPending: like.isPending || unlike.isPending,
+  };
 };
