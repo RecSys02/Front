@@ -76,6 +76,8 @@ const PlanDetailPage = () => {
   const toggleLike = useTogglePlanLike();
   const handleLikeToggle = () => {
     if (!content) return;
+    if (toggleLike.isPending) return;
+
     toggleLike.mutate({
       planId: content.id,
       like: !content.isActive,
