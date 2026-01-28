@@ -47,7 +47,7 @@ export const useCreatePlanFromModel = (args: {
       startDate,
       endDate,
       province: provinceCode,
-      isPrivate: false,
+      isPrivate: true,
     };
 
     createPlan.mutate({ body: createPlanPayload });

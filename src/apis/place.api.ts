@@ -12,6 +12,10 @@ export const placeApi = c.router(
       pathParams: z.object({
         placeId: z.coerce.number(),
       }),
+      query: z.object({
+        category: z.string(),
+        province: z.string(),
+      }),
       responses: {
         200: PlaceSchema,
       },

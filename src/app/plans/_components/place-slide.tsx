@@ -14,6 +14,8 @@ import MetaItem from "@/components/ui/meta-item";
 
 type Props = {
   placeId: number;
+  category: string;
+  province: string;
   index?: number;
   total?: number;
   onPrev?: () => void;
@@ -24,6 +26,8 @@ type Props = {
 
 const PlaceSlide = ({
   placeId,
+  category,
+  province,
   index,
   total,
   onPrev,
@@ -31,7 +35,11 @@ const PlaceSlide = ({
   hasPrev,
   hasNext,
 }: Props) => {
-  const { data: place, isLoading, isError } = useReadPlace(placeId);
+  const {
+    data: place,
+    isLoading,
+    isError,
+  } = useReadPlace(placeId, { category, province });
 
   const imageSrc =
     place?.images && place.images.length > 0 ? place.images[0] : Placeholder;
@@ -40,8 +48,8 @@ const PlaceSlide = ({
     typeof index === "number" && typeof total === "number" && total > 0;
 
   const categoryLabel = place?.category
-    ? CATEGORY_LABEL[String(place.category).toUpperCase()] ??
-      String(place.category)
+    ? (CATEGORY_LABEL[String(place.category).toUpperCase()] ??
+      String(place.category))
     : null;
 
   return (
@@ -73,7 +81,7 @@ const PlaceSlide = ({
             disabled={!hasPrev}
             className={cn(
               "h-8 w-8 grid place-items-center rounded-md bg-transparent p-0",
-              "disabled:opacity-30"
+              "disabled:opacity-30",
             )}
           >
             <ChevronLeft className="size-5 text-gray-600" />
@@ -93,7 +101,7 @@ const PlaceSlide = ({
             disabled={!hasNext}
             className={cn(
               "h-8 w-8 grid place-items-center rounded-md bg-transparent p-0",
-              "disabled:opacity-30"
+              "disabled:opacity-30",
             )}
           >
             <ChevronRight className="size-5 text-gray-600" />

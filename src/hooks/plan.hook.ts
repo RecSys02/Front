@@ -141,7 +141,9 @@ export const usePlanListByUser = (
 
   const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
-    query: params,
+    queryData: {
+      query: params,
+    },
     enabled: !IS_MOCK,
     select: (res: ApiOk<MyPlanListResponseDto>) => res.body,
   });
@@ -164,7 +166,9 @@ export const usePlanList = (
 
   const real = tsr.plan.list.useQuery({
     queryKey: key,
-    query: params,
+    queryData: {
+      query: params,
+    },
     enabled: !IS_MOCK,
     select: (res: ApiOk<PlanListResponseDto>) => res.body,
   });

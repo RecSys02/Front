@@ -18,6 +18,12 @@ import Planner from "@/app/(my)/_components/myplan-section/item/planner";
 
 type NavKey = "place" | "schedule";
 
+type PlaceRef = {
+  placeId: number;
+  category: string;
+  province: string;
+};
+
 const PlanDetailPage = () => {
   const navigate = useNavigate();
   const { planId } = useParams({ strict: false }) as { planId: string };
@@ -29,19 +35,33 @@ const PlanDetailPage = () => {
     isError,
   } = useReadPlan(Number.isFinite(id) ? id : null);
 
-  const placeIds = useMemo(() => {
+  const placeRefs = useMemo((): PlaceRef[] => {
     const schedule = content?.schedule ?? [];
-    const ids = schedule.flatMap((d) => d.activities.map((a) => a.placeId));
-    return Array.from(new Set(ids));
+
+    const refs = schedule.flatMap((d) =>
+      d.activities.map((a) => ({
+        placeId: a.placeId,
+        category: a.category,
+        province: a.province,
+      })),
+    );
+
+    const map = new Map<string, PlaceRef>();
+    refs.forEach((r) => {
+      const k = `${r.placeId}:${r.category}:${r.province}`;
+      if (!map.has(k)) map.set(k, r);
+    });
+
+    return Array.from(map.values());
   }, [content]);
 
-  usePrefetchPlaces(placeIds);
+  usePrefetchPlaces(placeRefs);
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeNav, setActiveNav] = useState<NavKey>("place");
 
   const hasPrev = activeIndex > 0;
-  const hasNext = activeIndex < placeIds.length - 1;
+  const hasNext = activeIndex < placeRefs.length - 1;
 
   const handlePrev = () => {
     if (!hasPrev) return;
@@ -89,6 +109,8 @@ const PlanDetailPage = () => {
       </Column>
     );
   }
+
+  const activePlace = placeRefs[activeIndex];
 
   return (
     <Column className="w-full max-w-240 mx-auto px-6 py-24 gap-2">
@@ -155,13 +177,15 @@ const PlanDetailPage = () => {
 
       <div ref={placeSectionRef} className="scroll-mt-24" />
 
-      {placeIds.length > 0 ? (
+      {placeRefs.length > 0 && activePlace ? (
         <Column className="w-full gap-4 min-h-0">
           <div className="w-full">
             <PlaceSlide
-              placeId={placeIds[activeIndex]}
+              placeId={activePlace.placeId}
+              category={activePlace.category}
+              province={activePlace.province}
               index={activeIndex}
-              total={placeIds.length}
+              total={placeRefs.length}
               onPrev={handlePrev}
               onNext={handleNext}
               hasPrev={hasPrev}
