@@ -18,45 +18,17 @@ import { ApiOk } from "@/types/util.type";
 import { MOCK_CREATE_PLAN, MOCK_PLAN, MOCK_POPULAR } from "./hook.mock";
 import { Plan } from "@/types/plan/plan.type";
 import { toast } from "sonner";
-import { planKeys, SearchFilterDTO } from "./hook.keys";
 
 const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 
-const invalidatePublicPlans = (qc: ReturnType<typeof useQueryClient>) => {
-  qc.invalidateQueries({ queryKey: planKeys.listRoot() });
-  qc.invalidateQueries({ queryKey: planKeys.popularRoot() });
+export type SearchFilterDTO = { from: string; to: string };
 
-  qc.refetchQueries({ queryKey: planKeys.listRoot(), type: "all" });
-  qc.refetchQueries({ queryKey: planKeys.popularRoot(), type: "all" });
-};
-
-const invalidateMyPlans = (qc: ReturnType<typeof useQueryClient>) => {
-  qc.invalidateQueries({ queryKey: planKeys.byUserRoot() });
-  qc.refetchQueries({ queryKey: planKeys.byUserRoot(), type: "all" });
-};
-
-const invalidatePlanDetail = (
-  qc: ReturnType<typeof useQueryClient>,
-  planId: number,
-) => {
-  qc.invalidateQueries({ queryKey: planKeys.detail(planId) });
-  qc.refetchQueries({ queryKey: planKeys.detail(planId), type: "all" });
-};
-
-const mapArray = <T>(data: T, fn: (x: any) => any): T => {
-  if (!Array.isArray(data)) return data;
-  return data.map(fn) as unknown as T;
-};
-
-const patchPlan = (p: any, planId: number, patch: (x: any) => any) => {
-  if (!p || typeof p !== "object") return p;
-  if (p.id !== planId) return p;
-  return patch(p);
-};
-
-const filterArray = (data: any, pred: (x: any) => boolean) => {
-  if (!Array.isArray(data)) return data;
-  return data.filter(pred);
+export const planKeys = {
+  popular: () => ["plan", "popular"] as const,
+  list: (params?: SearchFilterDTO) => ["plan", "list", params ?? null] as const,
+  byUser: (params?: SearchFilterDTO) =>
+    ["plan", "byUser", params ?? null] as const,
+  detail: (planId: number | null) => ["plan", "detail", planId] as const,
 };
 
 export const usePopular = () => {
@@ -97,29 +69,22 @@ export const useCreatePlan = () => {
   };
 
   const onSuccess = (res: ApiOk<CreatePlanResponseDto>) => {
-    invalidatePublicPlans(queryClient);
-    invalidateMyPlans(queryClient);
-    invalidatePlanDetail(queryClient, res.body.id);
+    queryClient.refetchQueries({ queryKey: ["plan"], type: "all" });
     navigateToPlan(res.body.id);
   };
 
-  const real = tsr.plan.create.useMutation({
-    onSuccess,
-    onError,
-  });
+  const real = tsr.plan.create.useMutation({ onSuccess, onError });
 
   const mock = useMutation<
     ApiOk<CreatePlanResponseDto>,
     Error,
     { body: CreatePlanRequestDto }
   >({
-    mutationFn: async () => {
-      return {
-        status: 200,
-        body: { id: 1 },
-        headers: new Headers(),
-      };
-    },
+    mutationFn: async () => ({
+      status: 200,
+      body: { id: 1 },
+      headers: new Headers(),
+    }),
     onSuccess,
     onError,
   });
@@ -134,9 +99,7 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
   const real = tsr.plan.read.useQuery({
     queryKey: key,
     enabled: enabled && !IS_MOCK,
-    queryData: {
-      params: { planId: planId as number },
-    },
+    queryData: { params: { planId: planId as number } },
     placeholderData: keepPreviousData,
     select: (res: ApiOk<Plan>) => res.body,
   });
@@ -176,9 +139,7 @@ export const usePlanListByUser = (
 
   const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
-    queryData: {
-      query: params,
-    },
+    queryData: { query: params },
     enabled: !IS_MOCK,
     placeholderData: keepPreviousData,
     select: (res: ApiOk<MyPlanListResponseDto>) => res.body,
@@ -203,9 +164,7 @@ export const usePlanList = (
 
   const real = tsr.plan.list.useQuery({
     queryKey: key,
-    queryData: {
-      query: params,
-    },
+    queryData: { query: params },
     enabled: !IS_MOCK,
     placeholderData: keepPreviousData,
     select: (res: ApiOk<PlanListResponseDto>) => res.body,
@@ -215,7 +174,7 @@ export const usePlanList = (
     queryKey: key,
     enabled: IS_MOCK,
     placeholderData: keepPreviousData,
-    queryFn: async (): Promise<PlanListResponseDto> => {
+    queryFn: async () => {
       return Array.from({ length: 18 }).map((_, idx) => {
         const p = MOCK_POPULAR[idx % MOCK_POPULAR.length];
         return {
@@ -240,39 +199,15 @@ export const usePlanList = (
 export const useRemovePlan = () => {
   const queryClient = useQueryClient();
 
-  const onSuccess = (
-    _res: ApiOk<void>,
-    vars: { params: { planId: number } },
-  ) => {
-    const planId = vars.params.planId;
-
-    queryClient.setQueriesData({ queryKey: planKeys.byUserRoot() }, (old) =>
-      filterArray(old, (p: any) => p?.id !== planId),
-    );
-
-    queryClient.setQueriesData({ queryKey: planKeys.listRoot() }, (old) =>
-      filterArray(old, (p: any) => p?.id !== planId),
-    );
-
-    queryClient.setQueriesData({ queryKey: planKeys.popularRoot() }, (old) =>
-      filterArray(old, (p: any) => p?.id !== planId),
-    );
-
-    queryClient.setQueryData(planKeys.detail(planId), undefined);
-
-    invalidatePublicPlans(queryClient);
-    invalidateMyPlans(queryClient);
-    invalidatePlanDetail(queryClient, planId);
-
+  const onSuccess = () => {
+    queryClient.refetchQueries({ queryKey: ["plan"], type: "all" });
     toast.success("여행 계획이 삭제되었습니다.");
   };
 
-  const real = tsr.plan.remove.useMutation({
-    onSuccess,
-  });
+  const real = tsr.plan.remove.useMutation({ onSuccess });
 
   const mock = useMutation<ApiOk<void>, Error, { params: { planId: number } }>({
-    mutationFn: async (): Promise<ApiOk<void>> => ({
+    mutationFn: async () => ({
       status: 200,
       body: undefined,
       headers: new Headers(),
@@ -286,44 +221,8 @@ export const useRemovePlan = () => {
 export const usePlanVisibility = () => {
   const queryClient = useQueryClient();
 
-  const onSuccess = (
-    _res: ApiOk<void>,
-    vars: {
-      params: { planId: number };
-      query: { isPrivate: boolean };
-      body: undefined;
-    },
-  ) => {
-    const planId = vars.params.planId;
-    const isPrivate = vars.query.isPrivate;
-
-    queryClient.setQueriesData({ queryKey: planKeys.byUserRoot() }, (old) =>
-      mapArray(old, (p: any) =>
-        patchPlan(p, planId, (x) => ({ ...x, isPrivate })),
-      ),
-    );
-
-    queryClient.setQueriesData({ queryKey: planKeys.listRoot() }, (old) =>
-      mapArray(old, (p: any) =>
-        patchPlan(p, planId, (x) => ({ ...x, isPrivate })),
-      ),
-    );
-
-    queryClient.setQueriesData({ queryKey: planKeys.popularRoot() }, (old) =>
-      mapArray(old, (p: any) =>
-        patchPlan(p, planId, (x) => ({ ...x, isPrivate })),
-      ),
-    );
-
-    queryClient.setQueryData(planKeys.detail(planId), (old: any) => {
-      if (!old) return old;
-      if (old.id !== planId) return old;
-      return { ...old, isPrivate };
-    });
-
-    invalidatePublicPlans(queryClient);
-    invalidateMyPlans(queryClient);
-    invalidatePlanDetail(queryClient, planId);
+  const onSuccess = () => {
+    queryClient.refetchQueries({ queryKey: ["plan"], type: "all" });
   };
 
   const real = tsr.plan.visibility.useMutation({ onSuccess });
@@ -337,7 +236,7 @@ export const usePlanVisibility = () => {
       body: undefined;
     }
   >({
-    mutationFn: async (): Promise<ApiOk<void>> => ({
+    mutationFn: async () => ({
       status: 200,
       body: undefined,
       headers: new Headers(),
@@ -348,100 +247,27 @@ export const usePlanVisibility = () => {
   return IS_MOCK ? mock : real;
 };
 
-export type ToggleLikeProps = {
-  planId: number;
-  like: boolean;
-};
+export type ToggleLikeProps = { planId: number; like: boolean };
 
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
-  console.log("QC", queryClient);
-  console.log(
-    "Active queries",
-    queryClient
-      .getQueryCache()
-      .getAll()
-      .map((q) => q.queryKey),
-  );
-  const applyLikePatch = (planId: number, nextLiked: boolean) => {
-    const patch = (x: any) => {
-      const prevLiked =
-        (typeof x.isLiked === "boolean" && x.isLiked) ||
-        (typeof x.liked === "boolean" && x.liked) ||
-        false;
 
-      const delta = prevLiked === nextLiked ? 0 : nextLiked ? 1 : -1;
-      const nextCount =
-        typeof x.likeCount === "number"
-          ? Math.max(0, x.likeCount + delta)
-          : x.likeCount;
-
-      const base = { ...x, likeCount: nextCount };
-      if ("isLiked" in base) base.isLiked = nextLiked;
-      if ("liked" in base) base.liked = nextLiked;
-      return base;
-    };
-
-    queryClient.setQueriesData({ queryKey: planKeys.byUserRoot() }, (old) =>
-      mapArray(old, (p: any) => patchPlan(p, planId, patch)),
-    );
-
-    queryClient.setQueriesData({ queryKey: planKeys.listRoot() }, (old) =>
-      mapArray(old, (p: any) => patchPlan(p, planId, patch)),
-    );
-
-    queryClient.setQueriesData({ queryKey: planKeys.popularRoot() }, (old) =>
-      mapArray(old, (p: any) => patchPlan(p, planId, patch)),
-    );
-
-    queryClient.setQueryData(planKeys.detail(planId), (old: any) => {
-      if (!old) return old;
-      if (old.id !== planId) return old;
-      return patch(old);
-    });
+  const after = () => {
+    queryClient.refetchQueries({ queryKey: ["plan", "list"], type: "all" });
+    queryClient.refetchQueries({ queryKey: ["plan", "popular"], type: "all" });
   };
 
-  const after = (planId: number) => {
-    invalidatePlanDetail(queryClient, planId);
-    invalidatePublicPlans(queryClient);
-    invalidateMyPlans(queryClient);
-  };
-
-  const like = tsr.plan.like.useMutation({
-    onMutate: async (vars: { params: { planId: number }; body: undefined }) => {
-      applyLikePatch(vars.params.planId, true);
-    },
-    onSuccess: (_res: ApiOk<void>, vars: { params: { planId: number } }) => {
-      after(vars.params.planId);
-    },
-  });
-
-  const unlike = tsr.plan.unlike.useMutation({
-    onMutate: async (vars: { params: { planId: number }; body: undefined }) => {
-      applyLikePatch(vars.params.planId, false);
-    },
-    onSuccess: (_res: ApiOk<void>, vars: { params: { planId: number } }) => {
-      after(vars.params.planId);
-    },
-  });
-
-  const mutate = (vars: ToggleLikeProps) => {
-    if (vars.like) {
-      like.mutate({
-        params: { planId: vars.planId },
-        body: undefined,
-      });
-      return;
-    }
-
-    unlike.mutate({
-      params: { planId: vars.planId },
-      body: undefined,
-    });
-  };
+  const like = tsr.plan.like.useMutation({ onSuccess: after });
+  const unlike = tsr.plan.unlike.useMutation({ onSuccess: after });
 
   return {
-    mutate,
+    mutate: (vars: ToggleLikeProps) => {
+      if (vars.like) {
+        like.mutate({ params: { planId: vars.planId }, body: undefined });
+      } else {
+        unlike.mutate({ params: { planId: vars.planId }, body: undefined });
+      }
+    },
     isPending: like.isPending || unlike.isPending,
   };
 };
