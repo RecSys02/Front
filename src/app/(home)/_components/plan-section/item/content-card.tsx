@@ -22,7 +22,7 @@ const ContentCard = ({ content }: Props) => {
   const handleLikeToggle = (e: React.MouseEvent<SVGSVGElement>) => {
     e.preventDefault();
     e.stopPropagation();
-
+    
     if (toggleLike.isPending) return;
 
     toggleLike.mutate({

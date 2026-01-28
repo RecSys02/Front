@@ -20,31 +20,26 @@ export const useReadPlace = (
 ): UseQueryResult<PlaceDto> => {
   const key = placeReadKey(placeId, query.category, query.province);
 
-  const real = tsr.place.read.useQuery({
-    queryKey: key,
-    queryData: {
-      params: { placeId },
-      query,
-    },
-    enabled:
-      !IS_MOCK &&
-      typeof placeId === "number" &&
-      !!query.category &&
-      !!query.province,
-    select: (res: ApiOk<PlaceDto>) => res.body,
+  const real = useQuery({
+    ...tsr.place.read.queryOptions({
+      queryKey: key,
+      queryData: {
+        params: { placeId },
+        query: { category: query.category, province: query.province },
+      },
+      select: (res: ApiOk<PlaceDto>) => res.body,
+      staleTime: 1000 * 60 * 5,
+    }),
+    enabled: !IS_MOCK,
   });
 
   const mock = useQuery<PlaceDto>({
     queryKey: key,
-    enabled:
-      IS_MOCK &&
-      typeof placeId === "number" &&
-      !!query.category &&
-      !!query.province,
+    enabled: IS_MOCK,
     queryFn: async () => MOCK_PLACE,
   });
 
-  return IS_MOCK ? mock : real;
+  return IS_MOCK ? mock : (real as unknown as UseQueryResult<PlaceDto>);
 };
 
 export const usePrefetchPlaces = (
@@ -75,8 +70,8 @@ export const usePrefetchPlaces = (
           params: { placeId },
           query: { category, province },
         },
-        staleTime: 1000 * 60 * 5,
         select: (res: ApiOk<PlaceDto>) => res.body,
+        staleTime: 1000 * 60 * 5,
       });
 
       qc.prefetchQuery(opts);
