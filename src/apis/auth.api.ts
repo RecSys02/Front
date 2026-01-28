@@ -3,6 +3,7 @@ import {
   AuthTokenResponseSchema,
   AvailabilityResponseSchema,
 } from "@/types/auth/auth.type";
+import { EmptySchema } from "@/types/util.type";
 import { initContract } from "@ts-rest/core";
 import { z } from "zod";
 
@@ -24,15 +25,15 @@ export const authApi = c.router(
     signout: {
       method: "POST",
       path: "/logout",
-      body: z.void(),
+      body: EmptySchema,
       responses: {
-        200: z.void(),
+        200: EmptySchema,
       },
     },
     reissue: {
       method: "POST",
       path: "/reissue",
-      body: z.void(),
+      body: EmptySchema,
       responses: {
         200: AuthTokenResponseSchema,
       },
@@ -62,7 +63,7 @@ export const authApi = c.router(
       path: "/join",
       body: CreateUserSchema,
       responses: {
-        200: z.void(),
+        200: EmptySchema,
       },
     },
   },
