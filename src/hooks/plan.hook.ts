@@ -25,10 +25,14 @@ const IS_MOCK = import.meta.env.VITE_USE_MOCK === "true";
 const invalidatePublicPlans = (qc: ReturnType<typeof useQueryClient>) => {
   qc.invalidateQueries({ queryKey: planKeys.listRoot() });
   qc.invalidateQueries({ queryKey: planKeys.popularRoot() });
+
+  qc.refetchQueries({ queryKey: planKeys.listRoot(), type: "all" });
+  qc.refetchQueries({ queryKey: planKeys.popularRoot(), type: "all" });
 };
 
 const invalidateMyPlans = (qc: ReturnType<typeof useQueryClient>) => {
   qc.invalidateQueries({ queryKey: planKeys.byUserRoot() });
+  qc.refetchQueries({ queryKey: planKeys.byUserRoot(), type: "all" });
 };
 
 const invalidatePlanDetail = (
@@ -36,6 +40,7 @@ const invalidatePlanDetail = (
   planId: number,
 ) => {
   qc.invalidateQueries({ queryKey: planKeys.detail(planId) });
+  qc.refetchQueries({ queryKey: planKeys.detail(planId), type: "all" });
 };
 
 const mapArray = <T>(data: T, fn: (x: any) => any): T => {
@@ -350,7 +355,14 @@ export type ToggleLikeProps = {
 
 export const useTogglePlanLike = () => {
   const queryClient = useQueryClient();
-
+  console.log("QC", queryClient);
+  console.log(
+    "Active queries",
+    queryClient
+      .getQueryCache()
+      .getAll()
+      .map((q) => q.queryKey),
+  );
   const applyLikePatch = (planId: number, nextLiked: boolean) => {
     const patch = (x: any) => {
       const prevLiked =
