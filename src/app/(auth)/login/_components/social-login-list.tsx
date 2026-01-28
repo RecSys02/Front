@@ -4,6 +4,7 @@ import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
 import { Border } from "@/components/ui/border";
 import NaverIconPng from "@/assets/logos/naver.png";
+import { toast } from "sonner";
 
 const SocialLoginList = () => {
   return (
@@ -16,12 +17,17 @@ const SocialLoginList = () => {
         <Border direction="horizontal" />
       </Row>
       <Row className="gap-4 mt-7.5 justify-center">
-        <GoogleIcon className="text-gray-300 cursor-pointer size-10" />
-        <img
-          src={NaverIconPng}
-          alt="naver login"
-          className="size-10 cursor-pointer"
+        <GoogleIcon
+          onClick={() => toast.error("준비중입니다.")}
+          className="text-gray-300 cursor-pointer size-10"
         />
+        <a href="http://43.200.93.100:8000/core/oauth2/authorization/naver">
+          <img
+            src={NaverIconPng}
+            alt="naver login"
+            className="size-10 cursor-pointer"
+          />
+        </a>
       </Row>
     </Column>
   );

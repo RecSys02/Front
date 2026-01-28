@@ -15,6 +15,7 @@ import ModelSpotPage from "./app/(model)/spot/page";
 import ModelPlanPage from "./app/(model)/plan/page";
 import PlanPage from "./app/plans/page";
 import PlanDetailPage from "./app/plans/[planId]/page";
+import OauthCallbackPage from "./app/(auth)/oauth/page";
 
 const rootRoute = createRootRoute({ component: App });
 
@@ -28,6 +29,12 @@ const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: ROUTES.Login,
   component: LoginPage,
+});
+
+const oauthCallbackRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: ROUTES.OauthCallback,
+  component: OauthCallbackPage,
 });
 
 const registerRoute = createRoute({
@@ -92,6 +99,7 @@ const routeTree = rootRoute.addChildren([
   modelTree,
   planRoute,
   planDetailRoute,
+  oauthCallbackRoute,
 ]);
 
 export const router = createRouter({ routeTree });
