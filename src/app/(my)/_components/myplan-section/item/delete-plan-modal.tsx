@@ -11,14 +11,19 @@ type Props = {
 };
 
 const DeletePlanModal = ({ open, onOpenChange, planId }: Props) => {
-  const removePlan = useRemovePlan(planId);
+  const removePlan = useRemovePlan();
   const isLoading = removePlan.isPending;
 
   const handleDelete = () => {
-    removePlan.mutate();
-    onOpenChange(false);
+    removePlan.mutate(
+      { planId },
+      {
+        onSuccess: () => {
+          onOpenChange(false);
+        },
+      },
+    );
   };
-
   return (
     <Modal
       open={open}

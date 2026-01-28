@@ -198,7 +198,7 @@ export const usePlanList = (
   return IS_MOCK ? mock : real;
 };
 
-export const useRemovePlan = (planId: number) => {
+export const useRemovePlan = () => {
   const queryClient = useQueryClient();
 
   const onSuccess = () => {
@@ -206,8 +206,8 @@ export const useRemovePlan = (planId: number) => {
     toast.success("여행 계획이 삭제되었습니다.");
   };
 
-  const real = useMutation<ApiOk<void>, Error, void>({
-    mutationFn: async () => {
+  const real = useMutation<ApiOk<void>, Error, { planId: number }>({
+    mutationFn: async ({ planId }) => {
       return tsr.plan.remove.mutation({
         params: { planId },
       });
@@ -215,7 +215,7 @@ export const useRemovePlan = (planId: number) => {
     onSuccess,
   });
 
-  const mock = useMutation<ApiOk<void>, Error, void>({
+  const mock = useMutation<ApiOk<void>, Error, { planId: number }>({
     mutationFn: async (): Promise<ApiOk<void>> => ({
       status: 200,
       body: undefined,
@@ -263,13 +263,18 @@ export const useTogglePlanLike = () => {
   const onSuccess = () => invalidateAllPlans(queryClient);
 
   const real = useMutation<ApiOk<void>, Error, ToggleLikeProps>({
-    mutationFn: async (props: ToggleLikeProps): Promise<ApiOk<void>> => {
+    mutationFn: async (props) => {
+      console.log("MUTATION FN RUN", props);
+
       if (props.like) {
+        console.log("CALL like.mutation");
         return tsr.plan.like.mutation({
           params: { planId: props.planId },
           body: undefined,
         });
       }
+
+      console.log("CALL unlike.mutation");
       return tsr.plan.unlike.mutation({
         params: { planId: props.planId },
         body: undefined,
