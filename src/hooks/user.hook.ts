@@ -46,7 +46,7 @@ export const useUserMe = () => {
   });
 
   const mock = useQuery<UserMeDto>({
-    queryKey: QK.me(),
+    queryKey: QK.meMock(),
     enabled: enabled && IS_MOCK,
     queryFn: async () => ({ userName: "MOCKUSER", userImg: null }),
     staleTime: 60_000,
@@ -95,6 +95,11 @@ export const useRename = () => {
     const nextName = vars.body.userName;
 
     queryClient.setQueryData<UserMeDto>(QK.me(), (prev) => ({
+      ...(prev ?? { userImg: null, userName: nextName }),
+      userName: nextName,
+    }));
+
+    queryClient.setQueryData<UserMeDto>(QK.meMock(), (prev) => ({
       ...(prev ?? { userImg: null, userName: nextName }),
       userName: nextName,
     }));
