@@ -1,4 +1,4 @@
-import { PROVINCE_CODE_MAP } from "@/constants/region.type";
+import { PROVINCE_CODE_MAP, PROVINCE_NAME_MAP } from "@/constants/region.type";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -20,4 +20,10 @@ export const toYYYYMMDD = (v: Date | string | null | undefined) => {
 export const resolveProvinceCode = (provinceLabel: string | null) => {
   if (!provinceLabel) return null;
   return PROVINCE_CODE_MAP[provinceLabel] ?? null;
+};
+
+export const mapProvinceToKorean = (province?: string | null): string => {
+  if (!province) return "";
+
+  return PROVINCE_NAME_MAP[province] ?? province;
 };

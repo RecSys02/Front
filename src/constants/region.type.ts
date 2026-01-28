@@ -18,6 +18,10 @@ export const PROVINCE_CODE_MAP: Record<string, string> = {
   제주특별자치도: "JEJU",
 };
 
+export const PROVINCE_NAME_MAP: Record<string, string> = Object.fromEntries(
+  Object.entries(PROVINCE_CODE_MAP).map(([ko, en]) => [en, ko]),
+);
+
 export const KOREA_REGIONS: Record<string, string[]> = {
   강원특별자치도: [
     "강릉시",
