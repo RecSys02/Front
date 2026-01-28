@@ -1,119 +1,111 @@
 import { useMemo, useState } from "react";
 import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
-import { usePlanList } from "@/hooks/plan.hook";
-import PreviewCard from "./_components/privew-card";
-import { Button } from "@/components/common/button/button";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PlusIcon } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import Body from "@/components/text/body";
-import Heading from "@/components/text/heading";
-import { useNavigate } from "@tanstack/react-router";
-import { ROUTES } from "@/constants/routes";
+import { Spinner } from "@/components/ui/spinner";
+import PlaceSlide from "./_components/place-slide";
+import { useReadPlan } from "@/hooks/plan.hook";
+import { usePrefetchPlaces } from "@/hooks/place.hook";
+import { useParams } from "@tanstack/react-router";
 
-type SortKey = "default" | "popular";
+type PlaceRef = {
+  placeId: number;
+  category: string;
+  province: string;
+};
 
-const PAGE_SIZE = 12;
+const ModelPlanPage = () => {
+  const { planId } = useParams({ strict: false }) as { planId: string };
+  const id = Number(planId);
 
-const PlanPage = () => {
-  const { data: contents, isLoading } = usePlanList();
-  const navigate = useNavigate();
-  const [sort, setSort] = useState<SortKey>("default");
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const {
+    data: content,
+    isLoading,
+    isError,
+  } = useReadPlan(Number.isFinite(id) ? id : null);
 
-  const sorted = useMemo(() => {
-    const list = contents ?? [];
-    if (sort === "popular") return list;
-    return list;
-  }, [contents, sort]);
+  const placeRefs = useMemo((): PlaceRef[] => {
+    const schedule = content?.schedule ?? [];
 
-  const visible = useMemo(
-    () => sorted.slice(0, visibleCount),
-    [sorted, visibleCount],
-  );
+    const refs = schedule.flatMap((d) =>
+      d.activities.map((a) => ({
+        placeId: a.placeId,
+        category: a.category,
+        province: a.province,
+      })),
+    );
 
-  const hasMore = visibleCount < (sorted?.length ?? 0);
+    const map = new Map<string, PlaceRef>();
+    refs.forEach((r) => {
+      const k = `${r.placeId}:${r.category}:${r.province}`;
+      if (!map.has(k)) map.set(k, r);
+    });
 
-  const handleChangeSort = (next: SortKey) => {
-    setSort(next);
-    setVisibleCount(PAGE_SIZE);
+    return Array.from(map.values());
+  }, [content]);
+
+  usePrefetchPlaces(placeRefs);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const hasPrev = activeIndex > 0;
+  const hasNext = activeIndex < placeRefs.length - 1;
+
+  const handlePrev = () => {
+    if (!hasPrev) return;
+    setActiveIndex((p) => p - 1);
   };
 
-  const isEmpty = !isLoading && (contents?.length ?? 0) === 0;
+  const handleNext = () => {
+    if (!hasNext) return;
+    setActiveIndex((p) => p + 1);
+  };
+
+  if (isLoading) {
+    return (
+      <Column className="w-full h-[70vh] items-center justify-center">
+        <Spinner className="size-12" />
+      </Column>
+    );
+  }
+
+  if (isError || !content) {
+    return (
+      <Column className="w-full h-[60vh] items-center justify-center">
+        <Body variant="body2" className="fc-gray-600">
+          플랜 정보를 불러오지 못했습니다.
+        </Body>
+      </Column>
+    );
+  }
+
+  const activePlace = placeRefs[activeIndex];
 
   return (
-    <Column className="flex-1">
-      <Column className="w-full max-w-274 mx-auto px-6 py-12 gap-8">
-        <Row className="justify-between items-center pl-4">
-          <Tabs
-            value={sort}
-            onValueChange={(v) => handleChangeSort(v as SortKey)}
-          >
-            <TabsList className="h-11 rounded-full px-1">
-              <TabsTrigger
-                value="default"
-                className="h-9 rounded-full px-6 text-base cursor-pointer data-[state=active]:bg-[#1A6E3D] data-[state=active]:text-white"
-              >
-                최신순
-              </TabsTrigger>
-              <TabsTrigger
-                value="popular"
-                disabled
-                className="h-9 rounded-full px-6 text-base cursor-pointer data-[state=active]:bg-[#1A6E3D] data-[state=active]:text-white"
-              >
-                인기순
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+    <Column className="w-full">
+      {placeRefs.length > 0 && activePlace ? (
+        <Row className="w-full justify-center">
+          <PlaceSlide
+            placeId={activePlace.placeId}
+            category={activePlace.category}
+            province={activePlace.province}
+            index={activeIndex}
+            total={placeRefs.length}
+            onPrev={handlePrev}
+            onNext={handleNext}
+            hasPrev={hasPrev}
+            hasNext={hasNext}
+          />
         </Row>
-
-        {isLoading ? (
-          <Row className="w-full items-center justify-center py-20">
-            <Spinner className="size-10" />
-          </Row>
-        ) : isEmpty ? (
-          <Column className="w-full py-20 items-center justify-center gap-2 h-140">
-            <Heading variant="heading2" className="fc-gray-500">
-              아직 공개된 여행 플랜이 없습니다.
-            </Heading>
-            <Body variant="body1" className="fc-gray-400">
-              AI 추천으로 첫 번째 플랜을 만들어보세요.
-            </Body>
-            <Button
-              className="mt-4 px-10 h-12 rounded-full bg-emphasis text-white text-[16px] font-bold hover:opacity-90"
-              onClick={() => {
-                navigate({ to: ROUTES.ModelContext });
-              }}
-            >
-              AI 여행 추천 받기
-            </Button>
-          </Column>
-        ) : (
-          <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 justify-items-center">
-              {visible.map((content, idx) => (
-                <PreviewCard key={`${content.name}-${idx}`} content={content} />
-              ))}
-            </div>
-
-            {hasMore && (
-              <Row className="justify-center pt-2">
-                <Button
-                  variant="outline"
-                  className="w-29 h-11 rounded-3xl text-body2 border-gray-500 fc-gray-800"
-                  onClick={() => setVisibleCount((prev) => prev + PAGE_SIZE)}
-                >
-                  더보기
-                  <PlusIcon />
-                </Button>
-              </Row>
-            )}
-          </>
-        )}
-      </Column>
+      ) : (
+        <Column className="rounded-lg border p-6 items-center justify-center">
+          <Body variant="body2" className="fc-gray-600">
+            등록된 장소가 없습니다.
+          </Body>
+        </Column>
+      )}
     </Column>
   );
 };
 
-export default PlanPage;
+export default ModelPlanPage;
