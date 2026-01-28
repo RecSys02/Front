@@ -77,6 +77,7 @@ export const useAutoModelResult = (args: {
       region,
       companion: input.companion ?? undefined,
       budget: input.budget,
+      accomAddress: input.address,
       selectedPlaces: [],
       historyPlaces: [],
     };
