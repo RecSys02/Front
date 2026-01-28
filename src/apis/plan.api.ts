@@ -38,7 +38,7 @@ export const planApi = c.router(
         planId: z.number(),
       }),
       responses: {
-        200: z.void(),
+        200: z.unknown(),
       },
     },
     visibility: {
@@ -52,7 +52,7 @@ export const planApi = c.router(
       }),
       body: z.void(),
       responses: {
-        200: z.void(),
+        200: z.unknown(),
       },
     },
     like: {
@@ -63,7 +63,7 @@ export const planApi = c.router(
       }),
       body: z.void(),
       responses: {
-        200: z.void(),
+        200: z.unknown(),
       },
     },
     unlike: {
@@ -74,7 +74,7 @@ export const planApi = c.router(
       }),
       body: z.void(),
       responses: {
-        200: z.void(),
+        200: z.unknown(),
       },
     },
     popular: {
