@@ -8,7 +8,7 @@ import { PlaceDto } from "@/types/place/place.type";
 export const MOCK_POPULAR: PopularPlanCardDto[] = [
   {
     id: 1,
-    name: "제주도 3박 4일",
+    name: "제주도 3박 4일제주도 3박 4일제주도 3박 4일제주도 3박 4일",
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 120,
     isActive: true,
@@ -62,7 +62,7 @@ export const MOCK_CREATE_PLAN = {
       date: "2026-01-02",
       activities: [
         {
-          name: "성수 카페",
+          name: "성수 카페성수 카페성수 카페성수 카페성수 카페성수 카페성수 카페",
           placeId: 1,
           category: "CAFE",
           province: "종로구",

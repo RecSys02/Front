@@ -22,7 +22,7 @@ const ContentCard = ({ content }: Props) => {
   const handleLikeToggle = (e: React.MouseEvent<SVGSVGElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    
+
     if (toggleLike.isPending) return;
 
     toggleLike.mutate({
@@ -51,33 +51,36 @@ const ContentCard = ({ content }: Props) => {
         />
       </div>
 
-      <Row className="w-140 h-15 items-center pt-6 px-2.5">
-        <Row className="w-37.5 shrink-0 h-full gap-3 items-center justify-between pr-3">
+      <div className="w-140 h-15 pt-6 px-2.5 grid grid-cols-[150px_1fr_auto] items-center gap-3">
+        {/* LEFT */}
+        <Row className="w-full h-full gap-3 items-center justify-between pr-3">
           <Body variant="body3" className="w-fit font-medium">
             POPULAR
           </Body>
           <Border className="w-full" />
         </Row>
 
+        {/* TITLE (ellipsis) */}
         <Heading
           variant="heading2"
-          className="w-full flex items-center font-bold fc-gray-800 line-clamp-1 mr-10"
+          className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap font-bold fc-gray-800"
         >
           {content.name}
         </Heading>
 
-        <Row className="w-16 shrink-0 gap-3 justify-start items-center">
+        {/* RIGHT (fixed, never shrink) */}
+        <Row className="flex-none shrink-0 items-center gap-3 justify-end">
           <HeartIcon
             onClick={handleLikeToggle}
-            className={`w-6 h-6 text-red-500 hover:scale-110 cursor-pointer transition-transform ${
+            className={`w-6 h-6 shrink-0 text-red-500 hover:scale-110 cursor-pointer transition-transform ${
               content.isActive ? "fill-red-500" : "fill-transparent"
             }`}
           />
-          <Body variant="body2" className="w-fit fc-gray-800 font-semibold">
+          <Body variant="body2" className="shrink-0 fc-gray-800 font-semibold">
             {content.likeCount > 99 ? "99+" : content.likeCount}
           </Body>
         </Row>
-      </Row>
+      </div>
 
       <Row className="pl-40 py-2.5 gap-x-3 gap-y-1.5 w-140 flex-wrap">
         {content.tags.map((tag, i) => (
