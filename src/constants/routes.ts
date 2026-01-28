@@ -16,6 +16,7 @@ const ROUTES = {
   PlanDetail: "/plans/$planId",
   Register: "/register",
   Login: "/login",
+  OauthCallback: "/oauth",
   My: "/my",
 };
 
