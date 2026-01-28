@@ -4,7 +4,6 @@ import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
 import { Spinner } from "@/components/ui/spinner";
 import { useReadPlan } from "@/hooks/plan.hook";
-import { usePrefetchPlaces } from "@/hooks/place.hook";
 import { useParams } from "@tanstack/react-router";
 import PlaceSlide from "@/app/plans/_components/place-slide";
 
@@ -26,30 +25,24 @@ const ModelPlanPage = () => {
 
   const placeRefs = useMemo((): PlaceRef[] => {
     const schedule = content?.schedule ?? [];
-
-    const refs = schedule.flatMap((d) =>
+    return schedule.flatMap((d) =>
       d.activities.map((a) => ({
         placeId: a.placeId,
         category: a.category,
         province: a.province,
       })),
     );
-
-    const map = new Map<string, PlaceRef>();
-    refs.forEach((r) => {
-      const k = `${r.placeId}:${r.category}:${r.province}`;
-      if (!map.has(k)) map.set(k, r);
-    });
-
-    return Array.from(map.values());
   }, [content]);
-
-  usePrefetchPlaces(placeRefs);
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const hasPrev = activeIndex > 0;
-  const hasNext = activeIndex < placeRefs.length - 1;
+  const safeIndex =
+    placeRefs.length === 0 ? 0 : Math.min(activeIndex, placeRefs.length - 1);
+
+  const activePlace = placeRefs[safeIndex];
+
+  const hasPrev = safeIndex > 0;
+  const hasNext = safeIndex < placeRefs.length - 1;
 
   const handlePrev = () => {
     if (!hasPrev) return;
@@ -60,7 +53,6 @@ const ModelPlanPage = () => {
     if (!hasNext) return;
     setActiveIndex((p) => p + 1);
   };
-
   if (isLoading) {
     return (
       <Column className="w-full h-[70vh] items-center justify-center">
@@ -78,8 +70,6 @@ const ModelPlanPage = () => {
       </Column>
     );
   }
-
-  const activePlace = placeRefs[activeIndex];
 
   return (
     <Column className="w-full">

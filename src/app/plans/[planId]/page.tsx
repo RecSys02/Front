@@ -6,7 +6,6 @@ import Body from "@/components/text/body";
 import { Spinner } from "@/components/ui/spinner";
 import PlaceSlide from "../_components/place-slide";
 import { useReadPlan, useTogglePlanLike } from "@/hooks/plan.hook";
-import { usePrefetchPlaces } from "@/hooks/place.hook";
 import Title from "@/components/text/title";
 import { Badge } from "@/components/ui/badge/badge";
 import { HeartIcon } from "lucide-react";
@@ -55,13 +54,14 @@ const PlanDetailPage = () => {
     return Array.from(map.values());
   }, [content]);
 
-  usePrefetchPlaces(placeRefs);
-
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeNav, setActiveNav] = useState<NavKey>("place");
 
-  const hasPrev = activeIndex > 0;
-  const hasNext = activeIndex < placeRefs.length - 1;
+  const safeIndex =
+    placeRefs.length === 0 ? 0 : Math.min(activeIndex, placeRefs.length - 1);
+
+  const hasPrev = safeIndex > 0;
+  const hasNext = safeIndex < placeRefs.length - 1;
 
   const handlePrev = () => {
     if (!hasPrev) return;
@@ -112,7 +112,7 @@ const PlanDetailPage = () => {
     );
   }
 
-  const activePlace = placeRefs[activeIndex];
+  const activePlace = placeRefs[safeIndex];
 
   return (
     <Column className="w-full max-w-240 mx-auto px-6 py-24 gap-2">
@@ -186,7 +186,7 @@ const PlanDetailPage = () => {
               placeId={activePlace.placeId}
               category={activePlace.category}
               province={activePlace.province}
-              index={activeIndex}
+              index={safeIndex}
               total={placeRefs.length}
               onPrev={handlePrev}
               onNext={handleNext}
@@ -214,6 +214,7 @@ const PlanDetailPage = () => {
           <Planner schedule={content.schedule} />
         </Row>
       </Column>
+
       <Row className="w-full justify-center mt-20">
         <Button
           onClick={() => navigate({ to: ".." })}
