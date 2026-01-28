@@ -12,7 +12,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 120,
     isActive: true,
-    imgSrc: Banner1,
+    image: Banner1,
   },
   {
     id: 2,
@@ -20,7 +20,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 80,
     isActive: false,
-    imgSrc: Banner1,
+    image: Banner1,
   },
   {
     id: 3,
@@ -28,7 +28,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 75,
     isActive: false,
-    imgSrc: Banner1,
+    image: Banner1,
   },
   {
     id: 4,
@@ -36,7 +36,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 50,
     isActive: true,
-    imgSrc: Banner1,
+    image: Banner1,
   },
   {
     id: 5,
@@ -44,7 +44,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 40,
     isActive: false,
-    imgSrc: Banner1,
+    image: Banner1,
   },
   {
     id: 6,
@@ -52,7 +52,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 20,
     isActive: false,
-    imgSrc: Banner1,
+    image: Banner1,
   },
 ];
 

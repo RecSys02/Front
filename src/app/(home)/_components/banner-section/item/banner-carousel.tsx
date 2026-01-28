@@ -29,11 +29,7 @@ const BannerCarousel = ({ setIdx, setApi }: Props) => {
       <CarouselContent className="-ml-4">
         {BANNER_ITEMS.map((banner, i) => (
           <CarouselItem key={i} className="w-210 pr-8">
-            <ImageBox
-              src={banner.imgSrc}
-              className="w-full h-132"
-              fit="cover"
-            />
+            <ImageBox src={banner.image} className="w-full h-132" fit="cover" />
           </CarouselItem>
         ))}
       </CarouselContent>

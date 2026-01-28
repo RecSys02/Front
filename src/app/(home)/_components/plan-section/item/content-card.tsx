@@ -19,7 +19,12 @@ const ContentCard = ({ content }: Props) => {
   const toggleLike = useTogglePlanLike();
   const navigate = useNavigate();
 
-  const handleLikeToggle = () => {
+  const handleLikeToggle = (e: React.MouseEvent<SVGSVGElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (toggleLike.isPending) return;
+
     toggleLike.mutate({
       planId: content.id,
       like: !content.isActive,
@@ -40,7 +45,7 @@ const ContentCard = ({ content }: Props) => {
         className="cursor-pointer hover:opacity-95 transition-opacity w-fit"
       >
         <ImageBox
-          src={content.imgSrc}
+          src={content.image}
           className="w-140 h-80 overflow-hidden"
           fit="cover"
         />

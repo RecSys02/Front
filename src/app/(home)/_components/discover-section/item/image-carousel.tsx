@@ -10,7 +10,7 @@ import Row from "@/components/common/container/row";
 
 type Props = {
   items: {
-    imgSrc: string;
+    image: string;
   }[];
   currentIdx: number;
   setIdx: (index: number) => void;
@@ -42,7 +42,7 @@ export const ImageCarousel = ({
           {items.map((item, i) => (
             <CarouselItem key={i} className="w-174">
               <ImageBox
-                src={item.imgSrc}
+                src={item.image}
                 className="w-full h-88 overflow-hidden rounded-3xl bg-gray-100"
                 fit="cover"
               />

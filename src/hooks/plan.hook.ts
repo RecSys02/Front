@@ -121,7 +121,7 @@ export const useReadPlan = (planId: number | null): UseQueryResult<Plan> => {
         name: popular.name,
         province,
         isPrivate: false,
-        imgSrc: popular.imgSrc,
+        image: popular.image,
         schedule: MOCK_CREATE_PLAN.schedule,
         isActive: popular.isActive,
         likeCount: popular.likeCount,
@@ -141,7 +141,9 @@ export const usePlanListByUser = (
 
   const real = tsr.plan.listByUser.useQuery({
     queryKey: key,
-    query: params,
+    queryData: {
+      query: params,
+    },
     enabled: !IS_MOCK,
     select: (res: ApiOk<MyPlanListResponseDto>) => res.body,
   });
@@ -164,7 +166,9 @@ export const usePlanList = (
 
   const real = tsr.plan.list.useQuery({
     queryKey: key,
-    query: params,
+    queryData: {
+      query: params,
+    },
     enabled: !IS_MOCK,
     select: (res: ApiOk<PlanListResponseDto>) => res.body,
   });
@@ -181,7 +185,7 @@ export const usePlanList = (
           isPrivate: false,
           isActive: false,
           province: "서울시",
-          imgSrc: p.imgSrc,
+          image: p.image,
           schedule: MOCK_CREATE_PLAN.schedule,
           tags: p.tags,
           likeCount: p.likeCount,

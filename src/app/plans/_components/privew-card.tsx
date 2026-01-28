@@ -8,6 +8,7 @@ import { HeartIcon } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
 import { Plan } from "@/types/plan/plan.type";
+import { mapProvinceToKorean } from "@/libs/utils";
 
 type Props = {
   content: Plan;
@@ -16,6 +17,9 @@ type Props = {
 const PreviewCard = ({ content }: Props) => {
   const toggleLike = useTogglePlanLike();
   const handleLikeToggle = () => {
+    if (!content) return;
+    if (toggleLike.isPending) return;
+
     toggleLike.mutate({
       planId: content.id,
       like: !content.isActive,
@@ -26,7 +30,7 @@ const PreviewCard = ({ content }: Props) => {
     <Column className="w-fit">
       <div className="relative size-55">
         <ImageBox
-          src={content.imgSrc}
+          src={content.image}
           className="w-full h-full overflow-hidden rounded-lg"
           fit="cover"
         />
@@ -55,7 +59,7 @@ const PreviewCard = ({ content }: Props) => {
             variant="body3"
             className="min-w-0 flex-1 flex items-center font-regular fc-gray-700 truncate"
           >
-            {content.province}
+            {mapProvinceToKorean(content.province)}
           </Body>
 
           <Link
