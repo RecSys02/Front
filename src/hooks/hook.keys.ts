@@ -1,24 +1,19 @@
 export type PlanListParams = { from?: string; to?: string };
 
 export const planKeys = {
-  all: ["plans"] as const,
+  all: ["plan"] as const,
 
-  popular: () => [...planKeys.all, "popular"] as const,
+  popularRoot: () => ["plan", "popular"] as const,
+  popular: () => ["plan", "popular"] as const,
 
-  list: (params?: PlanListParams) =>
-    [
-      ...planKeys.all,
-      "list",
-      { from: params?.from ?? null, to: params?.to ?? null },
-    ] as const,
+  listRoot: () => ["plan", "list"] as const,
+  list: (params?: { from: string; to: string }) =>
+    ["plan", "list", params ?? null] as const,
 
-  byUser: (params?: PlanListParams) =>
-    [
-      ...planKeys.all,
-      "byUser",
-      { from: params?.from ?? null, to: params?.to ?? null },
-    ] as const,
+  byUserRoot: () => ["plan", "byUser"] as const,
+  byUser: (params?: { from: string; to: string }) =>
+    ["plan", "byUser", params ?? null] as const,
 
-  detail: (planId: number | null) =>
-    [...planKeys.all, "detail", planId] as const,
+  detailRoot: () => ["plan", "detail"] as const,
+  detail: (planId: number | null) => ["plan", "detail", planId] as const,
 };
