@@ -21,7 +21,7 @@ const SocialLoginList = () => {
           onClick={() => toast.error("준비중입니다.")}
           className="text-gray-300 cursor-pointer size-10"
         />
-        <a href="http://43.200.93.100:8000/core/oauth2/authorization/naver">
+        <a href="http://34.64.78.140:8000/core/oauth2/authorization/naver">
           <img
             src={NaverIconPng}
             alt="naver login"

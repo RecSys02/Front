@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useModelContext } from "../model.hook";
 import type { TabValue } from "../model.type";
 import {
@@ -39,7 +39,6 @@ const ModelSpotPage = () => {
 
   const [tab, setTab] = useState<TabValue>("tourspot");
   const [sidebarOpen, setSidebarOpen] = useState(true);
-
   const [isGeneratingReco, setIsGeneratingReco] = useState(false);
 
   const { places, activePlace } = useSpotDerived({
@@ -76,9 +75,9 @@ const ModelSpotPage = () => {
   const detailOpen = sidebarOpen && spotOverlayOpen && !!activePlace;
 
   const panelRight = detailOpen
-    ? "right-200"
+    ? "right-[calc(var(--sidebar-width)+var(--detail-width))]"
     : sidebarOpen
-      ? "right-100"
+      ? "right-[var(--sidebar-width)]"
       : "right-0";
 
   const toggleSelectPlace = (p: PlaceDto) => {
@@ -87,21 +86,37 @@ const ModelSpotPage = () => {
 
   const handleTogglePanel = () => {
     if (detailOpen) {
-      setSidebarOpen(false);
+      setSpotOverlayOpen(false);
+      setNavHistory([]);
       return;
     }
+
     setSidebarOpen((v) => !v);
   };
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
 
+    const prevHtml = html.style.overflow;
+    const prevBody = body.style.overflow;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+
+    return () => {
+      html.style.overflow = prevHtml;
+      body.style.overflow = prevBody;
+    };
+  }, []);
   if (!modelResult) return <ModelSpotSkeleton />;
 
   return (
     <SidebarProvider open={sidebarOpen} onOpenChange={setSidebarOpen}>
-      <div className="h-dvh w-dvw overflow-hidden">
+      <div className="fixed inset-0 overflow-hidden [--sidebar-width:400px] [--detail-width:400px]">
         <Sidebar
           side="right"
           collapsible="offcanvas"
-          className={cn("border-l z-40 [--sidebar-width:400px]")}
+          className={cn("border-l z-40")}
         >
           <SpotSidebar
             tab={tab}
@@ -141,7 +156,7 @@ const ModelSpotPage = () => {
               "absolute z-50 top-1/2 -translate-y-1/2",
               "h-12 w-8 rounded-l-md rounded-r-none",
               "bg-white border border-r-0",
-              "transition-opacity duration-150 ease-out",
+              "transition-[right,opacity] duration-150 ease-out",
               panelRight,
             )}
           >
