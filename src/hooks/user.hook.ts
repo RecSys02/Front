@@ -13,7 +13,6 @@ import type {
   UserDto,
   UserMeDto,
 } from "@/types/user/user.type";
-import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
 
 const { getAccessToken } = AuthStore.actions;
@@ -169,7 +168,6 @@ export const useUpdateUserTag = () => {
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
   const { clear } = AuthStore.actions;
 
   const cleanup = async () => {
@@ -181,7 +179,7 @@ export const useDeleteUser = () => {
   const onSuccess = async () => {
     await cleanup();
     toast.success("회원 탈퇴가 완료되었습니다.");
-    navigate({ to: ROUTES.Home, replace: true });
+    window.location.replace(ROUTES.Home);
   };
 
   const onError = async () => {
