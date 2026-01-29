@@ -178,8 +178,8 @@ export const useDeleteUser = () => {
 
   const onSuccess = async () => {
     await cleanup();
-    toast.success("회원 탈퇴가 완료되었습니다.");
     window.location.replace(ROUTES.Home);
+    toast.success("회원 탈퇴가 완료되었습니다.");
   };
 
   const onError = async () => {
