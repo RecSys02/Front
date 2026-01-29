@@ -26,6 +26,18 @@ const QK = {
   userMock: () => ["user", "mock"] as const,
 };
 
+const clearUserCaches = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.removeQueries({ queryKey: QK.me() });
+  queryClient.removeQueries({ queryKey: QK.user() });
+  queryClient.removeQueries({ queryKey: QK.meMock() });
+  queryClient.removeQueries({ queryKey: QK.userMock() });
+
+  queryClient.setQueryData(QK.me(), undefined);
+  queryClient.setQueryData(QK.user(), undefined);
+  queryClient.setQueryData(QK.meMock(), undefined);
+  queryClient.setQueryData(QK.userMock(), undefined);
+};
+
 export const meQueryOptions = () =>
   queryOptions({
     queryKey: QK.me(),
@@ -104,9 +116,16 @@ export const useRename = () => {
       userName: nextName,
     }));
 
-    if (!IS_MOCK) {
-      queryClient.refetchQueries({ queryKey: QK.me() });
-    }
+    queryClient.setQueryData<UserDto>(QK.user(), (prev) =>
+      prev ? { ...prev, userName: nextName } : prev,
+    );
+
+    queryClient.setQueryData<UserDto>(QK.userMock(), (prev) =>
+      prev ? { ...prev, userName: nextName } : prev,
+    );
+
+    queryClient.invalidateQueries({ queryKey: QK.me() });
+    queryClient.invalidateQueries({ queryKey: QK.user() });
   };
 
   const real = tsr.user.rename.useMutation({ onSuccess, onError });
@@ -129,9 +148,8 @@ export const useUpdateUserTag = () => {
   };
 
   const onSuccess = () => {
-    if (!IS_MOCK) {
-      queryClient.refetchQueries({ queryKey: QK.user() });
-    }
+    queryClient.invalidateQueries({ queryKey: QK.user() });
+    queryClient.invalidateQueries({ queryKey: QK.userMock() });
     toast.success("태그가 저장되었습니다.");
   };
 
@@ -157,7 +175,7 @@ export const useDeleteUser = () => {
   const cleanup = async () => {
     await queryClient.cancelQueries();
     clear();
-    queryClient.clear();
+    clearUserCaches(queryClient);
   };
 
   const onSuccess = async () => {
