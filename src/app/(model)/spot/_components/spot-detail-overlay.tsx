@@ -43,11 +43,12 @@ const SpotDetailOverlay = ({
   return (
     <Column
       className={cn(
-        "absolute inset-y-0 w-100 z-30 border-l bg-background",
-        "transition-[right,transform,opacity] duration-300 ease-in-out",
+        "fixed inset-y-0 z-30 border-l bg-background",
+        "w-(--detail-width) right-(--sidebar-width)",
+        "transition-[transform,opacity] duration-300 ease-in-out",
         open
-          ? "right-100 translate-x-0 opacity-100 pointer-events-auto"
-          : "right-0 translate-x-full opacity-0 pointer-events-none"
+          ? "translate-x-0 opacity-100 pointer-events-auto"
+          : "translate-x-full opacity-0 pointer-events-none",
       )}
     >
       <Column className="relative w-full h-100 overflow-hidden">
@@ -116,7 +117,7 @@ const SpotDetailOverlay = ({
               "mt-2 cursor-pointer",
               isSelected
                 ? "bg-white border border-gray-200"
-                : "bg-emphasis text-white"
+                : "bg-emphasis text-white",
             )}
             onClick={onToggleSelect}
           >
