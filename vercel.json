@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/__proxy/:path*",
-      "destination": "http://43.200.93.100:8000/core/:path*"
+      "destination": "http://34.64.78.140:8000/core/:path*"
     },
     {
       "source": "/sse/:path*",
-      "destination": "http://43.200.93.100:8000/chat/:path*"
+      "destination": "http://34.64.78.140:8000/chat/:path*"
     },
     { "source": "/(.*)", 
       "destination": "/" 
