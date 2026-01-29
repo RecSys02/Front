@@ -39,11 +39,23 @@ const processQueue = (token: string | null) => {
   pendingQueue = [];
 };
 
+const isAuthPath = (url?: string) => {
+  if (!url) return false;
+  const path = url.startsWith("http") ? new URL(url).pathname : url;
+  return (
+    path.startsWith("/auth/login") ||
+    path.startsWith("/auth/join") ||
+    path.startsWith("/auth/check/") ||
+    path.startsWith("/auth/reissue") ||
+    path.startsWith("/auth/logout")
+  );
+};
+
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = getAccessToken();
 
-    if (token) {
+    if (token && !isAuthPath(config.url)) {
       config.headers = config.headers ?? {};
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -57,13 +69,17 @@ axiosInstance.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
     const response = error.response;
-    const originalRequest = error.config as RetryableRequestConfig;
+    const originalRequest = error.config as RetryableRequestConfig | undefined;
 
-    if (!response) {
+    if (!response || !originalRequest) {
       return Promise.reject(error);
     }
 
-    if (response.status === 401 && originalRequest && originalRequest._retry) {
+    if (isAuthPath(originalRequest.url)) {
+      return Promise.reject(error);
+    }
+
+    if (response.status === 401 && originalRequest._retry) {
       clear();
       window.location.href = "/login";
       return Promise.reject(error);
@@ -89,7 +105,8 @@ axiosInstance.interceptors.response.use(
 
       try {
         const reissueRes = await reissueClient.post("/auth/reissue");
-        const newToken: string | undefined = reissueRes.data?.accessToken;
+        const newToken: string | undefined = (reissueRes.data as any)
+          ?.accessToken;
 
         if (!newToken) {
           throw new Error("No accessToken in reissue response");
