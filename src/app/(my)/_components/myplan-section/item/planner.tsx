@@ -59,7 +59,7 @@ const Planner = ({ schedule }: Props) => {
               transform: "translateY(-50%)",
             }}
           >
-            Day {index + 1}
+            DAY {index + 1}
           </div>
 
           <div className="ml-14 relative h-full border-b border-l">

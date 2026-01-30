@@ -10,7 +10,7 @@ import Title from "@/components/text/title";
 import { Badge } from "@/components/ui/badge/badge";
 import { HeartIcon } from "lucide-react";
 import { Button } from "@/components/common/button/button";
-import { cn } from "@/libs/utils";
+import { cn, mapProvinceToKorean } from "@/libs/utils";
 import Subtitle from "@/components/text/subtitle";
 import { Border } from "@/components/ui/border";
 import Planner from "@/app/(my)/_components/myplan-section/item/planner";
@@ -121,7 +121,7 @@ const PlanDetailPage = () => {
           {content.name}
         </Title>
         <Body variant="body2" className="fc-gray-700">
-          {content.province}
+          {mapProvinceToKorean(content.province)}
         </Body>
       </Column>
 
