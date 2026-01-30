@@ -15,13 +15,8 @@ export const tsr = initTsrReactQuery(contract, {
     const hasQueryInPath = args.path.includes("?");
     const params = hasQueryInPath ? undefined : (args.rawQuery as any);
     const isModelCall =
-      pathname.startsWith("/__proxy/api/plans") ||
-      pathname.startsWith("/__proxy/api/recommend");
-    console.log("[TSR API PATH]", {
-      method: args.method,
-      pathname,
-      isProxy: pathname.startsWith("/__proxy"),
-    });
+      pathname.startsWith("/api/plans") ||
+      pathname.startsWith("/api/recommend");
     const result = await axiosInstance({
       url: args.path,
       method: method as any,
