@@ -51,7 +51,7 @@ const SpotDetailOverlay = ({
           : "translate-x-full opacity-0 pointer-events-none",
       )}
     >
-      <Column className="relative w-full h-100 overflow-hidden">
+      <Column className="relative w-full h-69.5 overflow-hidden shrink-0">
         <ImageBox
           src={place.images ? place.images[0] : Placeholder}
           className="w-full h-full"
@@ -77,53 +77,59 @@ const SpotDetailOverlay = ({
         </Row>
       </Column>
 
-      <Column className="h-full overflow-y-auto p-4 gap-3">
-        <Body variant="body1" className="font-semibold line-clamp-2">
-          {place.name}
-        </Body>
-
-        {place.address && (
-          <Row className="items-center gap-1">
-            <MapPin className="h-4 w-4 shrink-0 text-gray-400" />
-            <Body variant="body3" className="fc-gray-500 line-clamp-2">
-              {place.address}
-            </Body>
-          </Row>
-        )}
-
-        {place.keywords && place.keywords.length > 0 && (
-          <Row className="flex-wrap gap-1">
-            {place.keywords.slice(0, 6).map((k) => (
-              <Badge
-                key={k}
-                variant="secondary"
-                className="px-2 py-0.5 text-[11px] font-normal"
-              >
-                #{k}
-              </Badge>
-            ))}
-          </Row>
-        )}
-
-        {place.description && (
-          <Body variant="body3" className="fc-gray-600 whitespace-pre-line">
-            {place.description}
+      <Column className="min-h-0 flex-1 overflow-y-auto">
+        <Column className="sticky top-0 z-10 bg-background p-4 gap-3">
+          <Body variant="body1" className="font-semibold line-clamp-2">
+            {place.name}
           </Body>
-        )}
 
-        {!hideSelectButton && (
-          <Button
-            className={cn(
-              "mt-2 cursor-pointer",
-              isSelected
-                ? "bg-white border border-gray-200"
-                : "bg-emphasis text-white",
-            )}
-            onClick={onToggleSelect}
-          >
-            {isSelected ? "해제" : "추가"}
-          </Button>
-        )}
+          {place.address && (
+            <Row className="items-center gap-1">
+              <MapPin className="h-4 w-4 shrink-0 text-gray-400" />
+              <Body variant="body3" className="fc-gray-500 line-clamp-2">
+                {place.address}
+              </Body>
+            </Row>
+          )}
+
+          {place.keywords && place.keywords.length > 0 && (
+            <Row className="flex-wrap gap-1">
+              {place.keywords.slice(0, 6).map((k) => (
+                <Badge
+                  key={k}
+                  variant="secondary"
+                  className="px-2 py-0.5 text-[11px] font-normal"
+                >
+                  #{k}
+                </Badge>
+              ))}
+            </Row>
+          )}
+
+          <div className="h-px bg-gray-100" />
+        </Column>
+
+        <Column className="px-4 pb-4 gap-3">
+          {place.description && (
+            <Body variant="body3" className="fc-gray-600 whitespace-pre-line">
+              {place.description}
+            </Body>
+          )}
+
+          {!hideSelectButton && (
+            <Button
+              className={cn(
+                "mt-2 cursor-pointer",
+                isSelected
+                  ? "bg-white border border-gray-200"
+                  : "bg-emphasis text-white",
+              )}
+              onClick={onToggleSelect}
+            >
+              {isSelected ? "해제" : "추가"}
+            </Button>
+          )}
+        </Column>
       </Column>
     </Column>
   );

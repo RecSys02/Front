@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge/badge";
 import { Button } from "@/components/common/button/button";
 import { Border } from "@/components/ui/border";
 
-import { cn } from "@/libs/utils";
+import { cn, mapProvinceToKorean } from "@/libs/utils";
 import { ROUTES } from "@/constants/routes";
 
 import Planner from "@/app/(my)/_components/myplan-section/item/planner";
@@ -113,7 +113,7 @@ const ModelPlanPage = () => {
           {content.name}
         </Title>
         <Body variant="body2" className="fc-gray-700">
-          {content.province}
+          {mapProvinceToKorean(content.province)}
         </Body>
       </Column>
 

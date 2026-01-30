@@ -52,8 +52,15 @@ export const useCreatePlan = () => {
     });
   };
 
-  const onError = () => {
-    toast.error("여행 계획 생성에 실패했습니다. 다시 시도해 주세요.");
+  const onError = (err: unknown) => {
+    console.error("[createPlan error]", err);
+
+    if (err instanceof Error) {
+      toast.error(`생성 실패: ${err.message}`);
+    } else {
+      toast.error("여행 계획 생성에 실패했습니다. 다시 시도해 주세요.");
+    }
+
     navigate({ to: "/", replace: true });
   };
 
