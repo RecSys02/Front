@@ -17,6 +17,14 @@ export const tsr = initTsrReactQuery(contract, {
     const isModelCall =
       pathname.startsWith("/api/plans") ||
       pathname.startsWith("/api/recommend");
+    const timeout = isModelCall ? 60_000 : 10_000;
+
+    console.log("[TSR API TIMEOUT]", {
+      method,
+      path: pathname,
+      isModelCall,
+      timeout,
+    });
     const result = await axiosInstance({
       url: args.path,
       method: method as any,
@@ -24,7 +32,7 @@ export const tsr = initTsrReactQuery(contract, {
       params,
       data:
         method === "GET" || method === "HEAD" ? undefined : (args.body as any),
-      timeout: isModelCall ? 60_000 : 10_000,
+      timeout,
       signal: args.fetchOptions?.signal ?? undefined,
     });
 
