@@ -5,8 +5,13 @@ import TourspotPlaceholder from "@/assets/placeholder/tourspot-placeholder.png";
 import CafePlaceholder from "@/assets/placeholder/cafe-placeholder.png";
 import RestaurantPlaceholder from "@/assets/placeholder/restaurant-placeholder.png";
 import PlanPlaceholder from "@/assets/placeholder/plan-placeholder.png";
-
-export type ImageCategory = "TOURSPOT" | "CAFE" | "RESTAURANT" | "PLAN";
+import ProfilePlaceholder from "@/assets/placeholder/profile-placeholder.png";
+export type ImageCategory =
+  | "TOURSPOT"
+  | "CAFE"
+  | "RESTAURANT"
+  | "PLAN"
+  | "PROFILE";
 
 type Props = {
   src?: string | null;
@@ -20,6 +25,7 @@ const CATEGORY_PLACEHOLDER: Record<ImageCategory, string> = {
   CAFE: CafePlaceholder,
   RESTAURANT: RestaurantPlaceholder,
   PLAN: PlanPlaceholder,
+  PROFILE: ProfilePlaceholder,
 };
 
 export function ImageBox({ src, className, fit = "cover", category }: Props) {
