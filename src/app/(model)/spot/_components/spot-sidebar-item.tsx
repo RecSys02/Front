@@ -4,9 +4,8 @@ import { cn } from "@/libs/utils";
 import { Check } from "lucide-react";
 import { Button } from "@/components/common/button/button";
 import Body from "@/components/text/body";
-import { ImageBox } from "@/components/common/container/image-box";
+import { ImageBox, ImageCategory } from "@/components/common/container/image-box";
 import { Badge } from "@/components/ui/badge/badge";
-import Placeholder from "@/assets/banners/placeholder.png";
 import { PlaceDto } from "@/types/place/place.type";
 
 type Props = {
@@ -29,7 +28,8 @@ const SpotSidebarItem = ({ place, isActive, isSelected, onFocus }: Props) => {
     >
       <Row className="items-center gap-3">
         <ImageBox
-          src={place.images ? place.images[0] : Placeholder}
+          category={place.category as ImageCategory}
+          src={place.images?.[0] ?? null}
           className="size-20 shrink-0 rounded-md object-cover"
         />
 

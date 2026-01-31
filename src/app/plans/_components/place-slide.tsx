@@ -1,10 +1,12 @@
 import Column from "@/components/common/container/column";
 import Row from "@/components/common/container/row";
-import { ImageBox } from "@/components/common/container/image-box";
+import {
+  ImageBox,
+  ImageCategory,
+} from "@/components/common/container/image-box";
 import Body from "@/components/text/body";
 import { MapPin, ChevronLeft, ChevronRight, Clock3, Tag } from "lucide-react";
 import { Badge } from "@/components/ui/badge/badge";
-import Placeholder from "@/assets/banners/placeholder.png";
 import { Button } from "@/components/common/button/button";
 import { useReadPlace } from "@/hooks/place.hook";
 import { cn } from "@/libs/utils";
@@ -41,9 +43,6 @@ const PlaceSlide = ({
     isError,
   } = useReadPlace(placeId, { category, province });
 
-  const imageSrc =
-    place?.images && place.images.length > 0 ? place.images[0] : Placeholder;
-
   const showIndex =
     typeof index === "number" && typeof total === "number" && total > 0;
 
@@ -55,7 +54,12 @@ const PlaceSlide = ({
   return (
     <Column className="rounded-lg border overflow-hidden h-full flex flex-col">
       <Column className="relative w-full h-fit shrink-0 overflow-hidden">
-        <ImageBox src={imageSrc} className="w-full h-156" fit="cover" />
+        <ImageBox
+          category={category as ImageCategory}
+          src={place?.images?.[0]}
+          className="w-full h-156"
+          fit="cover"
+        />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/35 to-transparent" />
 
         {showIndex && (

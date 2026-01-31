@@ -1,5 +1,5 @@
 import Column from "@/components/common/container/column";
-import { ImageBox } from "@/components/common/container/image-box";
+import { ImageBox, ImageCategory } from "@/components/common/container/image-box";
 import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
 import { Border } from "@/components/ui/border";
@@ -45,6 +45,7 @@ const ContentCard = ({ content }: Props) => {
         className="cursor-pointer hover:opacity-95 transition-opacity w-fit"
       >
         <ImageBox
+          category={"PLAN" as ImageCategory}
           src={content.image}
           className="w-140 h-80 overflow-hidden"
           fit="cover"

@@ -1,6 +1,6 @@
 import { Button } from "@/components/common/button/button";
 import Column from "@/components/common/container/column";
-import { ImageBox } from "@/components/common/container/image-box";
+import { ImageBox, ImageCategory } from "@/components/common/container/image-box";
 import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
 import { useTogglePlanLike } from "@/hooks/plan.hook";
@@ -30,6 +30,7 @@ const PreviewCard = ({ content }: Props) => {
     <Column className="w-fit">
       <div className="relative size-55">
         <ImageBox
+          category={"PLAN" as ImageCategory}
           src={content.image}
           className="w-full h-full overflow-hidden rounded-lg"
           fit="cover"
