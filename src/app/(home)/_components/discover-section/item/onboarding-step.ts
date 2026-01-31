@@ -1,5 +1,5 @@
 import Placeholder from "@/assets/banners/placeholder.png";
-import Banner1 from "@/assets/banners/banner1.jpg";
+import Banner1 from "@/assets/banners/banner1.png";
 
 export type OnboardingConfig = {
   title: string;

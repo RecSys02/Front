@@ -2,7 +2,7 @@ import {
   MyPlanListResponseDto,
   PopularPlanCardDto,
 } from "@/types/plan/plan.wrapper.type";
-import Banner1 from "@/assets/banners/banner1.jpg";
+import Banner1 from "@/assets/banners/banner1.png";
 import { PlaceDto } from "@/types/place/place.type";
 
 export const MOCK_POPULAR: PopularPlanCardDto[] = [
