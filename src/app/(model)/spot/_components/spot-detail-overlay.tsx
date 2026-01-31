@@ -3,9 +3,11 @@ import Row from "@/components/common/container/row";
 import { ChevronLeft, MapPin, X } from "lucide-react";
 import Body from "@/components/text/body";
 import { Button } from "@/components/common/button/button";
-import { ImageBox } from "@/components/common/container/image-box";
+import {
+  ImageBox,
+  ImageCategory,
+} from "@/components/common/container/image-box";
 import { Badge } from "@/components/ui/badge/badge";
-import Placeholder from "@/assets/banners/placeholder.png";
 import { cn } from "@/libs/utils";
 import { PlaceDto } from "@/types/place/place.type";
 
@@ -53,7 +55,8 @@ const SpotDetailOverlay = ({
     >
       <Column className="relative w-full h-69.5 overflow-hidden shrink-0">
         <ImageBox
-          src={place.images ? place.images[0] : Placeholder}
+          category={place.category as ImageCategory}
+          src={place.images?.[0] ?? null}
           className="w-full h-full"
         />
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-black/35 to-transparent" />

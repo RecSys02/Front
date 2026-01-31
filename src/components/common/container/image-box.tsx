@@ -1,14 +1,28 @@
 import { useMemo, useState } from "react";
 import { cn } from "@/libs/utils";
-import Placeholder from "@/assets/banners/placeholder.png";
+import DefaultPlaceholder from "@/assets/banners/placeholder.png";
+import TourspotPlaceholder from "@/assets/placeholder/tourspot-placeholder.png";
+import CafePlaceholder from "@/assets/placeholder/cafe-placeholder.png";
+import RestaurantPlaceholder from "@/assets/placeholder/restaurant-placeholder.png";
+import PlanPlaceholder from "@/assets/placeholder/plan-placeholder.png";
+
+export type ImageCategory = "TOURSPOT" | "CAFE" | "RESTAURANT" | "PLAN";
 
 type Props = {
   src?: string | null;
   className?: string;
   fit?: "cover" | "contain";
+  category?: ImageCategory;
 };
 
-export function ImageBox({ src, className, fit = "cover" }: Props) {
+const CATEGORY_PLACEHOLDER: Record<ImageCategory, string> = {
+  TOURSPOT: TourspotPlaceholder,
+  CAFE: CafePlaceholder,
+  RESTAURANT: RestaurantPlaceholder,
+  PLAN: PlanPlaceholder,
+};
+
+export function ImageBox({ src, className, fit = "cover", category }: Props) {
   const [failed, setFailed] = useState(false);
 
   const normalizedSrc = useMemo(() => {
@@ -16,7 +30,10 @@ export function ImageBox({ src, className, fit = "cover" }: Props) {
     return s.length > 0 ? s : null;
   }, [src]);
 
-  const finalSrc = failed || !normalizedSrc ? Placeholder : normalizedSrc;
+  const placeholderSrc =
+    (category && CATEGORY_PLACEHOLDER[category]) ?? DefaultPlaceholder;
+
+  const finalSrc = failed || !normalizedSrc ? placeholderSrc : normalizedSrc;
 
   return (
     <div className={cn("relative overflow-hidden", className)}>

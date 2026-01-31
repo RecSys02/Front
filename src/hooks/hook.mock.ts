@@ -12,7 +12,7 @@ export const MOCK_POPULAR: PopularPlanCardDto[] = [
     tags: ["부드러운", "아무튼 좋은", "로컬", "저렴한", "활동적인"],
     likeCount: 120,
     isActive: true,
-    image: Banner1,
+    image: "",
   },
   {
     id: 2,
@@ -242,7 +242,6 @@ export const MOCK_PLACE: PlaceDto = {
   address: "서울특별시 성동구 뚝섬로 273",
   description: "도심 속에서 자연을 즐길 수 있는 대형 시민공원",
   duration: "2~3시간",
-  images: ["https://images.unsplash.com/photo-1549693578-d683be217e58"],
   keywords: ["공원", "자연", "산책", "휴식"],
   category: "TOURSPOT",
   province: "서울",
