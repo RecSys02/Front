@@ -63,7 +63,11 @@ export const useCreatePlan = () => {
     navigateToPlan(res.body.id);
   };
 
-  const real = tsr.plan.create.useMutation({ onSuccess, onError });
+  const real = tsr.plan.create.useMutation({
+    onSuccess,
+    onError,
+    retry: 2,
+  });
 
   const mock = useMutation<
     ApiOk<CreatePlanResponseDto>,
