@@ -13,19 +13,21 @@ const CATEGORY_COLORS: Record<string, string> = {
   CAFE: "bg-[#FFECBC]",
 };
 
+const parseTime = (time: string) => {
+  const [h, m] = time.split(":").map(Number);
+  return h + m / 60;
+};
+
 const getLeftPercent = (
   start: string,
   planStart: number,
   totalHours: number,
 ) => {
-  const hour = Number(start.split(":")[0]);
-  return ((hour - planStart) / totalHours) * 100;
+  return ((parseTime(start) - planStart) / totalHours) * 100;
 };
 
 const getWidthPercent = (start: string, end: string, totalHours: number) => {
-  const s = Number(start.split(":")[0]);
-  const e = Number(end.split(":")[0]);
-  return ((e - s) / totalHours) * 100;
+  return ((parseTime(end) - parseTime(start)) / totalHours) * 100;
 };
 
 const ActivityBar = ({
