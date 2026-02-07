@@ -62,7 +62,7 @@ const ChatbotDialog = ({ open, onOpenChange }: Props) => {
     <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent
         className={`
-          fixed z-10000 w-90 ${isExpanded ? "h-180" : "h-140"} p-0 overflow-hidden
+          fixed z-10000 ${isExpanded ? "h-180 w-120" : "h-140 w-90"} p-0 overflow-hidden
           inset-auto right-24! bottom-6! top-auto! left-auto!
           translate-x-0 translate-y-0 flex flex-col
         `}
