@@ -1,5 +1,11 @@
 import type { ChatMessage } from "@/types/chatbot/chatbot.type";
 
+export const WELCOME_MESSAGE: ChatMessage = {
+  role: "assistant",
+  content: "안녕하세요! 무엇을 도와드릴까요?",
+  isPending: false,
+};
+
 export const appendUserAndEmptyAssistant = (
   prev: ChatMessage[],
   userContent: string,

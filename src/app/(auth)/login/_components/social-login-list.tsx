@@ -4,7 +4,7 @@ import Row from "@/components/common/container/row";
 import Body from "@/components/text/body";
 import { Border } from "@/components/ui/border";
 import NaverIconPng from "@/assets/logos/naver.png";
-import { toast } from "sonner";
+import { handleNotReady } from "@/libs/utils";
 
 const SocialLoginList = () => {
   return (
@@ -18,7 +18,7 @@ const SocialLoginList = () => {
       </Row>
       <Row className="gap-4 mt-7.5 justify-center">
         <GoogleIcon
-          onClick={() => toast.error("준비중입니다.")}
+          onClick={handleNotReady}
           className="text-gray-300 cursor-pointer size-10"
         />
         <a href="http://34.64.78.140:8000/core/oauth2/authorization/naver">

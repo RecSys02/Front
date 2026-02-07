@@ -5,6 +5,8 @@ import ChatbotMessages from "./chatbot-messages";
 import ChatbotInputBar from "./chatbot-input-bar";
 import { useChatHistory } from "@/hooks/chat.hook";
 import { useChatbotComposer, useChatbotConversation } from "./chatbot.hook";
+import { ChatMessage } from "@/types/chatbot/chatbot.type";
+import { WELCOME_MESSAGE } from "./chatbot.util";
 
 type Props = {
   open: boolean;
@@ -35,7 +37,10 @@ const ChatbotDialog = ({ open, onOpenChange }: Props) => {
     if (didInitRef.current) return;
     if (!history.data) return;
 
-    convo.setMessages(history.data);
+    const initial: ChatMessage[] =
+      history.data.length > 0 ? history.data : [WELCOME_MESSAGE];
+
+    convo.setMessages(initial);
     didInitRef.current = true;
   }, [open, history.data, convo]);
 
@@ -57,7 +62,7 @@ const ChatbotDialog = ({ open, onOpenChange }: Props) => {
     <Dialog open={open} onOpenChange={handleOpenChange} modal={false}>
       <DialogContent
         className={`
-          fixed z-10000 w-90 ${isExpanded ? "h-180" : "h-140"} p-0 overflow-hidden
+          fixed z-10000 ${isExpanded ? "h-180 w-120" : "h-140 w-90"} p-0 overflow-hidden
           inset-auto right-24! bottom-6! top-auto! left-auto!
           translate-x-0 translate-y-0 flex flex-col
         `}
