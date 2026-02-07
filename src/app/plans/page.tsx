@@ -11,6 +11,7 @@ import Body from "@/components/text/body";
 import Heading from "@/components/text/heading";
 import { useNavigate } from "@tanstack/react-router";
 import { ROUTES } from "@/constants/routes";
+import { handleNotReady } from "@/libs/utils";
 
 type SortKey = "default" | "popular";
 
@@ -36,6 +37,10 @@ const PlanPage = () => {
   const hasMore = visibleCount < (sorted?.length ?? 0);
 
   const handleChangeSort = (next: SortKey) => {
+    if (next === "popular") {
+      handleNotReady();
+      return;
+    }
     setSort(next);
     setVisibleCount(PAGE_SIZE);
   };
@@ -59,7 +64,6 @@ const PlanPage = () => {
               </TabsTrigger>
               <TabsTrigger
                 value="popular"
-                disabled
                 className="h-9 rounded-full px-6 text-base cursor-pointer data-[state=active]:bg-[#1A6E3D] data-[state=active]:text-white"
               >
                 인기순

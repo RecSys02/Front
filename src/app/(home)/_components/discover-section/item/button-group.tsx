@@ -16,6 +16,7 @@ const ButtonGroup = ({ activeTab, onChangeTab }: Props) => {
         description={`취향 태그 따라 자동으로\n여행지 추천`}
       />
       <DiscoverButton
+        disabled={true}
         isActive={activeTab === "HOT"}
         onClick={() => onChangeTab("HOT")}
         name="대화형 챗봇 추천"

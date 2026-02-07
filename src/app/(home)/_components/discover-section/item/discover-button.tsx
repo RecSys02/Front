@@ -15,7 +15,7 @@ const DiscoverButton = ({
   name,
   description,
   isActive,
-  disabled = true,
+  disabled = false,
 }: Props) => {
   return (
     <Column className="w-fit gap-8.5 justify-center">

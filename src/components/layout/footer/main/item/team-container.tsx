@@ -11,9 +11,9 @@ const TeamContainer = () => {
       </Row>
       <Row>
         <TextBoxContainer>프론트 : 임치현T8170, 정하나T8186</TextBoxContainer>
-        <TextBoxContainer>서버 : 김민회T8080, 박새결T8090</TextBoxContainer>
+        <TextBoxContainer>서버 : 김민회T8029, 박새결T8073</TextBoxContainer>
         <TextBoxContainer bar={false}>
-          AI : 김진우T8080, 박재현T8080
+          AI : 김진우T8053, 박재현T8080
         </TextBoxContainer>
       </Row>
     </Column>

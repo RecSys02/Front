@@ -1,5 +1,6 @@
 import { PROVINCE_CODE_MAP, PROVINCE_NAME_MAP } from "@/constants/region.type";
 import { type ClassValue, clsx } from "clsx";
+import { toast } from "sonner";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -26,4 +27,8 @@ export const mapProvinceToKorean = (province?: string | null): string => {
   if (!province) return "";
 
   return PROVINCE_NAME_MAP[province] ?? province;
+};
+
+export const handleNotReady = () => {
+  toast.info("해당 기능은 현재 준비 중입니다.");
 };

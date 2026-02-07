@@ -20,7 +20,7 @@ export const BANNER_ITEMS: BannerConfig[] = [
     image: Banner1,
     iconSrc: LeafIcon,
     description: "고민은 뒤로, 오늘은 여행",
-    linkTo: ROUTES.Home,
+    linkTo: ROUTES.ModelContext,
     color: "bg-base",
   },
   {
@@ -28,6 +28,7 @@ export const BANNER_ITEMS: BannerConfig[] = [
     image: Banner2,
     iconSrc: LeafIcon,
     description: "내 취향 기반 장소 추천부터 일정까지 한 번에",
+    linkTo: ROUTES.ModelContext,
     color: "bg-[#C7D7E5]",
   },
   {
@@ -35,7 +36,7 @@ export const BANNER_ITEMS: BannerConfig[] = [
     image: Banner3,
     iconSrc: LeafIcon,
     description: "추천부터 계획까지 대화로 해결해요",
-    linkTo: ROUTES.Home,
+    linkTo: ROUTES.ModelContext,
     color: "bg-[#F3DDAF]",
   },
 ];

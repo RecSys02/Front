@@ -27,8 +27,8 @@ root.render(
     <QueryClientProvider client={queryClient}>
       <tsr.ReactQueryProvider>
         <RouterProvider router={router} />
-        <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" duration={1500} />
       </tsr.ReactQueryProvider>
     </QueryClientProvider>
-  </StrictMode>
+  </StrictMode>,
 );
