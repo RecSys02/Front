@@ -5,6 +5,8 @@ import ChatbotMessages from "./chatbot-messages";
 import ChatbotInputBar from "./chatbot-input-bar";
 import { useChatHistory } from "@/hooks/chat.hook";
 import { useChatbotComposer, useChatbotConversation } from "./chatbot.hook";
+import { ChatMessage } from "@/types/chatbot/chatbot.type";
+import { WELCOME_MESSAGE } from "./chatbot.util";
 
 type Props = {
   open: boolean;
@@ -35,7 +37,10 @@ const ChatbotDialog = ({ open, onOpenChange }: Props) => {
     if (didInitRef.current) return;
     if (!history.data) return;
 
-    convo.setMessages(history.data);
+    const initial: ChatMessage[] =
+      history.data.length > 0 ? history.data : [WELCOME_MESSAGE];
+
+    convo.setMessages(initial);
     didInitRef.current = true;
   }, [open, history.data, convo]);
 
