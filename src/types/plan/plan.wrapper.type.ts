@@ -23,7 +23,7 @@ export type PlanListResponseDto = z.infer<typeof PlanListResponseSchema>;
 
 export const CreatePlanRequestSchema = z.object({
   selectedPlaces: z.array(PlaceIdSchema),
-  name: z.string(),
+  name: z.string().nullable(),
   startDate: z.string(),
   endDate: z.string(),
   province: z.string(),

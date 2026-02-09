@@ -62,8 +62,9 @@ const SpotSidebar = ({
   const savedPlaces = useMemo(() => {
     const map = new Map<number, PlaceDto>();
     historyPlaces.forEach((p) => map.set(p.id, p));
+    selectedPlaces.forEach((p) => map.set(p.id, p));
     return Array.from(map.values());
-  }, [historyPlaces]);
+  }, [historyPlaces, selectedPlaces]);
 
   const listPlaces = tab === "saved" ? savedPlaces : places;
 

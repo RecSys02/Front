@@ -43,7 +43,7 @@ export const useCreatePlanFromModel = (args: {
 
     const createPlanPayload: CreatePlanRequestDto = {
       selectedPlaces: placesPayload,
-      name: `${startDate} ${provinceLabel} 여행 계획`,
+      name: null,
       startDate,
       endDate,
       province: provinceCode,
