@@ -10,6 +10,10 @@
 어슬렁은 **AI 추천 시스템과 대화형 인터페이스**를 결합하여
 사용자가 쉽고 빠르게 여행 계획을 세울 수 있도록 돕는 서비스입니다.
 
+화면설계서(https://www.notion.so/2f9136f77e8a803e892bf59cd0dc22aa?v=2f9136f77e8a80d38e9e000ca883d22c&source=copy_link)
+
+API명세서(https://www.notion.so/API-2f4136f77e8a80559f62f50d1aacc770?source=copy_link)
+
 ### 핵심 기능
 
 * ✨ AI 기반 여행지 추천
